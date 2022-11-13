@@ -1,6 +1,7 @@
-import { LogoutOutlined, MenuOutlined, TurnedInNot } from "@mui/icons-material";
+import { MenuOutlined, TurnedInNot } from "@mui/icons-material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
-  AppBar,
+  Box,
   Divider,
   Drawer,
   Grid,
@@ -14,61 +15,23 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-export const NavBar = ({ drawerWidth = 240 }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
+export const MobileNav = ({ drawerWidth, toggle }) => {
+  const [open, setOpen] = useState(toggle);
   const handleDrawerClose = () => {
+    console.log("cerrando...");
     setOpen(false);
   };
   return (
-    <>
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            onClick={handleDrawerOpen}
-            color="inherit"
-            edge="start"
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuOutlined color="blanco" />
-          </IconButton>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ color: "#fff" }}
-            >
-              Noise App
-            </Typography>
-            <IconButton color="blanco">
-              <LogoutOutlined />
-            </IconButton>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+    <Box
+      component="nav"
+      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+    >
       <Drawer
         variant="persistent"
         open={open}
         sx={{
-          // display: { sm: "block", xs: "none" },
+          //   display: { sm: "block", xs: "none" },
           "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
           // display: { xs: "none" },
         }}
@@ -77,15 +40,14 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           <Typography variant="h6" noWrap component="div">
             Jennifer Intriago
           </Typography>
-          {/*  */}
           <IconButton
+            color="inherit"
             edge="end"
+            sx={{ mr: 2, display: { sm: "none" } }}
             onClick={handleDrawerClose}
-            sx={{ color: "#17A9BF" }}
           >
             <ArrowBackIosIcon />
           </IconButton>
-          {/*  */}
         </Toolbar>
         <Divider />
         <List>
@@ -108,6 +70,6 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           ))}
         </List>
       </Drawer>
-    </>
+    </Box>
   );
 };
