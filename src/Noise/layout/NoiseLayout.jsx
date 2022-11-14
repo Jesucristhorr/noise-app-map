@@ -1,5 +1,6 @@
-import { Toolbar } from "@mui/material";
+import { Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { Footer } from "../components/Footer";
 import { NavBar } from "../components/NavBar";
 import { SideBar } from "../components/SideBar";
 
@@ -21,6 +22,7 @@ export const NoiseLayout = ({ children }) => {
           {children}
         </Box>
       </Box>
+      {/* <Footer /> */}
     </>
   );
 };
