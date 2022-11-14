@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export const SideBar = ({ drawerWidth = 240, open }) => {
   return (
@@ -37,23 +38,36 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
         </Toolbar>
         <Divider />
         <List>
-          {["Enero", "Febrero", "Marzo", "Abril"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                  <ListItemText primary={text} />
-                  <ListItemText
-                    secondary={
-                      "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico "
-                    }
-                  />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {/*  */}
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <TurnedInNot />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink to="/" style={{ textDecoration: "none" }}>
+                  <ListItemText primary={"Mapa"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <TurnedInNot />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink to="/information" style={{ textDecoration: "none" }}>
+                  <ListItemText primary={"Informacion"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+
+          {/*  */}
         </List>
       </Drawer>
     </Box>
