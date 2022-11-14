@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Map } from "mapbox-gl";
+import { Map, Marker, Popup } from "mapbox-gl";
 import { useLayoutEffect, useRef } from "react";
 import { Footer } from "../components/Footer";
 import { NoiseLayout } from "../layout/NoiseLayout";
@@ -15,9 +15,22 @@ export const NoisePage = () => {
       zoom: 15, // starting zoom
       projection: "globe", // display the map as a 3D globe
     });
+
+    const myLocationPopup = new Popup().setHTML(`
+    <h4>Aqui Estoy</h4>
+    <p>En algun punto de Manta</p>
+    `);
+
     map.on("style.load", () => {
       map.setFog({}); // Set the default atmosphere style
     });
+
+    new Marker({
+      color: "#000",
+    })
+      .setLngLat([-80.7131355321545, -0.9538658429270971])
+      .setPopup(myLocationPopup)
+      .addTo(map);
   }, []);
   return (
     <NoiseLayout>
