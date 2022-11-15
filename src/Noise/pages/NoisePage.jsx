@@ -1,4 +1,5 @@
-import { Typography } from "@mui/material";
+import { AddOutlined } from "@mui/icons-material";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import { Map, Marker, Popup } from "mapbox-gl";
 import { useLayoutEffect, useRef } from "react";
 import { Footer } from "../components/Footer";
@@ -46,6 +47,23 @@ export const NoisePage = () => {
           left: "0",
         }}
       ></div>
+
+      {/* BOTON FLOTANTE */}
+      <Tooltip title="Agregar Sensor">
+        <IconButton
+          size="large"
+          sx={{
+            color: "white",
+            backgroundColor: "primary.main",
+            ":hover": { backgroundColor: "primary.main", opacity: 0.9 },
+            position: "fixed",
+            right: 50,
+            bottom: 50,
+          }}
+        >
+          <AddOutlined sx={{ fontSize: 30 }} />
+        </IconButton>
+      </Tooltip>
     </NoiseLayout>
   );
 };
