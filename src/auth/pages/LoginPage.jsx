@@ -1,10 +1,18 @@
 import { Google } from "@mui/icons-material";
 import { Button, Grid, TextField, Typography, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import {
+  checkingAuthentication,
+  startGoogleSignIn,
+} from "../../store/auth/thunks";
 import { AuthLayout } from "../layout/AuthLayout";
 
 export const LoginPage = () => {
+  const { status, errorMessage } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -13,12 +21,17 @@ export const LoginPage = () => {
   } = useForm();
 
   // console.log(errors);
+  const onGoogleSignIn = () => {
+    console.log("onGoogleSignIn");
+    dispatch(startGoogleSignIn());
+  };
 
   return (
     <AuthLayout title="Login">
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
+          dispatch(checkingAuthentication(data));
         })}
       >
         <Grid container>
@@ -60,7 +73,7 @@ export const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Button variant="contained" fullWidth>
+              <Button variant="contained" fullWidth onClick={onGoogleSignIn}>
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>

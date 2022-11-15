@@ -15,7 +15,9 @@ export const authSlice = createSlice({
     logout: (state, payload) => {},
 
     // Control de botones y loading de la app
-    checkingCredentials: (state, payload) => {},
+    checkingCredentials: (state, payload) => {
+      state.status = "checking";
+    },
   },
 });
 
