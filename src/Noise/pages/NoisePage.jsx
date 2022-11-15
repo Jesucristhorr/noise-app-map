@@ -1,11 +1,25 @@
 import { AddOutlined } from "@mui/icons-material";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import { Map, Marker, Popup } from "mapbox-gl";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// import { getUserLocation } from "../../helpers/getUserLocation";
+import { setUserLocation } from "../../store/map/mapSlice";
+import { getUserLocation } from "../../store/map/thunks";
 import { Footer } from "../components/Footer";
 import { NoiseLayout } from "../layout/NoiseLayout";
 
 export const NoisePage = () => {
+  const { isLoading, userLocation } = useSelector((state) => state.map);
+  const dispatch = useDispatch();
+  console.log(`coords ${userLocation}`);
+
+  //obtener la geolocalizacion de la persona
+  useEffect(() => {
+    // getUserLocation().then((lnglat) => dispatch(setUserLocation(lnglat)));
+    dispatch(getUserLocation());
+  }, []);
+
   const mapDiv = useRef(null);
 
   useLayoutEffect(() => {
