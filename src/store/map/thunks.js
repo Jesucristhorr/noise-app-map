@@ -3,7 +3,7 @@ import { setUserLocation } from "./mapSlice";
 export const getUserLocation = () => {
   return async (dispatch) => {
     try {
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
+      await navigator.geolocation.getCurrentPosition(({ coords }) => {
         dispatch(setUserLocation([coords.longitude, coords.latitude]));
       });
     } catch (error) {
