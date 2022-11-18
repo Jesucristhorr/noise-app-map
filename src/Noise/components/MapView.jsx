@@ -1,11 +1,14 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserLocation } from "../../store/map/thunks";
+import { getUserLocation, setMap } from "../../store/map/thunks";
 import { Loading } from "./Loading";
 import { Map, Marker, Popup } from "mapbox-gl";
+import { setMapa } from "../../store/map/mapSlice";
 
 export const MapView = () => {
-  const { isLoading, userLocation } = useSelector((state) => state.map);
+  const { isLoading, userLocation, isMapReady, mapa } = useSelector(
+    (state) => state.map
+  );
   const dispatch = useDispatch();
 
   const mapDiv = useRef(null);
@@ -19,6 +22,8 @@ export const MapView = () => {
         zoom: 15, // starting zoom
         projection: "globe", // display the map as a 3D globe
       });
+
+      // dispatch(setMap(map));
 
       const myLocationPopup = new Popup().setHTML(`
         <h4>Aqui Estoy</h4>

@@ -9,7 +9,7 @@ export const InformationNoisePage = () => {
 
   return (
     <NoiseLayout>
-      <Typography variant="h3">Informacion de niveles de ruidos</Typography>
+      <Typography variant="h4">Informacion de niveles de ruidos</Typography>
       {/* <MapView /> */}
     </NoiseLayout>
     // <InfoNoise />

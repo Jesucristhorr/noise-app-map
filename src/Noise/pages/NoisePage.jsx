@@ -22,6 +22,7 @@ export const NoisePage = () => {
   return (
     <NoiseLayout>
       {/* <Typography>lorem ipsu sndas asd asd asd as d asd as asd asd </Typography> */}
+
       {/* MAPA */}
       <MapView />
 

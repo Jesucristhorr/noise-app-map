@@ -1,4 +1,10 @@
-import { MenuOutlined, TurnedInNot } from "@mui/icons-material";
+import {
+  MenuOutlined,
+  NoiseControlOff,
+  Person,
+  Sensors,
+  TurnedInNot,
+} from "@mui/icons-material";
 import {
   Box,
   Divider,
@@ -13,7 +19,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
 
 export const SideBar = ({ drawerWidth = 240, open }) => {
@@ -42,11 +48,14 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <TurnedInNot />
+                <MapIcon color="primary" />
               </ListItemIcon>
               <Grid container>
                 {/* <ListItemText primary={"hola"} /> */}
-                <NavLink to="/" style={{ textDecoration: "none" }}>
+                <NavLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <ListItemText primary={"Mapa"} />
                 </NavLink>
               </Grid>
@@ -56,18 +65,54 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <TurnedInNot />
+                <NoiseControlOff color="primary" />
               </ListItemIcon>
               <Grid container>
                 {/* <ListItemText primary={"hola"} /> */}
-                <NavLink to="/information" style={{ textDecoration: "none" }}>
-                  <ListItemText primary={"Informacion"} />
+                <NavLink
+                  to="/information"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Niveles de ruido"} />
                 </NavLink>
               </Grid>
             </ListItemButton>
           </ListItem>
-
           {/*  */}
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <Sensors color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/manage-sensors"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Administrar Sensores"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+          {/*  */}
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <Person color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Administrar Usuarios"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     </Box>

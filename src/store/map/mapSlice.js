@@ -5,6 +5,8 @@ export const mapSlice = createSlice({
   initialState: {
     isLoading: true,
     userLocation: [],
+    isMapReady: false,
+    mapa: undefined,
   },
   reducers: {
     // type: setUserLocation  payload: [number, number]
@@ -12,8 +14,12 @@ export const mapSlice = createSlice({
       // console.log(payload);
       (state.isLoading = false), (state.userLocation = payload);
     },
+
+    setMapa: (state, { payload }) => {
+      (state.isMapReady = true), (state.mapa = payload);
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserLocation } = mapSlice.actions;
+export const { setUserLocation, setMapa } = mapSlice.actions;
