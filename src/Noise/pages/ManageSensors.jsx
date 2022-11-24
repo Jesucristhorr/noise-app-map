@@ -1,6 +1,9 @@
 import { AddLocationAlt, MenuOutlined } from "@mui/icons-material";
 import {
+  Alert,
+  AlertTitle,
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   Modal,
@@ -9,33 +12,36 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLocation } from "../../store/map/mapSlice";
+import { getUserLocation } from "../../store/map/thunks";
+import { Alerts } from "../components/Alerts";
 import { NoiseLayout } from "../layout/NoiseLayout";
 
 export const ManageSensors = () => {
+  const { isLoading, userLocation } = useSelector((state) => state.map);
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    Width: 400,
-    bgcolor: "#fff",
-    border: "1px solid ##dfe6e9",
-    borderRadius: "7px",
-    boxShadow: 24,
-    p: 4,
-  };
+
+  // alerta
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => setOpenAlert(false);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
+
+  const handleUserLocationInForm = () => {
+    dispatch(getUserLocation());
+  };
 
   return (
     <>
@@ -75,6 +81,10 @@ export const ManageSensors = () => {
               <form
                 onSubmit={handleSubmit((data) => {
                   console.log(data);
+                  // mostrar alerta
+                  reset();
+                  setOpen(false);
+                  // setOpenAlert(true);
                 })}
               >
                 <Grid container>
@@ -140,6 +150,7 @@ export const ManageSensors = () => {
                         })}
                         error={!!errors.longitude}
                         helperText={errors.longitude ? "Campo requerido" : ""}
+                        value={userLocation[0] ? userLocation[0] : ""}
                       />
                     </Grid>
 
@@ -154,17 +165,52 @@ export const ManageSensors = () => {
                         })}
                         error={!!errors.latitude}
                         helperText={errors.latitude ? "Campo requerido" : ""}
+                        value={userLocation[1] ? userLocation[1] : ""}
                       />
                     </Grid>
                     <Grid item xs={1} sx={{ mt: 2.4, mr: 2 }}>
                       <Tooltip title="Fija ubicación actual">
-                        <IconButton color="inherit" edge="start">
+                        <IconButton
+                          color="inherit"
+                          edge="start"
+                          onClick={handleUserLocationInForm}
+                        >
                           <AddLocationAlt sx={{ fontSize: 35 }} />
                         </IconButton>
                       </Tooltip>
                     </Grid>
                   </Grid>
+                  {/*  */}
 
+                  {isLoading ? (
+                    <Alert
+                      severity="info"
+                      sx={{
+                        mt: 2,
+                        width: "100%",
+                        // display: isLoading ? "inherit" : "none",
+                        // display: "none",
+                      }}
+                    >
+                      <AlertTitle>Sin coordenadas asignadas</AlertTitle>
+                      De clic al botón para tomar ubicación actual
+                    </Alert>
+                  ) : (
+                    <Alert
+                      severity="success"
+                      sx={{
+                        mt: 2,
+                        width: "100%",
+                        // display: isLoading ? "inherit" : "none",
+                        // display: "none",
+                      }}
+                    >
+                      <AlertTitle>Listo</AlertTitle>
+                      Geolocalización asignada
+                    </Alert>
+                  )}
+
+                  {/*  */}
                   <Grid
                     container
                     sx={{ mb: 2, mt: 1, justifyContent: "center" }}
@@ -186,6 +232,7 @@ export const ManageSensors = () => {
           </Modal>
         </div>
       </NoiseLayout>
+      {/* {openAlert && <Alerts alert={true} />} */}
     </>
   );
 };
