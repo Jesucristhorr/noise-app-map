@@ -7,6 +7,9 @@ export const mapSlice = createSlice({
     userLocation: [],
     isMapReady: false,
     mapa: undefined,
+    sensors: [],
+    isSaving: false,
+    messageSaved: "",
   },
   reducers: {
     // type: setUserLocation  payload: [number, number]
@@ -18,8 +21,19 @@ export const mapSlice = createSlice({
     setMapa: (state, { payload }) => {
       (state.isMapReady = true), (state.mapa = payload);
     },
+
+    savingNewSensor: (state) => {
+      state.isSaving = true;
+    },
+
+    addNewSensor: (state, action) => {
+      //mutar el obj
+      state.sensors.push(action.payload);
+      state.isSaving = false;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserLocation, setMapa } = mapSlice.actions;
+export const { setUserLocation, setMapa, savingNewSensor, addNewSensor } =
+  mapSlice.actions;

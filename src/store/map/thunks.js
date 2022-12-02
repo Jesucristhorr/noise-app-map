@@ -1,4 +1,9 @@
-import { setUserLocation, setMapa } from "./mapSlice";
+import {
+  setUserLocation,
+  setMapa,
+  savingNewSensor,
+  addNewSensor,
+} from "./mapSlice";
 
 export const getUserLocation = () => {
   return async (dispatch) => {
@@ -24,5 +29,13 @@ export const setMap = (map) => {
       alert("Ocurrio algo inesperado");
       console.log(error);
     }
+  };
+};
+
+export const startNewNote = (data) => {
+  return async (dispatch, getState) => {
+    dispatch(savingNewSensor());
+    console.log(data);
+    dispatch(addNewSensor(data));
   };
 };

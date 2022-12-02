@@ -1,4 +1,10 @@
-import { AddLocationAlt, MenuOutlined } from "@mui/icons-material";
+import {
+  AddLocationAlt,
+  DeleteOutline,
+  Edit,
+  MenuOutlined,
+  UploadOutlined,
+} from "@mui/icons-material";
 import {
   Alert,
   AlertTitle,
@@ -7,6 +13,12 @@ import {
   Grid,
   IconButton,
   Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -16,12 +28,15 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserLocation } from "../../store/map/mapSlice";
-import { getUserLocation } from "../../store/map/thunks";
+import { getUserLocation, startNewNote } from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
 import { NoiseLayout } from "../layout/NoiseLayout";
 
 export const ManageSensors = () => {
-  const { isLoading, userLocation } = useSelector((state) => state.map);
+  const { isLoading, userLocation, sensors, isSaving } = useSelector(
+    (state) => state.map
+  );
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -80,7 +95,7 @@ export const ManageSensors = () => {
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {
-                  console.log(data);
+                  dispatch(startNewNote(data));
                   // mostrar alerta
                   reset();
                   setOpen(false);
@@ -231,6 +246,45 @@ export const ManageSensors = () => {
             </Box>
           </Modal>
         </div>
+        {/* Tabla de sensores */}
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell>Sensor</TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Descripcion</TableCell>
+                <TableCell>Unidad de Medida</TableCell>
+                <TableCell>Latitud</TableCell>
+                <TableCell>Longitud</TableCell>
+                <TableCell>Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            {/* Body */}
+            <TableBody>
+              {sensors.map((sensor) => (
+                <TableRow key={sensor.nombre}>
+                  <TableCell>{sensor.nombre}</TableCell>
+                  <TableCell>{sensor.sensor}</TableCell>
+                  <TableCell>{sensor.nombre}</TableCell>
+                  <TableCell>{sensor.description}</TableCell>
+                  <TableCell>{sensor.unit}</TableCell>
+                  <TableCell>{sensor.latitude}</TableCell>
+                  <TableCell>{sensor.longitude}</TableCell>
+                  <TableCell>
+                    <IconButton>
+                      <Edit />
+                    </IconButton>
+                    <IconButton>
+                      <DeleteOutline />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </NoiseLayout>
       {/* {openAlert && <Alerts alert={true} />} */}
     </>
