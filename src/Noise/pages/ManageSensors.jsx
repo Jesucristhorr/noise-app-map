@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserLocation } from "../../store/map/mapSlice";
 import { getUserLocation, startNewNote } from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
+import { TableSensors } from "../components/TableSensors";
 import { NoiseLayout } from "../layout/NoiseLayout";
 
 export const ManageSensors = () => {
@@ -247,44 +248,7 @@ export const ManageSensors = () => {
           </Modal>
         </div>
         {/* Tabla de sensores */}
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Sensor</TableCell>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Descripcion</TableCell>
-                <TableCell>Unidad de Medida</TableCell>
-                <TableCell>Latitud</TableCell>
-                <TableCell>Longitud</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            {/* Body */}
-            <TableBody>
-              {sensors.map((sensor) => (
-                <TableRow key={sensor.nombre}>
-                  <TableCell>{sensor.nombre}</TableCell>
-                  <TableCell>{sensor.sensor}</TableCell>
-                  <TableCell>{sensor.nombre}</TableCell>
-                  <TableCell>{sensor.description}</TableCell>
-                  <TableCell>{sensor.unit}</TableCell>
-                  <TableCell>{sensor.latitude}</TableCell>
-                  <TableCell>{sensor.longitude}</TableCell>
-                  <TableCell>
-                    <IconButton>
-                      <Edit />
-                    </IconButton>
-                    <IconButton>
-                      <DeleteOutline />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <TableSensors sensors={sensors} />
       </NoiseLayout>
       {/* {openAlert && <Alerts alert={true} />} */}
     </>

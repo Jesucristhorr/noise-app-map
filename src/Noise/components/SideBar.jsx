@@ -1,4 +1,5 @@
 import {
+  InfoOutlined,
   MenuOutlined,
   NoiseControlOff,
   Person,
@@ -65,12 +66,29 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <NoiseControlOff color="primary" />
+                <InfoOutlined color="primary" />
               </ListItemIcon>
               <Grid container>
                 {/* <ListItemText primary={"hola"} /> */}
                 <NavLink
                   to="/information"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Información"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <NoiseControlOff color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/noise-leves"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <ListItemText primary={"Niveles de ruido"} />
