@@ -166,7 +166,7 @@ export const ManageSensors = () => {
                         })}
                         error={!!errors.longitude}
                         helperText={errors.longitude ? "Campo requerido" : ""}
-                        value={userLocation[0] ? userLocation[0] : ""}
+                        // value={userLocation[0] ? userLocation[0] : ""}
                       />
                     </Grid>
 
@@ -181,7 +181,7 @@ export const ManageSensors = () => {
                         })}
                         error={!!errors.latitude}
                         helperText={errors.latitude ? "Campo requerido" : ""}
-                        value={userLocation[1] ? userLocation[1] : ""}
+                        // value={userLocation[1] ? userLocation[1] : ""}
                       />
                     </Grid>
                     <Grid item xs={1} sx={{ mt: 2.4, mr: 2 }}>

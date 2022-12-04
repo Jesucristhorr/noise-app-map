@@ -6,7 +6,7 @@ import { Map, Marker, Popup } from "mapbox-gl";
 import { setMapa } from "../../store/map/mapSlice";
 
 export const MapView = () => {
-  const { isLoading, userLocation, isMapReady, mapa } = useSelector(
+  const { isLoading, userLocation, isMapReady, mapa, sensors } = useSelector(
     (state) => state.map
   );
   const dispatch = useDispatch();
@@ -34,6 +34,31 @@ export const MapView = () => {
         map.setFog({}); // Set the default atmosphere style
       });
 
+      const newMarkets = [];
+      sensors.forEach((sensor) => {
+        console.log(sensor);
+        const { longitude, latitude } = sensor;
+        const market = [longitude, latitude];
+        const myLocationPopup = new Popup().setHTML(`
+        <h4>Nueva Ubicación</h4>
+        <p>En algun punto de manta</p>
+        <p>Sensor: ${sensor.nombre}</p>
+        <p>Descripcion: ${sensor.description}</p>
+        <img style='width: 150px' src=${"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3024&q=80"} />
+
+    `);
+        const newMarket = new Marker({
+          color: "#000",
+        })
+          .setLngLat(market)
+          .setPopup(myLocationPopup)
+          .addTo(map);
+        // newMarkets.push(newMarket);
+        // console.log(newMarkets);
+      });
+      //
+      //
+      //Centro
       new Marker({
         color: "#000",
       })
