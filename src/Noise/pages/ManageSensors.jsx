@@ -52,11 +52,18 @@ export const ManageSensors = () => {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  const handleUserLocationInForm = () => {
+  useEffect(() => {
     dispatch(getUserLocation());
+    console.log("Ha cambiado el userLocation");
+  }, []);
+
+  const handleUserLocationInForm = () => {
+    setValue("longitude", userLocation[0]);
+    setValue("latitude", userLocation[1]);
   };
 
   return (

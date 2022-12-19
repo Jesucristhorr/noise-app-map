@@ -8,12 +8,20 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { Modals } from "./Modals";
+import { useState } from "react";
 
 export const TableSensors = ({ sensors }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleModalEdit = () => {
+    console.log("le dieron clic");
+    setOpen(true);
+  };
   return (
     <div>
       <TableContainer>
-        <Table sx={{ minWidth: 650 }}>
+        <Table sx={{ minWidth: 650 }} size="small">
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
@@ -38,11 +46,16 @@ export const TableSensors = ({ sensors }) => {
                 <TableCell>{sensor.latitude}</TableCell>
                 <TableCell>{sensor.longitude}</TableCell>
                 <TableCell>
-                  <IconButton>
-                    <Edit />
+                  <IconButton
+                    onClick={() => {
+                      console.log(`Agarre el sensor con ID: ${sensor.id}`);
+                      setOpen(true);
+                    }}
+                  >
+                    <Edit sx={{ color: "#f9ca24" }} />
                   </IconButton>
                   <IconButton>
-                    <DeleteOutline />
+                    <DeleteOutline sx={{ color: "#c23616" }} />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -50,6 +63,7 @@ export const TableSensors = ({ sensors }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Modals open={open} setOpen={setOpen} />
     </div>
   );
 };
