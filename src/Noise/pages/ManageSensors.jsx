@@ -121,7 +121,7 @@ export const ManageSensors = () => {
                   <CloseOutlined />
                 </IconButton>
               }
-              severity="error"
+              severity="success"
               sx={{
                 mt: 2,
                 width: "100%",

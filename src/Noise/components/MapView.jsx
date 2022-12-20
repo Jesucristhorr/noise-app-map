@@ -40,11 +40,11 @@ export const MapView = () => {
         const { longitude, latitude } = sensor;
         const market = [longitude, latitude];
         const myLocationPopup = new Popup().setHTML(`
-        <h4>Nueva Ubicación</h4>
-        <p>En algun punto de manta</p>
+        <h4>Nueva Nodo</h4>
+        <p>En algun punto de Manta</p>
         <p>Sensor: ${sensor.nombre}</p>
         <p>Descripcion: ${sensor.description}</p>
-        <img style='width: 150px' src=${"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3024&q=80"} />
+        <img style='width: 150px'; object-fit: cover;' src=${"https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c"} />
 
     `);
         const newMarket = new Marker({

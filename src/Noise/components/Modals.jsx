@@ -99,7 +99,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
               // dispatch(startNewNote(data));
               const { id } = sensor;
               const newSensor = { id, ...data };
-              console.log(newSensor);
+
               dispatch(updateSensorForm(newSensor));
               // mostrar alerta
               reset();

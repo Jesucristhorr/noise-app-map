@@ -60,7 +60,6 @@ export const TableSensors = ({ sensors }) => {
               <TableCell>
                 <IconButton
                   onClick={() => {
-                    console.log(`Agarre el sensor con ID: ${sensor.id}`);
                     setOpen(true);
                     dispatch(setActiveSensorForm(sensor));
                   }}

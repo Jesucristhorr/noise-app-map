@@ -43,6 +43,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          backgroundColor: "#fff",
         }}
       >
         <Toolbar>
@@ -64,11 +65,11 @@ export const NavBar = ({ drawerWidth = 240 }) => {
               variant="h6"
               noWrap
               component="div"
-              sx={{ color: "#fff" }}
+              sx={{ color: "#000" }}
             >
               Noise App
             </Typography>
-            <IconButton color="blanco">
+            <IconButton color="primary">
               <LogoutOutlined />
             </IconButton>
           </Grid>
