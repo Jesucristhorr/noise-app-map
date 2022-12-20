@@ -11,12 +11,16 @@ export const mapSlice = createSlice({
     sensor: null,
     isSaving: false,
     messageSaved: "",
+    messageDelete: "",
   },
   reducers: {
     // type: setUserLocation  payload: [number, number]
     setUserLocation: (state, { payload }) => {
       // console.log(payload);
-      (state.isLoading = false), (state.userLocation = payload);
+      (state.isLoading = false),
+        (state.userLocation = payload),
+        (state.messageDelete = ""),
+        (state.messageSaved = "");
     },
 
     setMapa: (state, { payload }) => {
@@ -31,11 +35,13 @@ export const mapSlice = createSlice({
       //mutar el obj
       state.sensors.push(action.payload);
       state.isSaving = false;
+      state.messageSaved = `Sensor ${action.payload.sensor} agregado correctamente`;
     },
 
     // sensor individual
     setActiveSensor: (state, { payload }) => {
       state.sensor = payload;
+      state.messageSaved = "";
     },
 
     updateSensor: (state, action) => {
@@ -45,7 +51,16 @@ export const mapSlice = createSlice({
         }
         return sensor;
       });
-      state.messageSaved = `${action.payload.nombre}, actualizada correctamente`;
+      state.messageSaved = `Sensor ${action.payload.sensor}, actualizado correctamente`;
+    },
+
+    // Eliminar sensor
+    deleteSensorById: (state, action) => {
+      state.sensor = null;
+      state.sensors = state.sensors.filter(
+        (sensor) => sensor.id !== action.payload
+      );
+      state.messageDelete = `Sensor con ID ${action.payload} borrado correctamente`;
     },
   },
 });
@@ -58,4 +73,5 @@ export const {
   addNewSensor,
   setActiveSensor,
   updateSensor,
+  deleteSensorById,
 } = mapSlice.actions;

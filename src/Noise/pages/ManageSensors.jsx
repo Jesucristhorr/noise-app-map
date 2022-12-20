@@ -1,5 +1,7 @@
 import {
   AddLocationAlt,
+  CloseOutlined,
+  ClosedCaption,
   DeleteOutline,
   Edit,
   MenuOutlined,
@@ -10,6 +12,7 @@ import {
   AlertTitle,
   Button,
   CircularProgress,
+  Collapse,
   Grid,
   IconButton,
   Modal,
@@ -32,11 +35,18 @@ import { getUserLocation, startNewNote } from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
 import { TableSensors } from "../components/TableSensors";
 import { NoiseLayout } from "../layout/NoiseLayout";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
 export const ManageSensors = () => {
-  const { isLoading, userLocation, sensors, isSaving } = useSelector(
-    (state) => state.map
-  );
+  const {
+    isLoading,
+    userLocation,
+    sensors,
+    isSaving,
+    messageSaved,
+    messageDelete,
+  } = useSelector((state) => state.map);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -44,8 +54,9 @@ export const ManageSensors = () => {
   const handleClose = () => setOpen(false);
 
   // alerta
-  const [openAlert, setOpenAlert] = useState(false);
   const handleCloseAlert = () => setOpenAlert(false);
+  const [openAlert, setOpenAlert] = useState(isSaving);
+  const [openAlertDelete, setOpenAlertDelete] = useState(true);
 
   const {
     register,
@@ -55,11 +66,6 @@ export const ManageSensors = () => {
     setValue,
     formState: { errors },
   } = useForm();
-
-  useEffect(() => {
-    dispatch(getUserLocation());
-    console.log("Ha cambiado el userLocation");
-  }, []);
 
   const handleUserLocationInForm = () => {
     setValue("longitude", userLocation[0]);
@@ -72,6 +78,65 @@ export const ManageSensors = () => {
         <Button variant="contained" onClick={handleOpen} sx={{ color: "#fff" }}>
           Agregar Sensor
         </Button>
+
+        <Collapse in={openAlert}>
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpenAlert(false);
+                }}
+              >
+                <CloseOutlined />
+              </IconButton>
+            }
+            severity="success"
+            sx={{
+              mt: 2,
+              width: "100%",
+              // display: isSaving ? "inherit" : "none",
+              // display: "none",
+            }}
+          >
+            <AlertTitle>Guardado</AlertTitle>
+            {messageSaved}
+          </Alert>
+        </Collapse>
+
+        {!!messageDelete ? (
+          <Collapse in={openAlertDelete}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlertDelete(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="error"
+              sx={{
+                mt: 2,
+                width: "100%",
+                // display: isSaving ? "inherit" : "none",
+                // display: "none",
+              }}
+            >
+              <AlertTitle>Eliminado</AlertTitle>
+              {messageDelete}
+            </Alert>
+          </Collapse>
+        ) : (
+          ""
+        )}
+
         <div>
           <Modal
             open={open}
@@ -104,10 +169,9 @@ export const ManageSensors = () => {
               <form
                 onSubmit={handleSubmit((data) => {
                   dispatch(startNewNote(data));
-                  // mostrar alerta
                   reset();
                   setOpen(false);
-                  // setOpenAlert(true);
+                  setOpenAlert(true);
                 })}
               >
                 <Grid container>
@@ -204,34 +268,6 @@ export const ManageSensors = () => {
                     </Grid>
                   </Grid>
                   {/*  */}
-
-                  {isLoading ? (
-                    <Alert
-                      severity="info"
-                      sx={{
-                        mt: 2,
-                        width: "100%",
-                        // display: isLoading ? "inherit" : "none",
-                        // display: "none",
-                      }}
-                    >
-                      <AlertTitle>Sin coordenadas asignadas</AlertTitle>
-                      De clic al botón para tomar ubicación actual
-                    </Alert>
-                  ) : (
-                    <Alert
-                      severity="success"
-                      sx={{
-                        mt: 2,
-                        width: "100%",
-                        // display: isLoading ? "inherit" : "none",
-                        // display: "none",
-                      }}
-                    >
-                      <AlertTitle>Listo</AlertTitle>
-                      Geolocalización asignada
-                    </Alert>
-                  )}
 
                   {/*  */}
                   <Grid

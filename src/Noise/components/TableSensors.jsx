@@ -1,6 +1,8 @@
 import { DeleteOutline, Edit } from "@mui/icons-material";
 import {
+  Box,
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -11,7 +13,10 @@ import {
 import { Modals } from "./Modals";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveSensorForm } from "../../store/map/thunks";
+import {
+  setActiveSensorForm,
+  startDeletingSensor,
+} from "../../store/map/thunks";
 
 export const TableSensors = ({ sensors }) => {
   const [open, setOpen] = useState(false);
@@ -24,52 +29,58 @@ export const TableSensors = ({ sensors }) => {
     setOpen(true);
   };
   return (
-    <div>
-      <TableContainer>
-        <Table sx={{ minWidth: 650 }} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Sensor</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Descripcion</TableCell>
-              <TableCell>Unidad de Medida</TableCell>
-              <TableCell>Latitud</TableCell>
-              <TableCell>Longitud</TableCell>
-              <TableCell>Acciones</TableCell>
+    <TableContainer
+      component={Paper}
+      sx={{ mt: "24px", width: { md: "100%", xs: "400px" } }}
+    >
+      <Table sx={{ minWidth: 650 }} size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Sensor</TableCell>
+            <TableCell>Nombre</TableCell>
+            <TableCell>Descripcion</TableCell>
+            <TableCell>Unidad de Medida</TableCell>
+            <TableCell>Latitud</TableCell>
+            <TableCell>Longitud</TableCell>
+            <TableCell>Acciones</TableCell>
+          </TableRow>
+        </TableHead>
+        {/* Body */}
+        <TableBody>
+          {sensors.map((sensor) => (
+            <TableRow key={sensor.id}>
+              <TableCell>{sensor.id}</TableCell>
+              <TableCell>{sensor.sensor}</TableCell>
+              <TableCell>{sensor.nombre}</TableCell>
+              <TableCell>{sensor.description}</TableCell>
+              <TableCell>{sensor.unit}</TableCell>
+              <TableCell>{sensor.latitude}</TableCell>
+              <TableCell>{sensor.longitude}</TableCell>
+              <TableCell>
+                <IconButton
+                  onClick={() => {
+                    console.log(`Agarre el sensor con ID: ${sensor.id}`);
+                    setOpen(true);
+                    dispatch(setActiveSensorForm(sensor));
+                  }}
+                >
+                  <Edit sx={{ color: "#f9ca24" }} />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    dispatch(setActiveSensorForm(sensor));
+                    dispatch(startDeletingSensor());
+                  }}
+                >
+                  <DeleteOutline sx={{ color: "#c23616" }} />
+                </IconButton>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          {/* Body */}
-          <TableBody>
-            {sensors.map((sensor) => (
-              <TableRow key={sensor.id}>
-                <TableCell>{sensor.id}</TableCell>
-                <TableCell>{sensor.sensor}</TableCell>
-                <TableCell>{sensor.nombre}</TableCell>
-                <TableCell>{sensor.description}</TableCell>
-                <TableCell>{sensor.unit}</TableCell>
-                <TableCell>{sensor.latitude}</TableCell>
-                <TableCell>{sensor.longitude}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      console.log(`Agarre el sensor con ID: ${sensor.id}`);
-                      setOpen(true);
-                      dispatch(setActiveSensorForm(sensor));
-                    }}
-                  >
-                    <Edit sx={{ color: "#f9ca24" }} />
-                  </IconButton>
-                  <IconButton>
-                    <DeleteOutline sx={{ color: "#c23616" }} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          ))}
+        </TableBody>
+      </Table>
       <Modals open={open} setOpen={setOpen} sensor={sensor} />
-    </div>
+    </TableContainer>
   );
 };

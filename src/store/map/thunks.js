@@ -5,6 +5,7 @@ import {
   addNewSensor,
   setActiveSensor,
   updateSensor,
+  deleteSensorById,
 } from "./mapSlice";
 
 export const getUserLocation = () => {
@@ -52,5 +53,15 @@ export const setActiveSensorForm = (data) => {
 export const updateSensorForm = (sensor) => {
   return async (dispatch) => {
     dispatch(updateSensor(sensor));
+  };
+};
+
+export const startDeletingSensor = () => {
+  return async (dispatch, getState) => {
+    const { uid } = getState().auth;
+    const { sensor } = getState().map;
+    // todo borrar sensor por usuario autenticado
+
+    dispatch(deleteSensorById(sensor.id));
   };
 };

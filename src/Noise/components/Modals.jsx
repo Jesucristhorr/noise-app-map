@@ -17,9 +17,13 @@ import {
   startNewNote,
   updateSensorForm,
 } from "../../store/map/thunks";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
 export const Modals = ({ open, setOpen, sensor }) => {
-  const { userLocation } = useSelector((state) => state.map);
+  const { userLocation, messageDelete, messageSaved } = useSelector(
+    (state) => state.map
+  );
 
   const dispatch = useDispatch();
 
@@ -54,6 +58,12 @@ export const Modals = ({ open, setOpen, sensor }) => {
     setValue("latitude", userLocation[1]);
   };
 
+  // useEffect(() => {
+  //   if (messageDelete.length > 0) {
+  //     Swal.fire("Sensor Borrado", messageDelete, "success");
+  //   }
+  // }, [messageDelete]);
+
   return (
     <>
       <Modal
@@ -82,12 +92,15 @@ export const Modals = ({ open, setOpen, sensor }) => {
             component="h2"
             color="primary"
           >
-            Ingresar Nuevo Sensor
+            Actualizar Sensor
           </Typography>
           <form
             onSubmit={handleSubmit((data) => {
               // dispatch(startNewNote(data));
-              dispatch(updateSensorForm(sensor));
+              const { id } = sensor;
+              const newSensor = { id, ...data };
+              console.log(newSensor);
+              dispatch(updateSensorForm(newSensor));
               // mostrar alerta
               reset();
               setOpen(false);

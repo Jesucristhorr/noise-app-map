@@ -51,23 +51,92 @@ export const MobileNav = ({ drawerWidth, toggle }) => {
         </Toolbar>
         <Divider />
         <List>
-          {["Enero", "Febrero", "Marzo", "Abril"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                  <ListItemText primary={text} />
-                  <ListItemText
-                    secondary={
-                      "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico "
-                    }
-                  />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
-          ))}
+          {/*  */}
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <MapIcon color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Mapa"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <InfoOutlined color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/information"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Información"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <NoiseControlOff color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/noise-leves"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Niveles de ruido"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+          {/*  */}
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <Sensors color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/manage-sensors"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Administrar Sensores"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
+          {/*  */}
+
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <Person color="primary" />
+              </ListItemIcon>
+              <Grid container>
+                {/* <ListItemText primary={"hola"} /> */}
+                <NavLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <ListItemText primary={"Administrar Usuarios"} />
+                </NavLink>
+              </Grid>
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     </Box>
