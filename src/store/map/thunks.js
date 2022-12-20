@@ -3,6 +3,8 @@ import {
   setMapa,
   savingNewSensor,
   addNewSensor,
+  setActiveSensor,
+  updateSensor,
 } from "./mapSlice";
 
 export const getUserLocation = () => {
@@ -36,7 +38,19 @@ export const startNewNote = (data) => {
   return async (dispatch, getState) => {
     dispatch(savingNewSensor());
     data.id = new Date().getTime();
-    console.log(data);
+    // console.log(data);
     dispatch(addNewSensor(data));
+  };
+};
+
+export const setActiveSensorForm = (data) => {
+  return async (dispatch) => {
+    dispatch(setActiveSensor(data));
+  };
+};
+
+export const updateSensorForm = (sensor) => {
+  return async (dispatch) => {
+    dispatch(updateSensor(sensor));
   };
 };

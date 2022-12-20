@@ -10,9 +10,14 @@ import {
 } from "@mui/material";
 import { Modals } from "./Modals";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveSensorForm } from "../../store/map/thunks";
 
 export const TableSensors = ({ sensors }) => {
   const [open, setOpen] = useState(false);
+
+  const { sensor } = useSelector((state) => state.map);
+  const dispatch = useDispatch();
 
   const handleModalEdit = () => {
     console.log("le dieron clic");
@@ -50,6 +55,7 @@ export const TableSensors = ({ sensors }) => {
                     onClick={() => {
                       console.log(`Agarre el sensor con ID: ${sensor.id}`);
                       setOpen(true);
+                      dispatch(setActiveSensorForm(sensor));
                     }}
                   >
                     <Edit sx={{ color: "#f9ca24" }} />
@@ -63,7 +69,7 @@ export const TableSensors = ({ sensors }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Modals open={open} setOpen={setOpen} />
+      <Modals open={open} setOpen={setOpen} sensor={sensor} />
     </div>
   );
 };

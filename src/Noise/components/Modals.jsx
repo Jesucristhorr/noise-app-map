@@ -12,14 +12,17 @@ import {
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserLocation, startNewNote } from "../../store/map/thunks";
+import {
+  getUserLocation,
+  startNewNote,
+  updateSensorForm,
+} from "../../store/map/thunks";
 
-export const Modals = ({ open, setOpen }) => {
-  const { isLoading, userLocation, sensors, isSaving } = useSelector(
-    (state) => state.map
-  );
+export const Modals = ({ open, setOpen, sensor }) => {
+  const { userLocation } = useSelector((state) => state.map);
 
   const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -35,6 +38,16 @@ export const Modals = ({ open, setOpen }) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // setear valores
+  if (!!sensor) {
+    setValue("sensor", sensor.sensor ? sensor.sensor : "");
+    setValue("nombre", sensor.nombre ? sensor.nombre : "");
+    setValue("description", sensor.description ? sensor.description : "");
+    setValue("unit", sensor.unit ? sensor.unit : "");
+    setValue("longitude", sensor.longitude ? sensor.longitude : "");
+    setValue("latitude", sensor.latitude ? sensor.latitude : "");
+  }
 
   const handleUserLocationInForm = () => {
     setValue("longitude", userLocation[0]);
@@ -73,7 +86,8 @@ export const Modals = ({ open, setOpen }) => {
           </Typography>
           <form
             onSubmit={handleSubmit((data) => {
-              dispatch(startNewNote(data));
+              // dispatch(startNewNote(data));
+              dispatch(updateSensorForm(sensor));
               // mostrar alerta
               reset();
               setOpen(false);
@@ -143,7 +157,6 @@ export const Modals = ({ open, setOpen }) => {
                     })}
                     error={!!errors.longitude}
                     helperText={errors.longitude ? "Campo requerido" : ""}
-                    // value={userLocation[0] ? userLocation[0] : ""}
                   />
                 </Grid>
 
@@ -158,7 +171,6 @@ export const Modals = ({ open, setOpen }) => {
                     })}
                     error={!!errors.latitude}
                     helperText={errors.latitude ? "Campo requerido" : ""}
-                    // value={userLocation[1] ? userLocation[1] : ""}
                   />
                 </Grid>
                 <Grid item xs={1} sx={{ mt: 2.4, mr: 2 }}>

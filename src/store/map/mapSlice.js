@@ -8,6 +8,7 @@ export const mapSlice = createSlice({
     isMapReady: false,
     mapa: undefined,
     sensors: [],
+    sensor: null,
     isSaving: false,
     messageSaved: "",
   },
@@ -31,9 +32,30 @@ export const mapSlice = createSlice({
       state.sensors.push(action.payload);
       state.isSaving = false;
     },
+
+    // sensor individual
+    setActiveSensor: (state, { payload }) => {
+      state.sensor = payload;
+    },
+
+    updateSensor: (state, action) => {
+      state.sensors = state.sensors.map((sensor) => {
+        if (sensor.id === action.payload.id) {
+          return action.payload;
+        }
+        return sensor;
+      });
+      state.messageSaved = `${action.payload.nombre}, actualizada correctamente`;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserLocation, setMapa, savingNewSensor, addNewSensor } =
-  mapSlice.actions;
+export const {
+  setUserLocation,
+  setMapa,
+  savingNewSensor,
+  addNewSensor,
+  setActiveSensor,
+  updateSensor,
+} = mapSlice.actions;
