@@ -53,7 +53,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             edge="start"
             sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <MenuOutlined color="blanco" />
+            <MenuOutlined  sx={{ color: "#000" }} />
           </IconButton>
           <Grid
             container
@@ -70,7 +70,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
               Noise App
             </Typography>
             <IconButton color="primary">
-              <LogoutOutlined />
+              <LogoutOutlined  />
             </IconButton>
           </Grid>
         </Toolbar>
