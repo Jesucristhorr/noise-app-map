@@ -9,6 +9,8 @@ import {
 } from "@mui/icons-material";
 import {
   AppBar,
+  Avatar,
+  Box,
   Divider,
   Drawer,
   Grid,
@@ -25,6 +27,7 @@ import { useState } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
+import { fontSize } from "@mui/system";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const [open, setOpen] = useState(false);
@@ -53,7 +56,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             edge="start"
             sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <MenuOutlined  sx={{ color: "#000" }} />
+            <MenuOutlined sx={{ color: "primary" }} color="primary" />
           </IconButton>
           <Grid
             container
@@ -61,17 +64,32 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ color: "#000" }}
-            >
-              Noise App
-            </Typography>
-            <IconButton color="primary">
-              <LogoutOutlined  />
-            </IconButton>
+            {/*  */}
+            <Grid container>
+              <Grid display={{ xs: "none", md: "block" }}>
+                <img
+                  src="https://ik.imagekit.io/hpmztn0eqra/LOGO-ULEAM-HORIZONTAL__2__FhP2OS__w.png?ik-sdk-version=javascript-1.4.3&updatedAt=1609347141336"
+                  style={{ width: "150px" }}
+                />
+              </Grid>
+              <Grid>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ color: "#000", fontWeight: "bold" }}
+                >
+                  Facultad de Ciencias Informáticas
+                </Typography>
+                <Typography sx={{ color: "gray", fontSize: "12px" }}>
+                  Medición de Ruido Ambiental
+                </Typography>
+              </Grid>
+            </Grid>
+            {/*  */}
+            {/* <IconButton color="primary">
+              <LogoutOutlined />
+            </IconButton> */}
           </Grid>
         </Toolbar>
       </AppBar>
@@ -85,19 +103,36 @@ export const NavBar = ({ drawerWidth = 240 }) => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Jennifer Intriago
-          </Typography>
-          {/*  */}
-          <IconButton
-            edge="end"
-            onClick={handleDrawerClose}
-            sx={{ color: "#17A9BF" }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
           >
-            <ArrowBackIosIcon />
-          </IconButton>
-          {/*  */}
+            <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>JI</Avatar>
+            <Typography variant="p" noWrap component="div">
+              Jennifer Intriago
+            </Typography>
+            <IconButton
+              edge="end"
+              onClick={handleDrawerClose}
+              sx={{ color: "#17A9BF" }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+          </Box>
         </Toolbar>
+        <Box sx={{ margin: "0 auto" }}>
+          <NavLink
+            to="/auth/login"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Typography sx={{ fontSize: "14px", color: "gray" }}>
+              Cerrar Sesión
+            </Typography>
+          </NavLink>
+        </Box>
         <Divider />
         <List>
           {/*  */}

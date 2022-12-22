@@ -7,6 +7,7 @@ import {
   TurnedInNot,
 } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Divider,
   Drawer,
@@ -39,10 +40,29 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Jennifer Intriago
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>JI</Avatar>
+            <Typography variant="p" noWrap component="div">
+              Jennifer Intriago
+            </Typography>
+          </Box>
         </Toolbar>
+        <Box sx={{ margin: "0 auto" }}>
+          <NavLink
+            to="/auth/login"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Typography sx={{ fontSize: "14px", color: "gray" }}>
+              Cerrar Sesión
+            </Typography>
+          </NavLink>
+        </Box>
         <Divider />
         <List>
           {/*  */}
