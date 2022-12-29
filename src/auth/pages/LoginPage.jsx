@@ -6,6 +6,7 @@ import { Link as RouterLink } from "react-router-dom";
 import {
   checkingAuthentication,
   startGoogleSignIn,
+  startLoginWithEmailPassword,
 } from "../../store/auth/thunks";
 import { AuthLayout } from "../layout/AuthLayout";
 
@@ -32,6 +33,7 @@ export const LoginPage = () => {
         onSubmit={handleSubmit((data) => {
           console.log(data);
           dispatch(checkingAuthentication(data));
+          dispatch(startLoginWithEmailPassword(data));
         })}
       >
         <Grid container>

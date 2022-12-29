@@ -1,12 +1,26 @@
 import { Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { Link as RouterLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { startCreatingUserWithEmailPassword } from "../../store/auth";
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch();
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    dispatch(
+      startCreatingUserWithEmailPassword({
+        email: "jennifergabriela52@gmail.com",
+        password: "123456789",
+        displayName: "Jennifer Intriago",
+      })
+    );
+  };
   return (
     <>
       <AuthLayout title="Register">
-        <form>
+        <form onSubmit={onSubmit}>
           <Grid container>
             <Grid item xs={12} sx={{ mt: 2 }}>
               <TextField
