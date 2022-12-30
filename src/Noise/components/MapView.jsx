@@ -4,6 +4,7 @@ import { getUserLocation, setMap } from "../../store/map/thunks";
 import { Loading } from "./Loading";
 import { Map, Marker, Popup } from "mapbox-gl";
 import { setMapa } from "../../store/map/mapSlice";
+import { Typography } from "@mui/material";
 
 export const MapView = () => {
   const { isLoading, userLocation, isMapReady, mapa, sensors } = useSelector(
@@ -26,8 +27,8 @@ export const MapView = () => {
       // dispatch(setMap(map));
 
       const myLocationPopup = new Popup().setHTML(`
-        <h4>Aqui Estoy</h4>
-        <p>En algun punto de Manta</p>
+        <h4>Ubicación Actual</h4>
+        
     `);
 
       map.on("style.load", () => {
@@ -39,16 +40,20 @@ export const MapView = () => {
         console.log(sensor);
         const { longitude, latitude } = sensor;
         const market = [longitude, latitude];
-        const myLocationPopup = new Popup().setHTML(`
-        <h4>Nueva Nodo</h4>
-        <p>En algun punto de Manta</p>
-        <p>Sensor: ${sensor.nombre}</p>
-        <p>Descripcion: ${sensor.description}</p>
-        <img style='width: 150px'; object-fit: cover;' src=${"https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c"} />
+        const myLocationPopup = new Popup().setHTML(
+          `
+        <h3>Sensor ${sensor.sensor}</h3>
+        <p><strong>Sensor</strong>: ${sensor.nombre}</p>
+        <p><strong>Descripcion:</strong> ${sensor.description}</p>
+        <p><strong>dB:</strong> 75dB (umbral de dolor)</p>
+        <div style='display: flex; justify-content: center;'>
+          <img style='width: 100px'; object-fit: cover; margin: 0 auto:' src=${"https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c"} />
+        </div>
 
-    `);
+        `
+        );
         const newMarket = new Marker({
-          color: "#000",
+          color: "#29AFC3",
         })
           .setLngLat(market)
           .setPopup(myLocationPopup)
@@ -60,7 +65,7 @@ export const MapView = () => {
       //
       //Centro
       new Marker({
-        color: "#000",
+        color: "#29AFC3",
       })
         .setLngLat(userLocation)
         .setPopup(myLocationPopup)

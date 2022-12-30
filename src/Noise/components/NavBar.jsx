@@ -28,9 +28,12 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
 import { fontSize } from "@mui/system";
+import { useDispatch } from "react-redux";
+import { startLogout } from "../../store/auth";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -39,6 +42,11 @@ export const NavBar = ({ drawerWidth = 240 }) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const onLogout = () => {
+    dispatch(startLogout());
+  };
+
   return (
     <>
       <AppBar
@@ -124,14 +132,21 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           </Box>
         </Toolbar>
         <Box sx={{ margin: "0 auto" }}>
-          <NavLink
+          <IconButton onClick={onLogout}>
+            <LogoutOutlined color="inherit" />
+            <Typography sx={{ fontSize: "14px", color: "gray" }}>
+              Cerrar Sesión
+            </Typography>
+          </IconButton>
+
+          {/* <NavLink
             to="/auth/login"
             style={{ textDecoration: "none", color: "black" }}
           >
             <Typography sx={{ fontSize: "14px", color: "gray" }}>
               Cerrar Sesión
             </Typography>
-          </NavLink>
+          </NavLink> */}
         </Box>
         <Divider />
         <List>

@@ -1,5 +1,6 @@
 import {
   InfoOutlined,
+  LogoutOutlined,
   MenuOutlined,
   NoiseControlOff,
   Person,
@@ -23,8 +24,14 @@ import {
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { startLogout } from "../../store/auth";
 
 export const SideBar = ({ drawerWidth = 240, open }) => {
+  const dispatch = useDispatch();
+  const onLogout = () => {
+    dispatch(startLogout());
+  };
   return (
     <Box
       component="nav"
@@ -54,14 +61,20 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           </Box>
         </Toolbar>
         <Box sx={{ margin: "0 auto" }}>
-          <NavLink
+          <IconButton onClick={onLogout}>
+            <LogoutOutlined color="inherit" />
+            <Typography sx={{ fontSize: "14px", color: "gray" }}>
+              Cerrar Sesión
+            </Typography>
+          </IconButton>
+          {/* <NavLink
             to="/auth/login"
             style={{ textDecoration: "none", color: "black" }}
           >
             <Typography sx={{ fontSize: "14px", color: "gray" }}>
               Cerrar Sesión
             </Typography>
-          </NavLink>
+          </NavLink> */}
         </Box>
         <Divider />
         <List>

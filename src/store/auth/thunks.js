@@ -54,3 +54,10 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
     dispatch(login(result));
   };
 };
+
+export const startLogout = () => {
+  return async (dispatch) => {
+    // manadamos a llamar el logout desde el backend
+    dispatch(logout({ errorMessage: null }));
+  };
+};
