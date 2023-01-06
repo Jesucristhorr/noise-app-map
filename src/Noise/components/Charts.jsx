@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { BarChart } from "./BarChart";
 import { useState } from "react";
 import { width } from "@mui/system";
+import { LineChart } from "./LineChart";
 
 const dataset = [
   {
@@ -44,6 +45,8 @@ export const Charts = () => {
         label: "Users Gained",
         data: dataset.map((data) => data.userGain),
         backgroundColor: ["#74b9ff", "#dfe6e9"],
+        borderColor: "black",
+        borderWidth: 2,
       },
     ],
   });
@@ -53,12 +56,14 @@ export const Charts = () => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           alignItems: "center",
-          width: "800px",
+          width: { sm: "800px", xs: "400px" },
+          margin: "0 auto",
         }}
       >
         <BarChart chartData={userData} />
+        <LineChart chartData={userData} />
       </Box>
     </>
   );
