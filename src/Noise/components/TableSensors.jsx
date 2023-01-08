@@ -33,7 +33,7 @@ export const TableSensors = ({ sensors }) => {
   return (
     <TableContainer
       component={Paper}
-      sx={{ mt: "24px", width: { md: "100%", xs: "400px" } }}
+      sx={{ mt: "24px", width: { md: "100%", xs: "340px" } }}
     >
       <Table sx={{ minWidth: 650 }} size="small">
         <TableHead>
@@ -85,8 +85,8 @@ export const TableSensors = ({ sensors }) => {
                       if (result.isConfirmed) {
                         dispatch(startDeletingSensor());
                         Swal.fire(
-                          "Deleted!",
-                          "Your file has been deleted.",
+                          "Borrado!",
+                          "Este Nodo ha sido eliminado",
                           "success"
                         );
                       }

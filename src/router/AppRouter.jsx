@@ -14,19 +14,19 @@ export const AppRouter = () => {
   }
   return (
     <Routes>
-      {status === "authenticated" ? (
+      {/* {status === "authenticated" ? (
         <Route path="/*" element={<NoiseRoutes />} />
       ) : (
         <Route path="/auth/*" element={<AuthRoutes />} />
-      )}
+      )} */}
 
-      <Route path="/*" element={<Navigate to="/auth/login" />} />
       {/* Login y registro */}
-      {/* <Route path="/auth/*" element={<AuthRoutes />} /> */}
+      <Route path="/auth/*" element={<AuthRoutes />} />
 
       {/*  Aplicacion */}
-      {/* <Route path="/*" element={<NoiseRoutes />} /> */}
+      <Route path="/*" element={<NoiseRoutes />} />
 
+      <Route path="/*" element={<Navigate to="/auth/login" />} />
       <Route />
     </Routes>
   );

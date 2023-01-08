@@ -24,14 +24,19 @@ import {
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../store/auth";
+import { useCheckAuth } from "../../hooks/useCheckAuth";
 
 export const SideBar = ({ drawerWidth = 240, open }) => {
+  const { displayName } = useSelector((state) => state.auth);
+
+  const { status } = useCheckAuth();
   const dispatch = useDispatch();
   const onLogout = () => {
     dispatch(startLogout());
   };
+
   return (
     <Box
       component="nav"
@@ -47,26 +52,57 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
         }}
       >
         <Toolbar>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>JI</Avatar>
-            <Typography variant="p" noWrap component="div">
-              Jennifer Intriago
-            </Typography>
-          </Box>
+          {status === "authenticated" ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>
+                JI
+              </Avatar>
+              <Typography variant="p" noWrap component="div">
+                {displayName}
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>
+                I
+              </Avatar>
+              <Typography variant="p" noWrap component="div">
+                Invitado
+              </Typography>
+            </Box>
+          )}
         </Toolbar>
         <Box sx={{ margin: "0 auto" }}>
-          <IconButton onClick={onLogout}>
-            <LogoutOutlined color="inherit" />
-            <Typography sx={{ fontSize: "14px", color: "gray" }}>
-              Cerrar Sesión
-            </Typography>
-          </IconButton>
+          {status === "authenticated" ? (
+            <IconButton onClick={onLogout}>
+              <LogoutOutlined color="inherit" />
+              <Typography sx={{ fontSize: "14px", color: "gray" }}>
+                Cerrar Sesión
+              </Typography>
+            </IconButton>
+          ) : (
+            <NavLink
+              to="/auth/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Typography sx={{ fontSize: "14px", color: "gray" }}>
+                Iniciar Sesión
+              </Typography>
+            </NavLink>
+          )}
+
           {/* <NavLink
             to="/auth/login"
             style={{ textDecoration: "none", color: "black" }}
@@ -130,31 +166,36 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
             </ListItemButton>
           </ListItem>
           {/*  */}
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Sensors color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/manage-sensors"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Administrar Sensores"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
+
+          {status === "authenticated" ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Sensors color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <NavLink
+                    to="/manage-sensors"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Administrar Sensores"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
+
           {/*  */}
 
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <Person color="primary" />
               </ListItemIcon>
               <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
                 <NavLink
                   to="/"
                   style={{ textDecoration: "none", color: "black" }}
@@ -163,7 +204,7 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
                 </NavLink>
               </Grid>
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
     </Box>

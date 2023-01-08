@@ -1,12 +1,15 @@
 import { Search } from "@mui/icons-material";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Charts } from "../components/Charts";
 import { NoiseLayout } from "../layout/NoiseLayout";
+import { useSelector } from "react-redux";
 
 export const NoiseLeves = () => {
+  const { sensors } = useSelector((state) => state.map);
+
   const {
     register,
     handleSubmit,
@@ -50,10 +53,18 @@ export const NoiseLeves = () => {
             <TextField
               fullWidth
               label="Lugar"
+              select
+              defaultValue=""
               id="place"
               sx={{ width: "300px" }}
               {...register("place")}
-            />
+            >
+              {sensors.map((option) => (
+                <MenuItem key={option.sensor} value={option.place}>
+                  {option.place}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item>
             <Button variant="contained" sx={{ color: "#fff" }} type="submit">

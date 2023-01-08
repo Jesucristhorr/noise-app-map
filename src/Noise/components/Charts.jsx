@@ -52,14 +52,14 @@ export const Charts = () => {
   });
   return (
     <>
-      <Typography variant="h6">Este apartado es para graficos</Typography>
+      {/* <Typography variant="h6">Este apartado es para graficos</Typography> */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          width: { sm: "800px", xs: "400px" },
-          margin: "0 auto",
+          width: { sm: "900px", xs: "343px" },
+          margin: "70px auto",
         }}
       >
         <BarChart chartData={userData} />

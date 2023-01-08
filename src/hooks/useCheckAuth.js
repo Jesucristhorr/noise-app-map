@@ -19,6 +19,7 @@ export const useCheckAuth = () => {
       displayName: "Jennifer Intriago",
       photoUrl: "",
     };
+
     dispatch(login(user));
   }, []);
 

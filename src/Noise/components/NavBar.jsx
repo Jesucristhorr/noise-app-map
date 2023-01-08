@@ -220,13 +220,12 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           </ListItem>
           {/*  */}
 
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <Person color="primary" />
               </ListItemIcon>
               <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
                 <NavLink
                   to="/"
                   style={{ textDecoration: "none", color: "black" }}
@@ -235,7 +234,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
                 </NavLink>
               </Grid>
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
     </>

@@ -59,8 +59,11 @@ export const InformationNoisePage = () => {
         Escala de Ruido recomendado por la OMS
       </Typography>
       {/* TABLA DE NIVELES DE RUIDO POR OMS */}
-      <TableContainer>
-        <Table sx={{ minWidth: 650, width: "85%", sm: "", margin: "0 auto" }}>
+      <TableContainer sx={{ mt: "24px", width: { md: "100%", xs: "340px" } }}>
+        <Table
+          sx={{ minWidth: 600, width: "85%", sm: "", margin: "0 auto" }}
+          size="small"
+        >
           <TableHead>
             <TableRow>
               <TableCell sx={{ width: "170px" }}>

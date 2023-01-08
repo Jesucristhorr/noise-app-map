@@ -105,7 +105,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
             borderRadius: "7px",
             boxShadow: 24,
             p: 4,
-            width: { xs: "350px", md: "700px" },
+            width: { xs: "350px", md: "700px", lg: "900px" },
           }}
         >
           <Typography

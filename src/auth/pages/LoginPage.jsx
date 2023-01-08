@@ -68,25 +68,29 @@ export const LoginPage = () => {
             />
           </Grid>
 
-          <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ mb: 2, mt: 1, justifyContent: "center" }}
+          >
             <Grid item xs={12} sm={6}>
               <Button variant="contained" fullWidth type="submit">
                 <Typography>Login</Typography>
               </Button>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <Button variant="contained" fullWidth onClick={onGoogleSignIn}>
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>
-            </Grid>
+            </Grid> */}
           </Grid>
 
-          <Grid container direction="row" justifyContent="end">
+          {/* <Grid container direction="row" justifyContent="end">
             <Link component={RouterLink} color="inherit" to="/auth/register">
               Crear una cuenta
             </Link>
-          </Grid>
+          </Grid> */}
         </Grid>
       </form>
     </AuthLayout>
