@@ -49,7 +49,7 @@ export const MapView = () => {
         </div>
         <p><strong>Sensor</strong>: ${sensor.nombre}</p>
         <p><strong>Descripcion:</strong> ${sensor.description}</p>
-        <p><strong>Lugar:</strong> Sensor ubicado en ${userLocation}</p>
+        <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.place}</p>
 
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: #a29bfe; border-radius: 50%; display: flex; align-items: center;'>

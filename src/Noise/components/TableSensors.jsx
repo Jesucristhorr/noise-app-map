@@ -17,6 +17,8 @@ import {
   setActiveSensorForm,
   startDeletingSensor,
 } from "../../store/map/thunks";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
 export const TableSensors = ({ sensors }) => {
   const [open, setOpen] = useState(false);
@@ -41,6 +43,7 @@ export const TableSensors = ({ sensors }) => {
             <TableCell>Nombre</TableCell>
             <TableCell>Descripcion</TableCell>
             <TableCell>Unidad de Medida</TableCell>
+            <TableCell>Lugar</TableCell>
             <TableCell>Latitud</TableCell>
             <TableCell>Longitud</TableCell>
             <TableCell>Acciones</TableCell>
@@ -55,6 +58,7 @@ export const TableSensors = ({ sensors }) => {
               <TableCell>{sensor.nombre}</TableCell>
               <TableCell>{sensor.description}</TableCell>
               <TableCell>{sensor.unit}</TableCell>
+              <TableCell>{sensor.place}</TableCell>
               <TableCell>{sensor.latitude}</TableCell>
               <TableCell>{sensor.longitude}</TableCell>
               <TableCell>
@@ -69,7 +73,24 @@ export const TableSensors = ({ sensors }) => {
                 <IconButton
                   onClick={() => {
                     dispatch(setActiveSensorForm(sensor));
-                    dispatch(startDeletingSensor());
+                    Swal.fire({
+                      title: "Esta seguro de eliminar este Nodo?",
+                      text: "Esta acción no se puede revertir",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, delete it!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        dispatch(startDeletingSensor());
+                        Swal.fire(
+                          "Deleted!",
+                          "Your file has been deleted.",
+                          "success"
+                        );
+                      }
+                    });
                   }}
                 >
                   <DeleteOutline sx={{ color: "#c23616" }} />

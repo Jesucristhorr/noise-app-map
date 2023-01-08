@@ -2,8 +2,10 @@ import { AddLocationAlt } from "@mui/icons-material";
 import {
   Box,
   Button,
+  Divider,
   Grid,
   IconButton,
+  MenuItem,
   Modal,
   TextField,
   Tooltip,
@@ -17,8 +19,17 @@ import {
   startNewNote,
   updateSensorForm,
 } from "../../store/map/thunks";
-import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.css";
+
+const protocolo = [
+  {
+    value: 1,
+    label: "MQTT",
+  },
+  {
+    value: 2,
+    label: "Mosquitto",
+  },
+];
 
 export const Modals = ({ open, setOpen, sensor }) => {
   const { userLocation, messageDelete, messageSaved } = useSelector(
@@ -51,6 +62,17 @@ export const Modals = ({ open, setOpen, sensor }) => {
     setValue("unit", sensor.unit ? sensor.unit : "");
     setValue("longitude", sensor.longitude ? sensor.longitude : "");
     setValue("latitude", sensor.latitude ? sensor.latitude : "");
+    setValue("place", sensor.place ? sensor.place : "");
+
+    setValue(
+      "connectionType",
+      sensor.connectionType ? sensor.connectionType : 1
+    );
+
+    setValue("connHostname", sensor.connHostname ? sensor.connHostname : "");
+    setValue("connPort", sensor.connPort ? sensor.connPort : "");
+    setValue("connUsername", sensor.connUsername ? sensor.connUsername : "");
+    setValue("connPassword", sensor.connPassword ? sensor.connPassword : "");
   }
 
   const handleUserLocationInForm = () => {
@@ -107,6 +129,16 @@ export const Modals = ({ open, setOpen, sensor }) => {
               // setOpenAlert(true);
             })}
           >
+            <Divider
+              textAlign="left"
+              sx={{
+                mt: 1,
+                fontWeight: "bold",
+                color: "#073940",
+              }}
+            >
+              Información del Sensor
+            </Divider>
             <Grid container>
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
@@ -114,7 +146,10 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   type="text"
                   placeholder="AWE34TC"
                   fullWidth
-                  {...register("sensor", { required: "Campo requerido" })}
+                  {...register("sensor", {
+                    required: "Campo requerido",
+                    minLength: 5,
+                  })}
                   error={!!errors.sensor}
                   helperText={errors.sensor ? "Campo requerido" : ""}
                 />
@@ -126,7 +161,10 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   type="text"
                   placeholder="Arduino Nano"
                   fullWidth
-                  {...register("nombre", { required: "Campo requerido" })}
+                  {...register("nombre", {
+                    required: "Campo requerido",
+                    minLength: 5,
+                  })}
                   error={!!errors.nombre}
                   helperText={errors.nombre ? "Campo requerido" : ""}
                 />
@@ -140,6 +178,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   fullWidth
                   {...register("description", {
                     required: "Campo requerido",
+                    minLength: 5,
                   })}
                   error={!!errors.description}
                   helperText={errors.description ? "Campo requerido" : ""}
@@ -152,9 +191,27 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   type="text"
                   placeholder="dB(A)"
                   fullWidth
-                  {...register("unit", { required: "Campo requerido" })}
+                  {...register("unit", {
+                    required: "Campo requerido",
+                    minLength: 5,
+                  })}
                   error={!!errors.unit}
                   helperText={errors.unit ? "Campo requerido" : ""}
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Lugar"
+                  type="text"
+                  placeholder="Ejemplo: Facultad de Ciencias Informáticas"
+                  fullWidth
+                  {...register("place", {
+                    required: "Campo requerido",
+                    minLength: 5,
+                  })}
+                  error={!!errors.place}
+                  helperText={errors.place ? "Campo requerido" : ""}
                 />
               </Grid>
 
@@ -167,9 +224,12 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     fullWidth
                     {...register("longitude", {
                       required: "Campo requerido",
+                      pattern:
+                        /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/,
                     })}
                     error={!!errors.longitude}
-                    helperText={errors.longitude ? "Campo requerido" : ""}
+                    helperText={errors.longitude ? "Campo inválido" : ""}
+                    // value={userLocation[0] ? userLocation[0] : ""}
                   />
                 </Grid>
 
@@ -181,9 +241,11 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     fullWidth
                     {...register("latitude", {
                       required: "Campo requerido",
+                      pattern: /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/,
                     })}
                     error={!!errors.latitude}
-                    helperText={errors.latitude ? "Campo requerido" : ""}
+                    helperText={errors.latitude ? "Campo inválido" : ""}
+                    // value={userLocation[1] ? userLocation[1] : ""}
                   />
                 </Grid>
                 <Grid item xs={1} sx={{ mt: 2.4, mr: 2 }}>
@@ -197,6 +259,107 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     </IconButton>
                   </Tooltip>
                 </Grid>
+
+                {/* TODO: NUEVOS CAMPOS */}
+
+                <Divider
+                  textAlign="left"
+                  sx={{
+                    mt: 2,
+                    mb: 2,
+                    width: "100%",
+                    fontWeight: "bold",
+                    color: "#073940",
+                  }}
+                >
+                  Configuración del Sensor
+                </Divider>
+
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <TextField
+                    label="Tipo de conexión"
+                    select
+                    defaultValue="1"
+                    placeholder="Ejemplo: MQTT"
+                    fullWidth
+                    {...register("connectionType", {
+                      required: "Campo requerido",
+                    })}
+                    helperText={errors.connectionType ? "Campo requerido" : ""}
+                    error={!!errors.connectionType}
+                  >
+                    {protocolo.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid container justifyContent="space-between">
+                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                    <TextField
+                      label="Hostname"
+                      type="text"
+                      placeholder="Ejemplo: Hostname"
+                      fullWidth
+                      {...register("connHostname", {
+                        required: "Campo requerido",
+                        minLength: 5,
+                      })}
+                      helperText={errors.connHostname ? "Campo requerido" : ""}
+                      error={!!errors.connHostname}
+                    />
+                  </Grid>
+                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                    <TextField
+                      label="Puerto"
+                      type="text"
+                      placeholder="Ejemplo: Port"
+                      fullWidth
+                      {...register("connPort", {
+                        required: "Campo requerido",
+                        minLength: 4,
+                        maxLength: 4,
+                      })}
+                      helperText={errors.connPort ? "Campo inválido" : ""}
+                      error={!!errors.connPort}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid container justifyContent="space-between">
+                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                    <TextField
+                      label="Usuario de Conexión"
+                      type="text"
+                      placeholder="Ejemplo: username connection"
+                      fullWidth
+                      {...register("connUsername", {
+                        required: "Campo requerido",
+                        minLength: 5,
+                      })}
+                      error={!!errors.connUsername}
+                      helperText={errors.connUsername ? "Campo requerido" : ""}
+                    />
+                  </Grid>
+
+                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                    <TextField
+                      label="Contraseña de conexión"
+                      type="password"
+                      placeholder="***********"
+                      fullWidth
+                      {...register("connPassword", {
+                        required: "Campo requerido",
+                        minLength: 5,
+                      })}
+                      error={!!errors.connPassword}
+                      helperText={errors.connPassword ? "Campo requerido" : ""}
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* TODO: NUEVOS CAMPOS */}
               </Grid>
               {/*  */}
 
