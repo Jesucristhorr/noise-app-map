@@ -60,11 +60,14 @@ export const startLoginWithEmailPassword = ({ correo, password }) => {
         { correo, password }
       );
       console.log(resp.data.usuario);
-      dispatch(login(result));
+      //TODO: Hacer el dispath de login con la data que retorna
+      // dispatch(login(result));
       localStorage.setItem("token", resp.data.token);
     } catch (error) {
       console.log(error);
       setError(error.resp);
+      //TODO: Hacer el dispath de logout si hay error
+      // dispatch(logout(result));
     }
   };
 };
