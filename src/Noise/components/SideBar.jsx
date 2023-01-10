@@ -29,7 +29,7 @@ import { startLogout } from "../../store/auth";
 import { useCheckAuth } from "../../hooks/useCheckAuth";
 
 export const SideBar = ({ drawerWidth = 240, open }) => {
-  const { displayName } = useSelector((state) => state.auth);
+  const { displayName, role } = useSelector((state) => state.auth);
 
   const { status } = useCheckAuth();
   const dispatch = useDispatch();
@@ -181,21 +181,25 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
 
           {/*  */}
 
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Person color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                <NavLink
-                  to="/manage-users"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Administrar Usuarios"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
+          {status === "authenticated" && role.id === 1 ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Person color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  <NavLink
+                    to="/manage-users"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Administrar Usuarios"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
         </List>
       </Drawer>
     </Box>
