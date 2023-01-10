@@ -1,3 +1,5 @@
+import axios from "axios";
+import { autenticacionPorEmailPassword } from "../../api/auth";
 import { checkingCredentials, login, logout } from "./";
 
 // Ejecuta acciones o tareas asincronas
@@ -40,7 +42,7 @@ export const startCreatingUserWithEmailPassword = ({
   };
 };
 
-export const startLoginWithEmailPassword = ({ email, password }) => {
+export const startLoginWithEmailPassword = ({ correo, password }) => {
   return async (dispatch) => {
     dispatch(checkingCredentials());
     const result = {
@@ -51,7 +53,19 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 
     // Validacion en caso de que la peticion al backend no se realizo correctamente
     // if (!result.ok) return dispatch(logout(result));
-    dispatch(login(result));
+
+    try {
+      const resp = await axios.post(
+        "https://rest-server-production-ee16.up.railway.app/api/auth/login",
+        { correo, password }
+      );
+      console.log(resp.data.usuario);
+      dispatch(login(result));
+      localStorage.setItem("token", resp.data.token);
+    } catch (error) {
+      console.log(error);
+      setError(error.resp);
+    }
   };
 };
 

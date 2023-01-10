@@ -43,7 +43,7 @@ export const LoginPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
-              {...register("email", { required: "Campo requerido" })}
+              {...register("correo", { required: "Campo requerido" })}
               error={!!errors.email}
               helperText={errors.email ? "Campo requerido" : ""}
             />

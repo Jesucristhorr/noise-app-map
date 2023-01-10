@@ -170,7 +170,7 @@ export const ManageSensors = () => {
                 overflowY: "scroll",
                 p: 4,
                 width: { xs: "350px", md: "700px", lg: "900px" },
-                height: "100%",
+                // height: "100%",
               }}
             >
               <Typography
