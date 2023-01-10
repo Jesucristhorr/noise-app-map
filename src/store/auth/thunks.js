@@ -1,6 +1,12 @@
 import axios from "axios";
 import { autenticacionPorEmailPassword } from "../../api/auth";
-import { checkingCredentials, login, logout } from "./";
+import {
+  checkingCredentials,
+  login,
+  logout,
+  addNewUser,
+  savingNewUser,
+} from "./";
 
 // Ejecuta acciones o tareas asincronas
 export const checkingAuthentication = (emai, password) => {
@@ -20,25 +26,17 @@ export const startGoogleSignIn = () => {
 
 export const startCreatingUserWithEmailPassword = ({
   email,
-  password,
   displayName,
+  username,
+  role,
+  password,
 }) => {
   return async (dispatch) => {
-    dispatch(checkingCredentials());
     // Enviar al backend informacion del usuario - tarea asincrona
-    const res = {
-      name: "Jennifer Intriago Reyes",
-      password: "123456789",
-      displayName: "Jennifer Intriago",
-    };
+    dispatch(savingNewUser());
 
-    console.log(res);
-
-    // si recibe una respuesta positiva se creo el usuario sino, se hace esta valdiacion
-    if (!ok) return dispatch(logout(errorMessage));
-
-    // si todo sale bien despachamos la accion login para loguear al user
-    dispatch(login({ res }));
+    // TODO: enviar la informacion del usuario y recibir la res del back.
+    dispatch(addNewUser({ email, displayName, username, role, password }));
   };
 };
 
@@ -68,5 +66,16 @@ export const startLogout = () => {
   return async (dispatch) => {
     // manadamos a llamar el logout desde el backend
     dispatch(logout({ errorMessage: null }));
+  };
+};
+
+export const startDeletingUser = () => {
+  return async (dispatch, getState) => {
+    const { id } = getState().auth;
+    console.log(`Usuario que anda borrando ${id}`);
+
+    // todo borrar sensor por usuario autenticado
+
+    // dispatch(deleteUserById(sensor.id));
   };
 };

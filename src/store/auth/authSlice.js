@@ -9,7 +9,10 @@ export const authSlice = createSlice({
     displayName: null,
     username: null,
     role: null,
+    users: [],
+    isSaving: false,
     errorMessage: null,
+    messageSaved: null,
   },
   reducers: {
     login: (state, { payload }) => {
@@ -34,8 +37,31 @@ export const authSlice = createSlice({
     checkingCredentials: (state, payload) => {
       state.status = "checking";
     },
+
+    savingNewUser: (state) => {
+      state.isSaving = true;
+    },
+    addNewUser: (state, action) => {
+      //mutar el obj
+      console.log(action.payload);
+      state.users.push(action.payload);
+      state.messageSaved = `Usuario ${action.payload.displayName} agregado correctamente`;
+    },
+
+    deleteUserById: (state, action) => {
+      state.user = null;
+      state.users = state.users.filter((user) => user.id !== action.payload);
+      state.messageDelete = `Usuario con ID ${action.payload} borrado correctamente`;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { login, logout, checkingCredentials } = authSlice.actions;
+export const {
+  login,
+  logout,
+  checkingCredentials,
+  addNewUser,
+  savingNewUser,
+  deleteUserById,
+} = authSlice.actions;

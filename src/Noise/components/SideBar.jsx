@@ -181,21 +181,21 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
 
           {/*  */}
 
-          {/* <ListItem disablePadding>
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <Person color="primary" />
               </ListItemIcon>
               <Grid container>
                 <NavLink
-                  to="/"
+                  to="/manage-users"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <ListItemText primary={"Administrar Usuarios"} />
                 </NavLink>
               </Grid>
             </ListItemButton>
-          </ListItem> */}
+          </ListItem>
         </List>
       </Drawer>
     </Box>

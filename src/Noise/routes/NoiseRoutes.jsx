@@ -4,6 +4,8 @@ import { ManageSensors } from "../pages/ManageSensors";
 import { NoiseLeves } from "../pages/NoiseLeves";
 import { NoisePage } from "../pages/NoisePage";
 
+import { Register } from "../pages/Register";
+
 export const NoiseRoutes = () => {
   return (
     <Routes>
@@ -14,6 +16,8 @@ export const NoiseRoutes = () => {
       <Route path="/noise-leves" element={<NoiseLeves />} />
 
       <Route path="/manage-sensors" element={<ManageSensors />} />
+
+      <Route path="/manage-users" element={<Register />} />
 
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
