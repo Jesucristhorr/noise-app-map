@@ -2,7 +2,7 @@ import { Google } from "@mui/icons-material";
 import { Button, Grid, TextField, Typography, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   checkingAuthentication,
   startGoogleSignIn,
@@ -20,6 +20,7 @@ export const LoginPage = () => {
     watch,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   // console.log(errors);
   const onGoogleSignIn = () => {
@@ -31,9 +32,11 @@ export const LoginPage = () => {
     <AuthLayout title="Login">
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+          // console.log(data);
           dispatch(checkingAuthentication(data));
           dispatch(startLoginWithEmailPassword(data));
+
+          navigate("/");
         })}
       >
         <Grid container>
@@ -43,7 +46,7 @@ export const LoginPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
-              {...register("correo", { required: "Campo requerido" })}
+              {...register("email", { required: "Campo requerido" })}
               error={!!errors.email}
               helperText={errors.email ? "Campo requerido" : ""}
             />

@@ -42,32 +42,24 @@ export const startCreatingUserWithEmailPassword = ({
   };
 };
 
-export const startLoginWithEmailPassword = ({ correo, password }) => {
+export const startLoginWithEmailPassword = ({ email, password }) => {
   return async (dispatch) => {
     dispatch(checkingCredentials());
-    const result = {
-      email: "jennifergabriela52@gmail.com",
-      password: "12345678910",
-      displayName: "Jennifer Intriago",
-    };
-
-    // Validacion en caso de que la peticion al backend no se realizo correctamente
-    // if (!result.ok) return dispatch(logout(result));
 
     try {
-      const resp = await axios.post(
-        "https://rest-server-production-ee16.up.railway.app/api/auth/login",
-        { correo, password }
-      );
-      console.log(resp.data.usuario);
-      //TODO: Hacer el dispath de login con la data que retorna
-      // dispatch(login(result));
+      const resp = await autenticacionPorEmailPassword.post("auth/login", {
+        email,
+        password,
+      });
+      console.log(resp.data.user);
+
+      dispatch(login(resp.data.user));
       localStorage.setItem("token", resp.data.token);
     } catch (error) {
       console.log(error);
       setError(error.resp);
-      //TODO: Hacer el dispath de logout si hay error
-      // dispatch(logout(result));
+
+      dispatch(logout());
     }
   };
 };

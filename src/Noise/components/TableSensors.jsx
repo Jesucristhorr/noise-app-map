@@ -78,9 +78,9 @@ export const TableSensors = ({ sensors }) => {
                       text: "Esta acción no se puede revertir",
                       icon: "warning",
                       showCancelButton: true,
-                      confirmButtonColor: "#3085d6",
-                      cancelButtonColor: "#d33",
-                      confirmButtonText: "Yes, delete it!",
+                      confirmButtonColor: "#15AABF",
+                      cancelButtonColor: "#fc5c65",
+                      confirmButtonText: "Sí, eliminar!",
                     }).then((result) => {
                       if (result.isConfirmed) {
                         dispatch(startDeletingSensor());

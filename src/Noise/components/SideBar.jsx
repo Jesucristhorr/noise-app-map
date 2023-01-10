@@ -102,15 +102,6 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
               </Typography>
             </NavLink>
           )}
-
-          {/* <NavLink
-            to="/auth/login"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Typography sx={{ fontSize: "14px", color: "gray" }}>
-              Cerrar Sesión
-            </Typography>
-          </NavLink> */}
         </Box>
         <Divider />
         <List>

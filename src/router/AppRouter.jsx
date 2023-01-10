@@ -5,9 +5,11 @@ import { NoiseRoutes } from "../Noise/routes/NoiseRoutes";
 import { CheckingAuth } from "../ui/components/CheckingAuth";
 
 import { useCheckAuth } from "../hooks/useCheckAuth";
+import { useSelector } from "react-redux";
 
 export const AppRouter = () => {
   const { status } = useCheckAuth();
+  // const { status } = useSelector((state) => state.auth);
 
   if (status === "checking") {
     return <CheckingAuth />;

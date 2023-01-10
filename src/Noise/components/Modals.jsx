@@ -107,7 +107,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
             p: 4,
             width: { xs: "350px", md: "700px", lg: "900px" },
             overflowY: "scroll",
-            // height: "100%",
+            height: "90%",
           }}
         >
           <Typography

@@ -156,6 +156,7 @@ export const ManageSensors = () => {
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
+            // sx={{ height: "100%", overflowY: "scroll" }}
           >
             <Box
               sx={{
@@ -170,7 +171,7 @@ export const ManageSensors = () => {
                 overflowY: "scroll",
                 p: 4,
                 width: { xs: "350px", md: "700px", lg: "900px" },
-                // height: "100%",
+                height: "90%",
               }}
             >
               <Typography
