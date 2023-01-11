@@ -209,7 +209,7 @@ export const ManageSensors = () => {
                       placeholder="AWE34TC"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("sensor", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -226,7 +226,7 @@ export const ManageSensors = () => {
                       placeholder="Arduino Nano"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("nombre", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -243,7 +243,7 @@ export const ManageSensors = () => {
                       placeholder="Mide el ruido ambiental"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("description", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -260,7 +260,7 @@ export const ManageSensors = () => {
                       placeholder="dB(A)"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("unit", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -277,7 +277,7 @@ export const ManageSensors = () => {
                       placeholder="Ejemplo: Facultad de Ciencias Informáticas"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("place", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -295,7 +295,7 @@ export const ManageSensors = () => {
                         placeholder="0987890"
                         fullWidth
                         size="small"
-                        id="filled-hidden-label-small"
+                        // id="filled-hidden-label-small"
                         {...register("longitude", {
                           required: "Campo requerido",
                           pattern:
@@ -314,7 +314,7 @@ export const ManageSensors = () => {
                         placeholder="0987890"
                         fullWidth
                         size="small"
-                        id="filled-hidden-label-small"
+                        // id="filled-hidden-label-small"
                         {...register("latitude", {
                           required: "Campo requerido",
                           pattern:
@@ -360,7 +360,7 @@ export const ManageSensors = () => {
                         placeholder="Ejemplo: MQTT"
                         fullWidth
                         size="small"
-                        id="filled-hidden-label-small"
+                        // id="filled-hidden-label-small"
                         {...register("connectionType", {
                           required: "Campo requerido",
                         })}
@@ -384,7 +384,7 @@ export const ManageSensors = () => {
                           placeholder="Ejemplo: Hostname"
                           fullWidth
                           size="small"
-                          id="filled-hidden-label-small"
+                          // id="filled-hidden-label-small"
                           {...register("connHostname", {
                             required: "Campo requerido",
                             minLength: 5,
@@ -402,7 +402,7 @@ export const ManageSensors = () => {
                           placeholder="Ejemplo: Port"
                           fullWidth
                           size="small"
-                          id="filled-hidden-label-small"
+                          // id="filled-hidden-label-small"
                           {...register("connPort", {
                             required: "Campo requerido",
                             minLength: 4,
@@ -422,7 +422,7 @@ export const ManageSensors = () => {
                           placeholder="Ejemplo: username connection"
                           fullWidth
                           size="small"
-                          id="filled-hidden-label-small"
+                          // id="filled-hidden-label-small"
                           {...register("connUsername", {
                             required: "Campo requerido",
                             minLength: 5,
@@ -441,7 +441,7 @@ export const ManageSensors = () => {
                           placeholder="***********"
                           fullWidth
                           size="small"
-                          id="filled-hidden-label-small"
+                          // id="filled-hidden-label-small"
                           {...register("connPassword", {
                             required: "Campo requerido",
                             minLength: 5,

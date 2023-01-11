@@ -149,7 +149,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   placeholder="AWE34TC"
                   fullWidth
                   size="small"
-                  id="filled-hidden-label-small"
+                  // id="filled-hidden-label-small"
                   {...register("sensor", {
                     required: "Campo requerido",
                     minLength: 5,
@@ -183,7 +183,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   placeholder="Mide el ruido ambiental"
                   fullWidth
                   size="small"
-                  id="filled-hidden-label-small"
+                  // id="filled-hidden-label-small"
                   {...register("description", {
                     required: "Campo requerido",
                     minLength: 5,
@@ -200,7 +200,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   placeholder="dB(A)"
                   fullWidth
                   size="small"
-                  id="filled-hidden-label-small"
+                  // id="filled-hidden-label-small"
                   {...register("unit", {
                     required: "Campo requerido",
                     minLength: 5,
@@ -217,7 +217,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                   placeholder="Ejemplo: Facultad de Ciencias Informáticas"
                   fullWidth
                   size="small"
-                  id="filled-hidden-label-small"
+                  // id="filled-hidden-label-small"
                   {...register("place", {
                     required: "Campo requerido",
                     minLength: 5,
@@ -235,7 +235,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     placeholder="0987890"
                     fullWidth
                     size="small"
-                    id="filled-hidden-label-small"
+                    // id="filled-hidden-label-small"
                     {...register("longitude", {
                       required: "Campo requerido",
                       pattern:
@@ -254,7 +254,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     placeholder="0987890"
                     fullWidth
                     size="small"
-                    id="filled-hidden-label-small"
+                    // id="filled-hidden-label-small"
                     {...register("latitude", {
                       required: "Campo requerido",
                       pattern: /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/,
@@ -299,7 +299,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                     placeholder="Ejemplo: MQTT"
                     fullWidth
                     size="small"
-                    id="filled-hidden-label-small"
+                    // id="filled-hidden-label-small"
                     {...register("connectionType", {
                       required: "Campo requerido",
                     })}
@@ -321,7 +321,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                       placeholder="Ejemplo: Hostname"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("connHostname", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -337,7 +337,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                       placeholder="Ejemplo: Port"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("connPort", {
                         required: "Campo requerido",
                         minLength: 4,
@@ -357,7 +357,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                       placeholder="Ejemplo: username connection"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("connUsername", {
                         required: "Campo requerido",
                         minLength: 5,
@@ -374,7 +374,7 @@ export const Modals = ({ open, setOpen, sensor }) => {
                       placeholder="***********"
                       fullWidth
                       size="small"
-                      id="filled-hidden-label-small"
+                      // id="filled-hidden-label-small"
                       {...register("connPassword", {
                         required: "Campo requerido",
                         minLength: 5,

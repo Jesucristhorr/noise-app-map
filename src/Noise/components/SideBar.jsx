@@ -158,7 +158,7 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           </ListItem>
           {/*  */}
 
-          {(status === "authenticated" && role.id === 2) || role.id === 1 ? (
+          {status === "authenticated" ? (
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
