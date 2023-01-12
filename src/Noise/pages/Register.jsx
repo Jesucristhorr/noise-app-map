@@ -44,7 +44,7 @@ export const Register = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [openAlert, setOpenAlert] = useState(isSaving);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const {
     register,

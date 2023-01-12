@@ -34,7 +34,7 @@ export const startCreatingUserWithEmailPassword = ({
 }) => {
   return async (dispatch) => {
     // Enviar al backend informacion del usuario - tarea asincrona
-    dispatch(savingNewUser());
+
     try {
       let token = getToken();
       const resp = await autenticacionPorEmailPassword.post(
@@ -54,7 +54,16 @@ export const startCreatingUserWithEmailPassword = ({
       );
 
       console.log(resp);
-      dispatch(addNewUser({ email, displayName, username, roleId, password }));
+      dispatch(
+        addNewUser({
+          email,
+          displayName,
+          username,
+          roleId,
+          password,
+        })
+      );
+      dispatch(savingNewUser());
     } catch (error) {
       console.log("Algo fallo");
       console.log(error);
