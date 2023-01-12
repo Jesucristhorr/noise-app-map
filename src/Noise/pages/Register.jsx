@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NoiseLayout } from "../layout/NoiseLayout";
 import {
   Alert,
@@ -19,24 +19,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { startCreatingUserWithEmailPassword } from "../../store/auth";
 import { CloseOutlined } from "@mui/icons-material";
 import { TableUsers } from "../components/TableUsers";
+import { getRoles } from "../../store/roles/thunk";
 
-const role = [
-  {
-    value: 1,
-    label: "System",
-  },
-  {
-    value: 2,
-    label: "Admin",
-  },
-  {
-    value: 3,
-    label: "Common",
-  },
-];
+// const role = [
+//   {
+//     value: 1,
+//     label: "System",
+//   },
+//   {
+//     value: 2,
+//     label: "Admin",
+//   },
+//   {
+//     value: 3,
+//     label: "Common",
+//   },
+// ];
 
 export const Register = () => {
   const { messageSaved, isSaving, users } = useSelector((state) => state.auth);
+  const { roles } = useSelector((state) => state.role);
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -51,6 +54,11 @@ export const Register = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    dispatch(getRoles());
+  }, []);
+
   return (
     <>
       <NoiseLayout>
@@ -184,15 +192,15 @@ export const Register = () => {
                       fullWidth
                       size="small"
                       //   id="filled-hidden-label-small"
-                      {...register("role", {
+                      {...register("roleId", {
                         required: "Campo requerido",
                       })}
-                      helperText={errors.role ? "Campo requerido" : ""}
-                      error={!!errors.role}
+                      helperText={errors.roleId ? "Campo requerido" : ""}
+                      error={!!errors.roleId}
                     >
-                      {role.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {roles.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name}
                         </MenuItem>
                       ))}
                     </TextField>

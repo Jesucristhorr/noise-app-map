@@ -140,25 +140,29 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <NoiseControlOff color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/noise-leves"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Niveles de ruido"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
+          {status === "authenticated" ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <NoiseControlOff color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <NavLink
+                    to="/noise-leves"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Niveles de ruido"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
           {/*  */}
 
-          {status === "authenticated" ? (
+          {status === "authenticated" && (role.id === 1 || role.id === 2) ? (
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>

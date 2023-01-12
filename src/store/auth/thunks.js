@@ -7,6 +7,7 @@ import {
   addNewUser,
   savingNewUser,
 } from "./";
+import { getToken } from "../../helpers/getToken";
 
 // Ejecuta acciones o tareas asincronas
 export const checkingAuthentication = (emai, password) => {
@@ -28,15 +29,36 @@ export const startCreatingUserWithEmailPassword = ({
   email,
   displayName,
   username,
-  role,
+  roleId,
   password,
 }) => {
   return async (dispatch) => {
     // Enviar al backend informacion del usuario - tarea asincrona
     dispatch(savingNewUser());
+    try {
+      let token = getToken();
+      const resp = await autenticacionPorEmailPassword.post(
+        "/auth/signup",
+        {
+          email,
+          displayName,
+          username,
+          roleId,
+          password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // TODO: enviar la informacion del usuario y recibir la res del back.
-    dispatch(addNewUser({ email, displayName, username, role, password }));
+      console.log(resp);
+      dispatch(addNewUser({ email, displayName, username, roleId, password }));
+    } catch (error) {
+      console.log("Algo fallo");
+      console.log(error);
+    }
   };
 };
 
@@ -50,9 +72,9 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
         password,
       });
       console.log(resp.data.user);
-
       dispatch(login(resp.data.user));
       localStorage.setItem("token", resp.data.token);
+      localStorage.setItem("user", JSON.stringify(resp.data.user));
     } catch (error) {
       console.log(error);
       setError(error.resp);
@@ -64,8 +86,10 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 
 export const startLogout = () => {
   return async (dispatch) => {
-    // manadamos a llamar el logout desde el backend
+    // borrar data en LocalStorage
     dispatch(logout({ errorMessage: null }));
+    localStorage.removeItem("token");
+    localStorage.removeItem("user ");
   };
 };
 

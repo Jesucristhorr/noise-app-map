@@ -43,7 +43,7 @@ export const authSlice = createSlice({
     },
     addNewUser: (state, action) => {
       //mutar el obj
-      console.log(action.payload);
+      // console.log(action.payload);
       state.users.push(action.payload);
       state.messageSaved = `Usuario ${action.payload.displayName} agregado correctamente`;
     },

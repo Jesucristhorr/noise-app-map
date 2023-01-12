@@ -25,6 +25,8 @@ export const TableUsers = ({ users }) => {
   const [open, setOpen] = useState(false);
 
   const { sensor } = useSelector((state) => state.map);
+  const { roles } = useSelector((state) => state.role);
+
   const dispatch = useDispatch();
 
   const handleModalEdit = () => {
@@ -53,7 +55,15 @@ export const TableUsers = ({ users }) => {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.displayName}</TableCell>
               <TableCell>{user.username}</TableCell>
-              <TableCell>{user.role}</TableCell>
+              <TableCell>
+                {user.roleId === 1
+                  ? roles[0].name
+                  : user.roleId === 2
+                  ? roles[1].name
+                  : user.roleId === 3
+                  ? roles[2].name
+                  : ""}
+              </TableCell>
 
               <TableCell>
                 {/* EDITAR USER */}
