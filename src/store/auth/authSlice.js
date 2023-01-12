@@ -10,6 +10,7 @@ export const authSlice = createSlice({
     username: null,
     role: null,
     users: [],
+    user: null,
     isSaving: false,
     errorMessage: null,
     messageSaved: null,
@@ -30,7 +31,7 @@ export const authSlice = createSlice({
       state.displayName = null;
       state.username = null;
       state.role = null;
-      state.errorMessage = payload.errorMessage;
+      state.errorMessage = payload?.errorMessage;
     },
 
     // Control de botones y loading de la app
@@ -49,10 +50,16 @@ export const authSlice = createSlice({
       state.messageSaved = `Usuario ${action.payload.displayName} agregado correctamente`;
     },
 
+    // usuario individual
+    setActiveUser: (state, { payload }) => {
+      state.user = payload;
+      state.messageSaved = "";
+    },
+
     deleteUserById: (state, action) => {
       state.user = null;
-      state.users = state.users.filter((user) => user.id !== action.payload);
-      state.messageDelete = `Usuario con ID ${action.payload} borrado correctamente`;
+      state.users = state.users.filter((user) => user.email !== action.payload);
+      state.messageDelete = `Usuario con email ${action.payload} borrado correctamente`;
     },
   },
 });
@@ -65,4 +72,5 @@ export const {
   addNewUser,
   savingNewUser,
   deleteUserById,
+  setActiveUser,
 } = authSlice.actions;

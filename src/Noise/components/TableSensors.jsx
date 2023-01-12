@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Modals } from "./Modals";
+import { ModalEditSensor } from "./ModalEditSensor";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -100,7 +100,7 @@ export const TableSensors = ({ sensors }) => {
           ))}
         </TableBody>
       </Table>
-      <Modals open={open} setOpen={setOpen} sensor={sensor} />
+      <ModalEditSensor open={open} setOpen={setOpen} sensor={sensor} />
     </TableContainer>
   );
 };

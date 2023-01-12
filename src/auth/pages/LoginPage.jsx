@@ -1,5 +1,12 @@
 import { Google } from "@mui/icons-material";
-import { Button, Grid, TextField, Typography, Link } from "@mui/material";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Link,
+  Alert,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -35,7 +42,6 @@ export const LoginPage = () => {
           // console.log(data);
           dispatch(checkingAuthentication(data));
           dispatch(startLoginWithEmailPassword(data));
-
           navigate("/");
         })}
       >
@@ -69,6 +75,12 @@ export const LoginPage = () => {
                   : "La contraseña debe tener mínimo 10 caracteres"
               }
             />
+          </Grid>
+
+          <Grid container display={!!errorMessage ? "" : "none"} sx={{ mt: 1 }}>
+            <Grid item xs={12}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
           </Grid>
 
           <Grid

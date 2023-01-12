@@ -6,8 +6,11 @@ import {
   logout,
   addNewUser,
   savingNewUser,
+  setActiveUser,
+  deleteUserById,
 } from "./";
 import { getToken } from "../../helpers/getToken";
+import { useNavigate } from "react-router-dom";
 
 // Ejecuta acciones o tareas asincronas
 export const checkingAuthentication = (emai, password) => {
@@ -85,10 +88,9 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
       localStorage.setItem("token", resp.data.token);
       localStorage.setItem("user", JSON.stringify(resp.data.user));
     } catch (error) {
-      console.log(error);
-      setError(error.resp);
-
-      dispatch(logout());
+      console.log(error.response.data.msg);
+      // setError(error.resp);
+      dispatch(logout({ errorMessage: error.response.data.msg }));
     }
   };
 };
@@ -96,19 +98,23 @@ export const startLoginWithEmailPassword = ({ email, password }) => {
 export const startLogout = () => {
   return async (dispatch) => {
     // borrar data en LocalStorage
-    dispatch(logout({ errorMessage: null }));
+    dispatch(logout({ errorMessage: "" }));
     localStorage.removeItem("token");
-    localStorage.removeItem("user ");
+    localStorage.removeItem("user");
+  };
+};
+
+export const setActiveUserForm = (data) => {
+  return async (dispatch) => {
+    dispatch(setActiveUser(data));
   };
 };
 
 export const startDeletingUser = () => {
   return async (dispatch, getState) => {
-    const { id } = getState().auth;
-    console.log(`Usuario que anda borrando ${id}`);
+    const { id, user } = getState().auth;
 
-    // todo borrar sensor por usuario autenticado
-
-    // dispatch(deleteUserById(sensor.id));
+    // TODO borrar sensor por usuario autenticado
+    dispatch(deleteUserById(user.email));
   };
 };

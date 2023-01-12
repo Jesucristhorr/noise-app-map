@@ -11,6 +11,7 @@ export const mapSlice = createSlice({
     sensor: null,
     isSaving: false,
     messageSaved: "",
+    messageUpdated: "",
     messageDelete: "",
   },
   reducers: {
@@ -41,7 +42,7 @@ export const mapSlice = createSlice({
     // sensor individual
     setActiveSensor: (state, { payload }) => {
       state.sensor = payload;
-      state.messageSaved = "";
+      // state.messageSaved = "";
     },
 
     updateSensor: (state, action) => {
@@ -51,7 +52,7 @@ export const mapSlice = createSlice({
         }
         return sensor;
       });
-      state.messageSaved = `Sensor ${action.payload.sensor}, actualizado correctamente`;
+      state.messageUpdated = `Sensor ${action.payload.sensor}, actualizado correctamente`;
     },
 
     // Eliminar sensor

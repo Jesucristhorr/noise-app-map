@@ -37,7 +37,7 @@ export const setMap = (map) => {
   };
 };
 
-export const startNewNote = (data) => {
+export const startNewSensor = (data) => {
   return async (dispatch, getState) => {
     dispatch(savingNewSensor());
     data.id = new Date().getTime();

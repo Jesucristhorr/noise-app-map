@@ -32,8 +32,8 @@ import { Box } from "@mui/system";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserLocation } from "../../store/map/mapSlice";
-import { getUserLocation, startNewNote } from "../../store/map/thunks";
+import { setUserLocation, updateSensor } from "../../store/map/mapSlice";
+import { getUserLocation, startNewSensor } from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
 import { TableSensors } from "../components/TableSensors";
 import { NoiseLayout } from "../layout/NoiseLayout";
@@ -59,6 +59,7 @@ export const ManageSensors = () => {
     isSaving,
     messageSaved,
     messageDelete,
+    messageUpdated,
   } = useSelector((state) => state.map);
 
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ export const ManageSensors = () => {
   const handleCloseAlert = () => setOpenAlert(false);
   const [openAlert, setOpenAlert] = useState(isSaving);
   const [openAlertDelete, setOpenAlertDelete] = useState(true);
+  const [openAlertUpdate, setOpenAlertUpdate] = useState(true);
 
   const {
     register,
@@ -118,6 +120,37 @@ export const ManageSensors = () => {
             {messageSaved}
           </Alert>
         </Collapse>
+
+        {!!messageUpdated ? (
+          <Collapse in={openAlertUpdate}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlertUpdate(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="info"
+              sx={{
+                mt: 2,
+                width: "100%",
+                // display: isSaving ? "inherit" : "none",
+                // display: "none",
+              }}
+            >
+              <AlertTitle>Actualizado</AlertTitle>
+              {messageUpdated}
+            </Alert>
+          </Collapse>
+        ) : (
+          ""
+        )}
 
         {!!messageDelete ? (
           <Collapse in={openAlertDelete}>
@@ -184,8 +217,7 @@ export const ManageSensors = () => {
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {
-                  console.log(data);
-                  dispatch(startNewNote(data));
+                  dispatch(startNewSensor(data));
                   reset();
                   setOpen(false);
                   setOpenAlert(true);

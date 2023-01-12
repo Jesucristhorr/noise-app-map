@@ -28,12 +28,16 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import MapIcon from "@mui/icons-material/Map";
 import { NavLink } from "react-router-dom";
 import { fontSize } from "@mui/system";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../store/auth";
+import { useCheckAuth } from "../../hooks/useCheckAuth";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
+  const { displayName, role } = useSelector((state) => state.auth);
+
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const { status } = useCheckAuth();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -44,7 +48,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
   };
 
   const onLogout = () => {
-    dispatch(startLogout());
+    dispatch(startLogout({ errorMessage: "" }));
   };
 
   return (
@@ -110,43 +114,71 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           // display: { xs: "none" },
         }}
       >
-        <Toolbar>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>JI</Avatar>
-            <Typography variant="p" noWrap component="div">
-              Jennifer Intriago
-            </Typography>
-            <IconButton
-              edge="end"
-              onClick={handleDrawerClose}
-              sx={{ color: "#17A9BF" }}
+        <Toolbar sx={{ justifyContent: "space-around" }}>
+          {status === "authenticated" ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
             >
-              <ArrowBackIosIcon />
-            </IconButton>
-          </Box>
+              <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>
+                JI
+              </Avatar>
+              <Typography variant="p" noWrap component="div">
+                {displayName}
+              </Typography>
+              <IconButton
+                edge="end"
+                onClick={handleDrawerClose}
+                sx={{ color: "#17A9BF" }}
+              >
+                <ArrowBackIosIcon />
+              </IconButton>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>
+                I
+              </Avatar>
+              <Typography variant="p" noWrap component="div">
+                Invitado
+              </Typography>
+              <IconButton
+                edge="end"
+                onClick={handleDrawerClose}
+                sx={{ color: "#17A9BF" }}
+              >
+                <ArrowBackIosIcon />
+              </IconButton>
+            </Box>
+          )}
         </Toolbar>
         <Box sx={{ margin: "0 auto" }}>
-          <IconButton onClick={onLogout}>
-            <LogoutOutlined color="inherit" />
-            <Typography sx={{ fontSize: "14px", color: "gray" }}>
-              Cerrar Sesión
-            </Typography>
-          </IconButton>
-
-          {/* <NavLink
-            to="/auth/login"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Typography sx={{ fontSize: "14px", color: "gray" }}>
-              Cerrar Sesión
-            </Typography>
-          </NavLink> */}
+          {status === "authenticated" ? (
+            <IconButton onClick={onLogout}>
+              <LogoutOutlined color="inherit" />
+              <Typography sx={{ fontSize: "14px", color: "gray" }}>
+                Cerrar Sesión
+              </Typography>
+            </IconButton>
+          ) : (
+            <NavLink
+              to="/auth/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <Typography sx={{ fontSize: "14px", color: "gray" }}>
+                Iniciar Sesión
+              </Typography>
+            </NavLink>
+          )}
         </Box>
         <Divider />
         <List>
@@ -185,56 +217,70 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <NoiseControlOff color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/noise-leves"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Niveles de ruido"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
-          {/*  */}
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Sensors color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/manage-sensors"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Administrar Sensores"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
+          {status === "authenticated" ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <NoiseControlOff color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <NavLink
+                    to="/noise-leves"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Niveles de ruido"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
           {/*  */}
 
-          {/* <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Person color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                <NavLink
-                  to="/"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Administrar Usuarios"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem> */}
+          {status === "authenticated" && (role.id === 1 || role.id === 2) ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Sensors color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <NavLink
+                    to="/manage-sensors"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Administrar Sensores"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
+
+          {/*  */}
+
+          {status === "authenticated" && role.id === 1 ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Person color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  <NavLink
+                    to="/manage-users"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <ListItemText primary={"Administrar Usuarios"} />
+                  </NavLink>
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <p></p>
+          )}
         </List>
       </Drawer>
     </>

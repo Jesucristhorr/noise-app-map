@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserLocation,
-  startNewNote,
+  startNewSensor,
   updateSensorForm,
 } from "../../store/map/thunks";
 
@@ -31,7 +31,7 @@ const protocolo = [
   },
 ];
 
-export const Modals = ({ open, setOpen, sensor }) => {
+export const ModalEditSensor = ({ open, setOpen, sensor }) => {
   const { userLocation, messageDelete, messageSaved } = useSelector(
     (state) => state.map
   );
@@ -55,25 +55,27 @@ export const Modals = ({ open, setOpen, sensor }) => {
   const handleClose = () => setOpen(false);
 
   // setear valores
-  if (!!sensor) {
-    setValue("sensor", sensor.sensor ? sensor.sensor : "");
-    setValue("nombre", sensor.nombre ? sensor.nombre : "");
-    setValue("description", sensor.description ? sensor.description : "");
-    setValue("unit", sensor.unit ? sensor.unit : "");
-    setValue("longitude", sensor.longitude ? sensor.longitude : "");
-    setValue("latitude", sensor.latitude ? sensor.latitude : "");
-    setValue("place", sensor.place ? sensor.place : "");
+  useEffect(() => {
+    if (!!sensor) {
+      setValue("sensor", sensor.sensor ? sensor.sensor : "");
+      setValue("nombre", sensor.nombre ? sensor.nombre : "");
+      setValue("description", sensor.description ? sensor.description : "");
+      setValue("unit", sensor.unit ? sensor.unit : "");
+      setValue("longitude", sensor.longitude ? sensor.longitude : "");
+      setValue("latitude", sensor.latitude ? sensor.latitude : "");
+      setValue("place", sensor.place ? sensor.place : "");
 
-    setValue(
-      "connectionType",
-      sensor.connectionType ? sensor.connectionType : 1
-    );
+      setValue(
+        "connectionType",
+        sensor.connectionType ? sensor.connectionType : 1
+      );
 
-    setValue("connHostname", sensor.connHostname ? sensor.connHostname : "");
-    setValue("connPort", sensor.connPort ? sensor.connPort : "");
-    setValue("connUsername", sensor.connUsername ? sensor.connUsername : "");
-    setValue("connPassword", sensor.connPassword ? sensor.connPassword : "");
-  }
+      setValue("connHostname", sensor.connHostname ? sensor.connHostname : "");
+      setValue("connPort", sensor.connPort ? sensor.connPort : "");
+      setValue("connUsername", sensor.connUsername ? sensor.connUsername : "");
+      setValue("connPassword", sensor.connPassword ? sensor.connPassword : "");
+    }
+  }, [sensor]);
 
   const handleUserLocationInForm = () => {
     setValue("longitude", userLocation[0]);

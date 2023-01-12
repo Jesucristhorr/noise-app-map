@@ -34,7 +34,7 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
   const { status } = useCheckAuth();
   const dispatch = useDispatch();
   const onLogout = () => {
-    dispatch(startLogout());
+    dispatch(startLogout({ errorMessage: "" }));
   };
 
   return (

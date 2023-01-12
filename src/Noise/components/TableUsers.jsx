@@ -10,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { Modals } from "./Modals";
+import { ModalEditSensor } from "./ModalEditSensor";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,7 +19,7 @@ import {
 } from "../../store/map/thunks";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
-import { startDeletingUser } from "../../store/auth";
+import { setActiveUserForm, startDeletingUser } from "../../store/auth";
 
 export const TableUsers = ({ users }) => {
   const [open, setOpen] = useState(false);
@@ -76,7 +76,7 @@ export const TableUsers = ({ users }) => {
                 </IconButton> */}
                 <IconButton
                   onClick={() => {
-                    // dispatch(setActiveSensorForm(sensor));
+                    dispatch(setActiveUserForm(user));
                     Swal.fire({
                       title: "Esta seguro de eliminar este Usuario?",
                       text: "Esta acción no se puede revertir",
@@ -104,7 +104,7 @@ export const TableUsers = ({ users }) => {
           ))}
         </TableBody>
       </Table>
-      <Modals open={open} setOpen={setOpen} sensor={sensor} />
+      <ModalEditSensor open={open} setOpen={setOpen} sensor={sensor} />
     </TableContainer>
   );
 };
