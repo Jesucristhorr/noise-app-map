@@ -42,7 +42,7 @@ export const LoginPage = () => {
           // console.log(data);
           dispatch(checkingAuthentication(data));
           dispatch(startLoginWithEmailPassword(data));
-          navigate("/");
+          // navigate("/");
         })}
       >
         <Grid container>

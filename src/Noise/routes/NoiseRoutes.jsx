@@ -15,7 +15,7 @@ export const NoiseRoutes = () => {
 
       <Route path="/information" element={<InformationNoisePage />} />
 
-      {status === "authenticated" ? (
+      {/* {status === "authenticated" ? (
         <Route>
           <Route path="/noise-leves" element={<NoiseLeves />} />
           <Route path="/manage-sensors" element={<ManageSensors />} />
@@ -23,13 +23,13 @@ export const NoiseRoutes = () => {
         </Route>
       ) : (
         <Route path="/*" element={<Navigate to="/" />} />
-      )}
+      )} */}
 
-      {/* <Route path="/noise-leves" element={<NoiseLeves />} />
+      <Route path="/noise-leves" element={<NoiseLeves />} />
       <Route path="/manage-sensors" element={<ManageSensors />} />
-      <Route path="/manage-users" element={<Register />} /> */}
+      <Route path="/manage-users" element={<Register />} />
 
-      {/* <Route path="/*" element={<Navigate to="/" />} /> */}
+      <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

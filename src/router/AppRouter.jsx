@@ -6,6 +6,8 @@ import { CheckingAuth } from "../ui/components/CheckingAuth";
 
 import { useCheckAuth } from "../hooks/useCheckAuth";
 import { useSelector } from "react-redux";
+import { NoisePage } from "../Noise/pages/NoisePage";
+import { InformationNoisePage } from "../Noise/pages/InformationNoisePage";
 
 export const AppRouter = () => {
   const { status } = useCheckAuth();
@@ -16,17 +18,21 @@ export const AppRouter = () => {
   }
   return (
     <Routes>
-      {/* {status === "authenticated" ? (
+      <Route path="/" element={<NoisePage />} />
+
+      <Route path="/information" element={<InformationNoisePage />} />
+
+      {status === "authenticated" ? (
         <Route path="/*" element={<NoiseRoutes />} />
       ) : (
         <Route path="/auth/*" element={<AuthRoutes />} />
-      )} */}
+      )}
 
       {/* Login y registro */}
-      <Route path="/auth/*" element={<AuthRoutes />} />
+      {/* <Route path="/auth/*" element={<AuthRoutes />} /> */}
 
       {/*  Aplicacion */}
-      <Route path="/*" element={<NoiseRoutes />} />
+      {/* <Route path="/*" element={<NoiseRoutes />} /> */}
 
       <Route path="/*" element={<Navigate to="/auth/login" />} />
       <Route />
