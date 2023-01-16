@@ -48,6 +48,7 @@ export const authSlice = createSlice({
       state.users.push(action.payload);
 
       state.messageSaved = `Usuario ${action.payload.displayName} agregado correctamente`;
+      state.errorMessage = null;
     },
 
     // usuario individual
@@ -56,10 +57,20 @@ export const authSlice = createSlice({
       state.messageSaved = "";
     },
 
+    setUsers: (state, action) => {
+      state.users = action.payload;
+    },
+
     deleteUserById: (state, action) => {
       state.user = null;
       state.users = state.users.filter((user) => user.email !== action.payload);
       state.messageDelete = `Usuario con email ${action.payload} borrado correctamente`;
+    },
+
+    showErrorRegister: (state, { payload }) => {
+      console.log(payload);
+      state.errorMessage = payload;
+      state.messageSaved = null;
     },
   },
 });
@@ -73,4 +84,6 @@ export const {
   savingNewUser,
   deleteUserById,
   setActiveUser,
+  showErrorRegister,
+  setUsers,
 } = authSlice.actions;

@@ -1,4 +1,9 @@
-import { DeleteOutline, Edit } from "@mui/icons-material";
+import {
+  DeleteOutline,
+  Edit,
+  MarkEmailReadOutlined,
+  MarkEmailUnread,
+} from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -9,9 +14,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { ModalEditSensor } from "./ModalEditSensor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setActiveSensorForm,
@@ -19,7 +25,11 @@ import {
 } from "../../store/map/thunks";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
-import { setActiveUserForm, startDeletingUser } from "../../store/auth";
+import {
+  setActiveUserForm,
+  startDeletingUser,
+  startLoadingUsers,
+} from "../../store/auth";
 
 export const TableUsers = ({ users }) => {
   const [open, setOpen] = useState(false);
@@ -33,6 +43,11 @@ export const TableUsers = ({ users }) => {
     console.log("le dieron clic");
     setOpen(true);
   };
+
+  useEffect(() => {
+    dispatch(startLoadingUsers());
+  }, []);
+
   return (
     <TableContainer
       component={Paper}
@@ -55,25 +70,30 @@ export const TableUsers = ({ users }) => {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.displayName}</TableCell>
               <TableCell>{user.username}</TableCell>
-              <TableCell>
-                {user.roleId === 1
-                  ? roles[0].name
-                  : user.roleId === 2
-                  ? roles[1].name
-                  : user.roleId === 3
-                  ? roles[2].name
-                  : ""}
-              </TableCell>
+              <TableCell>{user.role ? user.role.name : "NO ROLE"}</TableCell>
 
               <TableCell>
-                {/* EDITAR USER */}
-                {/* <IconButton
+                {/* send mail */}
+                <Tooltip title="Reenviar Email de verificación">
+                  <IconButton
+                    onClick={() => {
+                      console.log("clic para reenviar mail");
+                      // TODO: Depachar thunk de reenvio
+                    }}
+                  >
+                    <MarkEmailUnread color="primary" />
+                  </IconButton>
+                </Tooltip>
+
+                {/* edit */}
+                <IconButton
                   onClick={() => {
-                    
+                    console.log("clic para editar");
+                    // TODO: Depachar thunk de editar
                   }}
                 >
                   <Edit sx={{ color: "#f9ca24" }} />
-                </IconButton> */}
+                </IconButton>
                 <IconButton
                   onClick={() => {
                     dispatch(setActiveUserForm(user));

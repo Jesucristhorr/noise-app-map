@@ -8,9 +8,12 @@ import {
   savingNewUser,
   setActiveUser,
   deleteUserById,
+  showErrorRegister,
+  setUsers,
 } from "./";
 import { getToken } from "../../helpers/getToken";
 import { useNavigate } from "react-router-dom";
+import { loadUsers } from "../../helpers/getUsers";
 
 // Ejecuta acciones o tareas asincronas
 export const checkingAuthentication = (emai, password) => {
@@ -56,7 +59,7 @@ export const startCreatingUserWithEmailPassword = ({
         }
       );
 
-      console.log(resp);
+      // console.log(resp);
       dispatch(
         addNewUser({
           email,
@@ -68,8 +71,9 @@ export const startCreatingUserWithEmailPassword = ({
       );
       dispatch(savingNewUser());
     } catch (error) {
-      console.log("Algo fallo");
-      console.log(error);
+      console.log("Algo falló");
+      console.log(error.response.data.msg);
+      dispatch(showErrorRegister(error.response.data.msg));
     }
   };
 };
@@ -107,6 +111,19 @@ export const startLogout = () => {
 export const setActiveUserForm = (data) => {
   return async (dispatch) => {
     dispatch(setActiveUser(data));
+  };
+};
+
+export const startLoadingUsers = () => {
+  return async (dispatch, getState) => {
+    try {
+      const users = await loadUsers();
+      // console.log(users);
+      dispatch(setUsers(users));
+    } catch (error) {
+      console.log(error);
+      console.log("Algo salio mal");
+    }
   };
 };
 

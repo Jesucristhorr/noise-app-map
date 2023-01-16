@@ -5,6 +5,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  CircularProgress,
   Collapse,
   Divider,
   Grid,
@@ -16,7 +17,10 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { startCreatingUserWithEmailPassword } from "../../store/auth";
+import {
+  startCreatingUserWithEmailPassword,
+  startLoadingUsers,
+} from "../../store/auth";
 import { CloseOutlined } from "@mui/icons-material";
 import { TableUsers } from "../components/TableUsers";
 import { getRoles } from "../../store/roles/thunk";
@@ -37,14 +41,19 @@ import { getRoles } from "../../store/roles/thunk";
 // ];
 
 export const Register = () => {
-  const { messageSaved, isSaving, users } = useSelector((state) => state.auth);
+  const { messageSaved, isSaving, users, errorMessage } = useSelector(
+    (state) => state.auth
+  );
   const { roles } = useSelector((state) => state.role);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [loadingUsers, setOpenLoadingUsers] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [openAlert, setOpenAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -56,39 +65,96 @@ export const Register = () => {
   } = useForm();
 
   useEffect(() => {
-    dispatch(getRoles());
+    dispatch(getRoles()).then(() => {
+      setOpenLoadingUsers(false);
+    });
+    setOpenLoadingUsers(true);
   }, []);
 
   return (
     <>
       <NoiseLayout>
-        <Button variant="contained" onClick={handleOpen} sx={{ color: "#fff" }}>
-          Agregar Nuevo Usuario
-        </Button>
+        {loadingUsers ? (
+          <Box sx={{ position: "absolute", top: "50%", left: "50%" }}>
+            <CircularProgress color="primary" />
+          </Box>
+        ) : (
+          <p></p>
+        )}
+
+        <Box sx={{ display: "flex" }}>
+          <Button
+            variant="contained"
+            onClick={handleOpen}
+            disabled={loading}
+            sx={{ color: "#fff" }}
+          >
+            Agregar Nuevo Usuario
+          </Button>
+
+          {loading && (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: "primary",
+                position: "absolute",
+                top: "17%",
+                left: "50%",
+                marginTop: "-12px",
+                marginLeft: "-12px",
+              }}
+            />
+          )}
+        </Box>
 
         <Collapse in={openAlert}>
-          <Alert
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpenAlert(false);
-                }}
-              >
-                <CloseOutlined />
-              </IconButton>
-            }
-            severity="success"
-            sx={{
-              mt: 2,
-              width: "100%",
-            }}
-          >
-            <AlertTitle>Guardado</AlertTitle>
-            {messageSaved}
-          </Alert>
+          {!!errorMessage ? (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlert(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="error"
+              sx={{
+                mt: 2,
+                width: "100%",
+              }}
+            >
+              <AlertTitle>Error</AlertTitle>
+              {errorMessage}
+            </Alert>
+          ) : (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlert(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="success"
+              sx={{
+                mt: 2,
+                width: "100%",
+              }}
+            >
+              <AlertTitle>Guardado</AlertTitle>
+              {messageSaved}
+            </Alert>
+          )}
         </Collapse>
 
         <div>
@@ -125,11 +191,18 @@ export const Register = () => {
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {
-                  console.log(data);
-                  dispatch(startCreatingUserWithEmailPassword(data));
+                  // console.log(data);
+                  dispatch(startCreatingUserWithEmailPassword(data)).then(
+                    () => {
+                      setOpenAlert(true);
+                      setLoading(false);
+                      dispatch(startLoadingUsers());
+                    }
+                  );
+
+                  setLoading(true);
                   reset();
                   setOpen(false);
-                  setOpenAlert(true);
                 })}
               >
                 <Grid container>
