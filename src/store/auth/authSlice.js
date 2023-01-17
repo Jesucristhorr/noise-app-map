@@ -57,12 +57,13 @@ export const authSlice = createSlice({
     setActiveUser: (state, { payload }) => {
       state.user = payload;
       state.messageSaved = "";
+      state.messageSaved = "";
     },
 
     setUsers: (state, action) => {
       state.users = action.payload;
       state.messageErrorResendEmail = null;
-      state.messageResendEmail = null;
+      // state.messageSaved = null;
     },
 
     deleteUserById: (state, action) => {

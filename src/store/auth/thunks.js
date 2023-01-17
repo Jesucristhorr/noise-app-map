@@ -165,6 +165,9 @@ export const resendEmailConfirmation = ({ id }) => {
 export const updateUserById = (user) => {
   return async (dispatch, getState) => {
     // TODO despachar reducer para actualizar usuario
-    dispatch(updateUser(user.email));
+
+    dispatch(updateUser(user));
+    // const users = await loadUsers();
+    // dispatch(setUsers(users));
   };
 };

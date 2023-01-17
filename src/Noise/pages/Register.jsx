@@ -45,6 +45,8 @@ export const Register = () => {
   const [openAlert, setOpenAlert] = useState(false);
 
   const [openMsgEmail, setOpenMsgEmail] = useState(true);
+  const [openUpdateMsg, setOpenUpdateMsg] = useState(true);
+
   const [openMsgError, setOpenMsgError] = useState(true);
 
   const [loading, setLoading] = useState(false);
@@ -203,6 +205,35 @@ export const Register = () => {
             >
               <AlertTitle>Correo enviado</AlertTitle>
               {messageResendEmail}
+            </Alert>
+          ) : (
+            <p></p>
+          )}
+        </Collapse>
+
+        <Collapse in={openUpdateMsg}>
+          {!!messageSaved ? (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenUpdateMsg(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="info"
+              sx={{
+                mt: 2,
+                width: "100%",
+              }}
+            >
+              <AlertTitle>Usuario actualizado correctamente</AlertTitle>
+              {messageSaved}
             </Alert>
           ) : (
             <p></p>

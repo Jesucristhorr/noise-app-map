@@ -27,7 +27,7 @@ const protocolo = [
   },
   {
     value: 2,
-    label: "Mosquitto",
+    label: "AMQP",
   },
 ];
 
