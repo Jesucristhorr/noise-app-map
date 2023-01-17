@@ -7,12 +7,14 @@ import {
 import {
   Box,
   IconButton,
+  Pagination,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Tooltip,
 } from "@mui/material";
@@ -29,10 +31,13 @@ import {
   setActiveUserForm,
   startDeletingUser,
   startLoadingUsers,
+  resendEmailConfirmation,
 } from "../../store/auth";
 
 export const TableUsers = ({ users }) => {
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { sensor } = useSelector((state) => state.map);
   const { roles } = useSelector((state) => state.role);
@@ -47,6 +52,15 @@ export const TableUsers = ({ users }) => {
   useEffect(() => {
     dispatch(startLoadingUsers());
   }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <TableContainer
@@ -65,7 +79,10 @@ export const TableUsers = ({ users }) => {
         </TableHead>
         {/* Body */}
         <TableBody>
-          {users.map((user) => (
+          {(rowsPerPage > 0
+            ? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : users
+          ).map((user) => (
             <TableRow key={user.email}>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.displayName}</TableCell>
@@ -77,8 +94,10 @@ export const TableUsers = ({ users }) => {
                 <Tooltip title="Reenviar Email de verificación">
                   <IconButton
                     onClick={() => {
-                      console.log("clic para reenviar mail");
+                      // console.log("clic para reenviar mail");
                       // TODO: Depachar thunk de reenvio
+
+                      dispatch(resendEmailConfirmation(user));
                     }}
                   >
                     <MarkEmailUnread color="primary" />
@@ -125,6 +144,16 @@ export const TableUsers = ({ users }) => {
         </TableBody>
       </Table>
       <ModalEditSensor open={open} setOpen={setOpen} sensor={sensor} />
+
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+        component="div"
+        count={users.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={handleChangePage}
+      />
     </TableContainer>
   );
 };

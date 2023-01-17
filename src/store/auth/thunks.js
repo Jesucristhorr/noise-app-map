@@ -10,6 +10,8 @@ import {
   deleteUserById,
   showErrorRegister,
   setUsers,
+  showMsgResendEmail,
+  showMsgErrorResendEmail,
 } from "./";
 import { getToken } from "../../helpers/getToken";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +74,7 @@ export const startCreatingUserWithEmailPassword = ({
       dispatch(savingNewUser());
     } catch (error) {
       console.log("Algo falló");
-      console.log(error.response.data.msg);
+      console.log(error.response.data);
       dispatch(showErrorRegister(error.response.data.msg));
     }
   };
@@ -133,5 +135,29 @@ export const startDeletingUser = () => {
 
     // TODO borrar sensor por usuario autenticado
     dispatch(deleteUserById(user.email));
+  };
+};
+
+export const resendEmailConfirmation = ({ id }) => {
+  return async (dispatch, getState) => {
+    let token = getToken();
+    try {
+      const resp = await autenticacionPorEmailPassword.post(
+        "/auth/signup/resend-confirmation-email",
+        { userId: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(resp.data);
+      //TODO Despachar estado para mostrar msm
+      dispatch(showMsgResendEmail(resp.data));
+    } catch (error) {
+      console.log(error.response.data.msg);
+      console.log("Algo salió mal :(");
+      dispatch(showMsgErrorResendEmail(error.response.data));
+    }
   };
 };

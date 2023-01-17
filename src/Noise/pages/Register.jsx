@@ -25,25 +25,15 @@ import { CloseOutlined } from "@mui/icons-material";
 import { TableUsers } from "../components/TableUsers";
 import { getRoles } from "../../store/roles/thunk";
 
-// const role = [
-//   {
-//     value: 1,
-//     label: "System",
-//   },
-//   {
-//     value: 2,
-//     label: "Admin",
-//   },
-//   {
-//     value: 3,
-//     label: "Common",
-//   },
-// ];
-
 export const Register = () => {
-  const { messageSaved, isSaving, users, errorMessage } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    messageSaved,
+    isSaving,
+    users,
+    errorMessage,
+    messageResendEmail,
+    messageErrorResendEmail,
+  } = useSelector((state) => state.auth);
   const { roles } = useSelector((state) => state.role);
 
   const dispatch = useDispatch();
@@ -53,6 +43,9 @@ export const Register = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [openAlert, setOpenAlert] = useState(false);
+
+  const [openMsgEmail, setOpenMsgEmail] = useState(true);
+
   const [loading, setLoading] = useState(false);
 
   const {
@@ -154,6 +147,64 @@ export const Register = () => {
               <AlertTitle>Guardado</AlertTitle>
               {messageSaved}
             </Alert>
+          )}
+        </Collapse>
+
+        <Collapse in={openMsgEmail}>
+          {!!messageErrorResendEmail ? (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenMsgEmail(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="error"
+              sx={{
+                mt: 2,
+                width: "100%",
+              }}
+            >
+              <AlertTitle>Error</AlertTitle>
+              {messageErrorResendEmail}
+            </Alert>
+          ) : (
+            <p></p>
+          )}
+        </Collapse>
+
+        <Collapse in={openMsgEmail}>
+          {!!messageResendEmail ? (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenMsgEmail(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="success"
+              sx={{
+                mt: 2,
+                width: "100%",
+              }}
+            >
+              <AlertTitle>Error</AlertTitle>
+              {messageResendEmail}
+            </Alert>
+          ) : (
+            <p></p>
           )}
         </Collapse>
 
@@ -268,8 +319,8 @@ export const Register = () => {
                       {...register("roleId", {
                         required: "Campo requerido",
                       })}
-                      helperText={errors.roleId ? "Campo requerido" : ""}
                       error={!!errors.roleId}
+                      helperText={errors.roleId ? "Campo requerido" : ""}
                     >
                       {roles.map((option) => (
                         <MenuItem key={option.id} value={option.id}>
@@ -289,10 +340,14 @@ export const Register = () => {
                       id="filled-hidden-label-small"
                       {...register("password", {
                         required: "Campo requerido",
-                        minLength: 5,
+                        minLength: 10,
                       })}
                       error={!!errors.password}
-                      helperText={errors.password ? "Campo requerido" : ""}
+                      helperText={
+                        errors.password
+                          ? "La contraseña debe tener mínimo 10 caracteres"
+                          : ""
+                      }
                     />
                   </Grid>
 

@@ -14,6 +14,8 @@ export const authSlice = createSlice({
     isSaving: false,
     errorMessage: null,
     messageSaved: null,
+    messageResendEmail: null,
+    messageErrorResendEmail: null,
   },
   reducers: {
     login: (state, { payload }) => {
@@ -72,6 +74,17 @@ export const authSlice = createSlice({
       state.errorMessage = payload;
       state.messageSaved = null;
     },
+
+    showMsgResendEmail: (state, { payload }) => {
+      console.log(payload);
+      state.messageResendEmail = payload.msg;
+      messageErrorResendEmail = null;
+    },
+
+    showMsgErrorResendEmail: (state, { payload }) => {
+      state.messageErrorResendEmail = payload.msg;
+      state.messageResendEmail = null;
+    },
   },
 });
 
@@ -86,4 +99,6 @@ export const {
   setActiveUser,
   showErrorRegister,
   setUsers,
+  showMsgResendEmail,
+  showMsgErrorResendEmail,
 } = authSlice.actions;
