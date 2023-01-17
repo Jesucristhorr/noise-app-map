@@ -61,6 +61,8 @@ export const authSlice = createSlice({
 
     setUsers: (state, action) => {
       state.users = action.payload;
+      state.messageErrorResendEmail = null;
+      state.messageResendEmail = null;
     },
 
     deleteUserById: (state, action) => {
@@ -78,12 +80,23 @@ export const authSlice = createSlice({
     showMsgResendEmail: (state, { payload }) => {
       console.log(payload);
       state.messageResendEmail = payload.msg;
-      messageErrorResendEmail = null;
+      state.messageErrorResendEmail = null;
     },
 
     showMsgErrorResendEmail: (state, { payload }) => {
       state.messageErrorResendEmail = payload.msg;
       state.messageResendEmail = null;
+    },
+
+    updateUser: (state, action) => {
+      state.isSaving = false;
+      state.users = state.users.map((user) => {
+        if (user.id === action.payload.id) {
+          return action.payload;
+        }
+        return user;
+      });
+      state.messageSaved = `${action.payload.displayName}, actualizada correctamente`;
     },
   },
 });
@@ -101,4 +114,5 @@ export const {
   setUsers,
   showMsgResendEmail,
   showMsgErrorResendEmail,
+  updateUser,
 } = authSlice.actions;

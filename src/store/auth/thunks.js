@@ -12,6 +12,7 @@ import {
   setUsers,
   showMsgResendEmail,
   showMsgErrorResendEmail,
+  updateUser,
 } from "./";
 import { getToken } from "../../helpers/getToken";
 import { useNavigate } from "react-router-dom";
@@ -151,13 +152,19 @@ export const resendEmailConfirmation = ({ id }) => {
           },
         }
       );
-      // console.log(resp.data);
-      //TODO Despachar estado para mostrar msm
+
       dispatch(showMsgResendEmail(resp.data));
     } catch (error) {
-      console.log(error.response.data.msg);
+      // console.log(error.response.data);
       console.log("Algo salió mal :(");
       dispatch(showMsgErrorResendEmail(error.response.data));
     }
+  };
+};
+
+export const updateUserById = (user) => {
+  return async (dispatch, getState) => {
+    // TODO despachar reducer para actualizar usuario
+    dispatch(updateUser(user.email));
   };
 };

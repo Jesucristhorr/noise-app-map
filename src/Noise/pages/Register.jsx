@@ -45,6 +45,7 @@ export const Register = () => {
   const [openAlert, setOpenAlert] = useState(false);
 
   const [openMsgEmail, setOpenMsgEmail] = useState(true);
+  const [openMsgError, setOpenMsgError] = useState(true);
 
   const [loading, setLoading] = useState(false);
 
@@ -150,7 +151,7 @@ export const Register = () => {
           )}
         </Collapse>
 
-        <Collapse in={openMsgEmail}>
+        <Collapse in={openMsgError}>
           {!!messageErrorResendEmail ? (
             <Alert
               action={
@@ -159,7 +160,7 @@ export const Register = () => {
                   color="inherit"
                   size="small"
                   onClick={() => {
-                    setOpenMsgEmail(false);
+                    setOpenMsgError(false);
                   }}
                 >
                   <CloseOutlined />
@@ -200,7 +201,7 @@ export const Register = () => {
                 width: "100%",
               }}
             >
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>Correo enviado</AlertTitle>
               {messageResendEmail}
             </Alert>
           ) : (

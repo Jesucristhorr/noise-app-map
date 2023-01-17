@@ -17,6 +17,7 @@ import {
   TablePagination,
   TableRow,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { ModalEditSensor } from "./ModalEditSensor";
 import { useEffect, useState } from "react";
@@ -74,6 +75,7 @@ export const TableUsers = ({ users }) => {
             <TableCell>Nombres</TableCell>
             <TableCell>Usuario</TableCell>
             <TableCell>Rol</TableCell>
+            <TableCell>Estado</TableCell>
             <TableCell>Acciones</TableCell>
           </TableRow>
         </TableHead>
@@ -88,6 +90,17 @@ export const TableUsers = ({ users }) => {
               <TableCell>{user.displayName}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.role ? user.role.name : "NO ROLE"}</TableCell>
+              <TableCell>
+                {user.active ? (
+                  <Typography sx={{ color: "#78e08f", fontWeight: "bold" }}>
+                    Activo
+                  </Typography>
+                ) : (
+                  <Typography sx={{ color: "#ff6b6b", fontWeight: "bold" }}>
+                    Inactivo
+                  </Typography>
+                )}
+              </TableCell>
 
               <TableCell>
                 {/* send mail */}
@@ -107,8 +120,8 @@ export const TableUsers = ({ users }) => {
                 {/* edit */}
                 <IconButton
                   onClick={() => {
-                    console.log("clic para editar");
                     // TODO: Depachar thunk de editar
+                    // dispatch(updateUserById(user))
                   }}
                 >
                   <Edit sx={{ color: "#f9ca24" }} />
