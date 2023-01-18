@@ -18,6 +18,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearMessages,
   startCreatingUserWithEmailPassword,
   startLoadingUsers,
 } from "../../store/auth";
@@ -33,24 +34,21 @@ export const Register = () => {
     errorMessage,
     messageResendEmail,
     messageErrorResendEmail,
+    messageUpdated,
   } = useSelector((state) => state.auth);
   const { roles } = useSelector((state) => state.role);
 
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [loadingUsers, setOpenLoadingUsers] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openMsgEmail, setOpenMsgEmail] = useState(true);
+  const [openUpdateMsg, setOpenUpdateMsg] = useState(true);
+  const [openMsgError, setOpenMsgError] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [openAlert, setOpenAlert] = useState(false);
-
-  const [openMsgEmail, setOpenMsgEmail] = useState(true);
-  const [openUpdateMsg, setOpenUpdateMsg] = useState(true);
-
-  const [openMsgError, setOpenMsgError] = useState(true);
-
-  const [loading, setLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -66,6 +64,18 @@ export const Register = () => {
     });
     setOpenLoadingUsers(true);
   }, []);
+
+  useEffect(() => {
+    setOpenMsgError(true);
+  }, [messageErrorResendEmail]);
+
+  useEffect(() => {
+    setOpenMsgEmail(true);
+  }, [messageResendEmail]);
+
+  useEffect(() => {
+    setOpenUpdateMsg(true);
+  }, [messageUpdated]);
 
   return (
     <>
@@ -212,7 +222,7 @@ export const Register = () => {
         </Collapse>
 
         <Collapse in={openUpdateMsg}>
-          {!!messageSaved ? (
+          {!!messageUpdated ? (
             <Alert
               action={
                 <IconButton
@@ -233,7 +243,7 @@ export const Register = () => {
               }}
             >
               <AlertTitle>Usuario actualizado correctamente</AlertTitle>
-              {messageSaved}
+              {messageUpdated}
             </Alert>
           ) : (
             <p></p>
@@ -280,8 +290,10 @@ export const Register = () => {
                       setOpenAlert(true);
                       setLoading(false);
                       dispatch(startLoadingUsers());
+                      // dispatch(clearMessages());
                     }
                   );
+                  dispatch(clearMessages());
 
                   setLoading(true);
                   reset();

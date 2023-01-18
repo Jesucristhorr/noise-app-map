@@ -14,6 +14,7 @@ export const authSlice = createSlice({
     isSaving: false,
     errorMessage: null,
     messageSaved: null,
+    messageUpdated: null,
     messageResendEmail: null,
     messageErrorResendEmail: null,
   },
@@ -97,7 +98,14 @@ export const authSlice = createSlice({
         }
         return user;
       });
-      state.messageSaved = `${action.payload.displayName}, actualizada correctamente`;
+      state.messageUpdated = `${action.payload.displayName}, actualizada correctamente`;
+    },
+
+    clearMessages: (state, action) => {
+      state.messageSaved = null;
+      state.messageUpdated = null;
+      state.messageResendEmail = null;
+      state.messageErrorResendEmail = null;
     },
   },
 });
@@ -116,4 +124,5 @@ export const {
   showMsgResendEmail,
   showMsgErrorResendEmail,
   updateUser,
+  clearMessages,
 } = authSlice.actions;

@@ -7,14 +7,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserById } from "../../store/auth";
+import {
+  clearMessages,
+  startLoadingUsers,
+  updateUserById,
+} from "../../store/auth";
 
 export const RegisterEdit = ({ open, setOpen, user }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [loading, setLoading] = useState(false);
+
   const { roles } = useSelector((state) => state.role);
   const dispatch = useDispatch();
 
@@ -32,7 +38,7 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
       setValue("email", user.email ? user.email : "");
       setValue("displayName", user.displayName ? user.displayName : "");
       setValue("username", user.username ? user.username : "");
-      setValue("roleId", "name", user.role ? user.role.id : "");
+      // setValue("roleId", "name", user.role ? user.role.id : "");
     }
   }, [user]);
 
@@ -66,21 +72,21 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
           component="h2"
           color="primary"
         >
-          Ingresar Nuevo usuario
+          Actualizar Nuevo usuario
         </Typography>
         <form
           onSubmit={handleSubmit((data) => {
             const { id } = user;
             const newUser = { id, ...data };
             // console.log(newUser);
-            dispatch(updateUserById(newUser));
-            // dispatch(startCreatingUserWithEmailPassword(data)).then(() => {
-            //   setOpenAlert(true);
-            //   setLoading(false);
-            //   dispatch(startLoadingUsers());
-            // });
 
-            // setLoading(true);
+            dispatch(updateUserById(newUser)).then(() => {
+              // dispatch(clearMessages());
+              dispatch(startLoadingUsers());
+            });
+
+            // dispatch(clearMessages());
+
             reset();
             setOpen(false);
           })}

@@ -33,6 +33,7 @@ import {
   startDeletingUser,
   startLoadingUsers,
   resendEmailConfirmation,
+  clearMessages,
 } from "../../store/auth";
 import { RegisterEdit } from "./RegisterEdit";
 
@@ -116,7 +117,7 @@ export const TableUsers = ({ users }) => {
                         // console.log("clic para reenviar mail");
                         // TODO: Depachar thunk de reenvio
 
-                        dispatch(resendEmailConfirmation(user));
+                        dispatch(resendEmailConfirmation(user)).then(() => {});
                       }}
                     >
                       <MarkEmailUnread color="primary" />
