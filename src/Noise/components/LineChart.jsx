@@ -9,6 +9,7 @@ import {
   Legend,
   PointElement,
   LineElement,
+  Filler,
 } from "chart.js";
 
 ChartJS.register(
@@ -18,13 +19,14 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 export const LineChart = ({ chartData }) => {
   return (
     <>
-      <Typography>LINE CHART</Typography>
+      <Typography>Ruido Ambiental </Typography>
       <Line data={chartData} />
     </>
   );
