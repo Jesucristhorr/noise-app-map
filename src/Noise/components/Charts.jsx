@@ -93,6 +93,7 @@ const dataset3 = [
 ];
 
 export const Charts = () => {
+  const [data, setData] = useState([]);
   useEffect(() => {
     const authToken = getToken();
     const socket = io("wss://iot-api.codefilia.com", {
@@ -104,11 +105,14 @@ export const Charts = () => {
       // socket.emit("authenticate", { token: authToken });
     });
 
-    socket.on("sensor-data", (data) => {
-      console.log(data);
+    socket.on("sensor-data", (dataSensor) => {
+      // console.log(dataSensor);
+      // setData([...data, dataSensor]);
+      setData((currentData) => [...currentData, dataSensor]);
     });
   }, []);
 
+  console.log(data);
   const [userData, setUserData] = useState({
     labels: dataset2.map((data) => data.hora),
     datasets: [
