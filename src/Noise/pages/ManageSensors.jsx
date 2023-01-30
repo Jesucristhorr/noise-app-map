@@ -47,7 +47,7 @@ const protocolo = [
   },
   {
     value: 2,
-    label: "Mosquitto",
+    label: "AMQP",
   },
 ];
 
@@ -304,6 +304,7 @@ export const ManageSensors = () => {
 
                   <Grid item xs={12} sx={{ mt: 2 }}>
                     <TextField
+                      // no mayor a 100 caracteres
                       label="Lugar"
                       type="text"
                       placeholder="Ejemplo: Facultad de Ciencias Informáticas"
@@ -313,6 +314,7 @@ export const ManageSensors = () => {
                       {...register("place", {
                         required: "Campo requerido",
                         minLength: 5,
+                        maxLength: 99,
                       })}
                       error={!!errors.place}
                       helperText={errors.place ? "Campo requerido" : ""}
@@ -386,7 +388,7 @@ export const ManageSensors = () => {
 
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       <TextField
-                        label="Tipo de conexión"
+                        label="Protocolo de conexión "
                         select
                         defaultValue=""
                         placeholder="Ejemplo: MQTT"
@@ -409,11 +411,11 @@ export const ManageSensors = () => {
                       </TextField>
                     </Grid>
                     <Grid container justifyContent="space-between">
-                      <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                      <Grid item xs={12} sx={{ mt: 2, mr: 1 }}>
                         <TextField
-                          label="Hostname"
+                          label="URL de conexión"
                           type="text"
-                          placeholder="Ejemplo: Hostname"
+                          placeholder="Ejemplo: www.algo.com"
                           fullWidth
                           size="small"
                           // id="filled-hidden-label-small"
@@ -427,7 +429,7 @@ export const ManageSensors = () => {
                           error={!!errors.connHostname}
                         />
                       </Grid>
-                      <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                      {/* <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
                         <TextField
                           label="Puerto"
                           type="number"
@@ -443,13 +445,13 @@ export const ManageSensors = () => {
                           helperText={errors.connPort ? "Campo inválido" : ""}
                           error={!!errors.connPort}
                         />
-                      </Grid>
+                      </Grid> */}
                     </Grid>
 
                     <Grid container justifyContent="space-between">
                       <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
                         <TextField
-                          label="Usuario de Conexión"
+                          label="Usuario"
                           type="text"
                           placeholder="Ejemplo: username connection"
                           fullWidth
@@ -468,7 +470,7 @@ export const ManageSensors = () => {
 
                       <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
                         <TextField
-                          label="Contraseña de conexión"
+                          label="Contraseña"
                           type="password"
                           placeholder="***********"
                           fullWidth

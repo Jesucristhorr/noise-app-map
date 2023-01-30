@@ -7,8 +7,7 @@ import { Charts } from "../components/Charts";
 import { NoiseLayout } from "../layout/NoiseLayout";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
-
-const socket = io("https://websocket-server-production-118f.up.railway.app/");
+import { getToken } from "../../helpers/getToken";
 
 export const NoiseLeves = () => {
   const { sensors } = useSelector((state) => state.map);
@@ -21,10 +20,20 @@ export const NoiseLeves = () => {
     formState: { errors },
   } = useForm();
 
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  // const [isConnected, setIsConnected] = useState(socket.connected);
   useEffect(() => {
+    const authToken = getToken();
+    const socket = io("wss://iot-api.codefilia.com", {
+      auth: { token: authToken },
+    });
+
     socket.on("connect", () => {
       console.log("Connected to socket");
+      // socket.emit("authenticate", { token: authToken });
+    });
+
+    socket.on("sensor-data", (data) => {
+      console.log(data);
     });
   }, []);
 
@@ -51,17 +60,17 @@ export const NoiseLeves = () => {
           columnSpacing={2}
         >
           <Grid item>
-            <TextField
+            {/* <TextField
               sx={{ width: "300px" }}
               fullWidth
               // label="Fecha"
               id="datefl"
               type="date"
               {...register("datefl")}
-            />
+            /> */}
           </Grid>
           <Grid item>
-            <TextField
+            {/* <TextField
               fullWidth
               label="Lugar"
               select
@@ -75,7 +84,17 @@ export const NoiseLeves = () => {
                   {option.place}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
+
+            <TextField
+              sx={{ width: "300px" }}
+              fullWidth
+              // label="Fecha"
+              id="datefl"
+              // type="datetime"
+              type="datetime-local"
+              {...register("dateTimefl")}
+            />
           </Grid>
           <Grid item>
             <Button variant="contained" sx={{ color: "#fff" }} type="submit">
