@@ -21,21 +21,21 @@ export const NoiseLeves = () => {
   } = useForm();
 
   // const [isConnected, setIsConnected] = useState(socket.connected);
-  useEffect(() => {
-    const authToken = getToken();
-    const socket = io("wss://iot-api.codefilia.com", {
-      auth: { token: authToken },
-    });
+  // useEffect(() => {
+  //   const authToken = getToken();
+  //   const socket = io("wss://iot-api.codefilia.com", {
+  //     auth: { token: authToken },
+  //   });
 
-    socket.on("connect", () => {
-      console.log("Connected to socket");
-      // socket.emit("authenticate", { token: authToken });
-    });
+  //   socket.on("connect", () => {
+  //     console.log("Connected to socket");
+  //     // socket.emit("authenticate", { token: authToken });
+  //   });
 
-    socket.on("sensor-data", (data) => {
-      console.log(data);
-    });
-  }, []);
+  //   socket.on("sensor-data", (data) => {
+  //     console.log(data);
+  //   });
+  // }, []);
 
   return (
     <NoiseLayout>

@@ -394,7 +394,6 @@ export const Register = () => {
                       }
                     />
                   </Grid>
-
                   <Grid
                     container
                     sx={{ mb: 2, mt: 1, justifyContent: "center" }}

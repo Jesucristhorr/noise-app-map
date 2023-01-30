@@ -1,6 +1,10 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserLocation, setMap } from "../../store/map/thunks";
+import {
+  getUserLocation,
+  setMap,
+  startLoadingSensors,
+} from "../../store/map/thunks";
 import { Loading } from "./Loading";
 import { Map, Marker, Popup } from "mapbox-gl";
 import { setMapa } from "../../store/map/mapSlice";
@@ -15,6 +19,10 @@ export const MapView = () => {
   const dispatch = useDispatch();
 
   const mapDiv = useRef(null);
+
+  useEffect(() => {
+    dispatch(startLoadingSensors());
+  }, []);
 
   useLayoutEffect(() => {
     if (!isLoading) {

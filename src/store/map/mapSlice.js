@@ -13,6 +13,7 @@ export const mapSlice = createSlice({
     messageSaved: "",
     messageUpdated: "",
     messageDelete: "",
+    messageError: "",
   },
   reducers: {
     // type: setUserLocation  payload: [number, number]
@@ -36,7 +37,7 @@ export const mapSlice = createSlice({
       //mutar el obj
       state.sensors.push(action.payload);
       state.isSaving = false;
-      state.messageSaved = `Sensor ${action.payload.sensor} agregado correctamente`;
+      state.messageSaved = `Sensor ${action.payload.name} agregado correctamente`;
     },
 
     // sensor individual
@@ -63,6 +64,15 @@ export const mapSlice = createSlice({
       );
       state.messageDelete = `Sensor con ID ${action.payload} borrado correctamente`;
     },
+
+    errorSensor: (state, action) => {
+      console.log(action.payload.response.data.msg);
+      state.messageError = `${action.payload.response.data.msg}`;
+    },
+
+    setSensors: (state, action) => {
+      state.sensors = action.payload;
+    },
   },
 });
 
@@ -75,4 +85,6 @@ export const {
   setActiveSensor,
   updateSensor,
   deleteSensorById,
+  errorSensor,
+  setSensors,
 } = mapSlice.actions;

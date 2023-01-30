@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { BarChart } from "./BarChart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { width } from "@mui/system";
 import { LineChart } from "./LineChart";
+import { io } from "socket.io-client";
+import { getToken } from "../../helpers/getToken";
 
 const dataset2 = [
   {
@@ -91,6 +93,22 @@ const dataset3 = [
 ];
 
 export const Charts = () => {
+  useEffect(() => {
+    const authToken = getToken();
+    const socket = io("wss://iot-api.codefilia.com", {
+      auth: { token: authToken },
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected to socket");
+      // socket.emit("authenticate", { token: authToken });
+    });
+
+    socket.on("sensor-data", (data) => {
+      console.log(data);
+    });
+  }, []);
+
   const [userData, setUserData] = useState({
     labels: dataset2.map((data) => data.hora),
     datasets: [

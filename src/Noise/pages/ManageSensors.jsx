@@ -33,7 +33,11 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserLocation, updateSensor } from "../../store/map/mapSlice";
-import { getUserLocation, startNewSensor } from "../../store/map/thunks";
+import {
+  getUserLocation,
+  startLoadingSensors,
+  startNewSensor,
+} from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
 import { TableSensors } from "../components/TableSensors";
 import { NoiseLayout } from "../layout/NoiseLayout";
@@ -47,7 +51,7 @@ const protocolo = [
   },
   {
     value: 2,
-    label: "AMQP",
+    label: "MQTTS",
   },
 ];
 
@@ -60,6 +64,7 @@ export const ManageSensors = () => {
     messageSaved,
     messageDelete,
     messageUpdated,
+    messageError,
   } = useSelector((state) => state.map);
 
   const dispatch = useDispatch();
@@ -69,7 +74,7 @@ export const ManageSensors = () => {
 
   // alerta
   const handleCloseAlert = () => setOpenAlert(false);
-  const [openAlert, setOpenAlert] = useState(isSaving);
+  const [openAlert, setOpenAlert] = useState(false);
   const [openAlertDelete, setOpenAlertDelete] = useState(true);
   const [openAlertUpdate, setOpenAlertUpdate] = useState(true);
 
@@ -87,6 +92,10 @@ export const ManageSensors = () => {
     setValue("latitude", userLocation[1]);
   };
 
+  useEffect(() => {
+    dispatch(startLoadingSensors());
+  }, []);
+
   return (
     <>
       <NoiseLayout>
@@ -95,30 +104,57 @@ export const ManageSensors = () => {
         </Button>
 
         <Collapse in={openAlert}>
-          <Alert
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpenAlert(false);
-                }}
-              >
-                <CloseOutlined />
-              </IconButton>
-            }
-            severity="success"
-            sx={{
-              mt: 2,
-              width: "100%",
-              // display: isSaving ? "inherit" : "none",
-              // display: "none",
-            }}
-          >
-            <AlertTitle>Guardado</AlertTitle>
-            {messageSaved}
-          </Alert>
+          {!!messageSaved ? (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlert(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="success"
+              sx={{
+                mt: 2,
+                width: "100%",
+                // display: isSaving ? "inherit" : "none",
+                // display: "none",
+              }}
+            >
+              <AlertTitle>Guardado</AlertTitle>
+              {messageSaved}
+            </Alert>
+          ) : (
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpenAlert(false);
+                  }}
+                >
+                  <CloseOutlined />
+                </IconButton>
+              }
+              severity="error"
+              sx={{
+                mt: 2,
+                width: "100%",
+                // display: isSaving ? "inherit" : "none",
+                // display: "none",
+              }}
+            >
+              <AlertTitle>Error</AlertTitle>
+              {messageError}
+            </Alert>
+          )}
         </Collapse>
 
         {!!messageUpdated ? (
@@ -217,10 +253,12 @@ export const ManageSensors = () => {
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {
-                  dispatch(startNewSensor(data));
-                  reset();
+                  // console.log(data);
+                  dispatch(startNewSensor(data)).then(() => {
+                    setOpenAlert(true);
+                  });
                   setOpen(false);
-                  setOpenAlert(true);
+                  reset();
                 })}
               >
                 <Divider
@@ -242,16 +280,16 @@ export const ManageSensors = () => {
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("sensor", {
+                      {...register("name", {
                         required: "Campo requerido",
                         minLength: 5,
                       })}
-                      error={!!errors.sensor}
-                      helperText={errors.sensor ? "Campo requerido" : ""}
+                      error={!!errors.name}
+                      helperText={errors.name ? "Campo requerido" : ""}
                     />
                   </Grid>
 
-                  <Grid item xs={12} sx={{ mt: 2 }}>
+                  {/* <Grid item xs={12} sx={{ mt: 2 }}>
                     <TextField
                       label="Nombre"
                       type="text"
@@ -266,7 +304,7 @@ export const ManageSensors = () => {
                       error={!!errors.nombre}
                       helperText={errors.nombre ? "Campo requerido" : ""}
                     />
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item xs={12} sx={{ mt: 2 }}>
                     <TextField
@@ -293,12 +331,14 @@ export const ManageSensors = () => {
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("unit", {
+                      {...register("measurementUnit", {
                         required: "Campo requerido",
                         minLength: 5,
                       })}
-                      error={!!errors.unit}
-                      helperText={errors.unit ? "Campo requerido" : ""}
+                      error={!!errors.measurementUnit}
+                      helperText={
+                        errors.measurementUnit ? "Campo requerido" : ""
+                      }
                     />
                   </Grid>
 
@@ -311,13 +351,13 @@ export const ManageSensors = () => {
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("place", {
+                      {...register("locationName", {
                         required: "Campo requerido",
                         minLength: 5,
                         maxLength: 99,
                       })}
-                      error={!!errors.place}
-                      helperText={errors.place ? "Campo requerido" : ""}
+                      error={!!errors.locationName}
+                      helperText={errors.locationName ? "Campo requerido" : ""}
                     />
                   </Grid>
 
@@ -395,13 +435,11 @@ export const ManageSensors = () => {
                         fullWidth
                         size="small"
                         // id="filled-hidden-label-small"
-                        {...register("connectionType", {
+                        {...register("protocolId", {
                           required: "Campo requerido",
                         })}
-                        helperText={
-                          errors.connectionType ? "Campo requerido" : ""
-                        }
-                        error={!!errors.connectionType}
+                        helperText={errors.protocolId ? "Campo requerido" : ""}
+                        error={!!errors.protocolId}
                       >
                         {protocolo.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
@@ -419,14 +457,14 @@ export const ManageSensors = () => {
                           fullWidth
                           size="small"
                           // id="filled-hidden-label-small"
-                          {...register("connHostname", {
+                          {...register("connectionUrl", {
                             required: "Campo requerido",
                             minLength: 5,
                           })}
                           helperText={
-                            errors.connHostname ? "Campo requerido" : ""
+                            errors.connectionUrl ? "Campo requerido" : ""
                           }
-                          error={!!errors.connHostname}
+                          error={!!errors.connectionUrl}
                         />
                       </Grid>
                       {/* <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
@@ -457,13 +495,13 @@ export const ManageSensors = () => {
                           fullWidth
                           size="small"
                           // id="filled-hidden-label-small"
-                          {...register("connUsername", {
+                          {...register("connectionUsername", {
                             required: "Campo requerido",
                             minLength: 5,
                           })}
-                          error={!!errors.connUsername}
+                          error={!!errors.connectionUsername}
                           helperText={
-                            errors.connUsername ? "Campo requerido" : ""
+                            errors.connectionUsername ? "Campo requerido" : ""
                           }
                         />
                       </Grid>
@@ -476,13 +514,13 @@ export const ManageSensors = () => {
                           fullWidth
                           size="small"
                           // id="filled-hidden-label-small"
-                          {...register("connPassword", {
+                          {...register("connectionPassword", {
                             required: "Campo requerido",
                             minLength: 5,
                           })}
-                          error={!!errors.connPassword}
+                          error={!!errors.connectionPassword}
                           helperText={
-                            errors.connPassword ? "Campo requerido" : ""
+                            errors.connectionPassword ? "Campo requerido" : ""
                           }
                         />
                       </Grid>

@@ -40,7 +40,6 @@ export const TableSensors = ({ sensors }) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Sensor</TableCell>
-            <TableCell>Nombre</TableCell>
             <TableCell>Descripcion</TableCell>
             <TableCell>Unidad de Medida</TableCell>
             <TableCell>Lugar</TableCell>
@@ -52,13 +51,12 @@ export const TableSensors = ({ sensors }) => {
         {/* Body */}
         <TableBody>
           {sensors.map((sensor) => (
-            <TableRow key={sensor.id}>
+            <TableRow key={sensor.name}>
               <TableCell>{sensor.id}</TableCell>
-              <TableCell>{sensor.sensor}</TableCell>
-              <TableCell>{sensor.nombre}</TableCell>
+              <TableCell>{sensor.name}</TableCell>
               <TableCell>{sensor.description}</TableCell>
-              <TableCell>{sensor.unit}</TableCell>
-              <TableCell>{sensor.place}</TableCell>
+              <TableCell>{sensor.measurementUnit}</TableCell>
+              <TableCell>{sensor.locationName}</TableCell>
               <TableCell>{sensor.latitude}</TableCell>
               <TableCell>{sensor.longitude}</TableCell>
               <TableCell>

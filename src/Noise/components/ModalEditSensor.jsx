@@ -57,23 +57,29 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
   // setear valores
   useEffect(() => {
     if (!!sensor) {
-      setValue("sensor", sensor.sensor ? sensor.sensor : "");
-      setValue("nombre", sensor.nombre ? sensor.nombre : "");
+      setValue("name", sensor.name ? sensor.name : "");
       setValue("description", sensor.description ? sensor.description : "");
-      setValue("unit", sensor.unit ? sensor.unit : "");
+      setValue(
+        "measurementUnit",
+        sensor.measurementUnit ? sensor.measurementUnit : ""
+      );
       setValue("longitude", sensor.longitude ? sensor.longitude : "");
       setValue("latitude", sensor.latitude ? sensor.latitude : "");
-      setValue("place", sensor.place ? sensor.place : "");
+      setValue("locationName", sensor.locationName ? sensor.locationName : "");
 
       setValue(
-        "connectionType",
-        sensor.connectionType ? sensor.connectionType : 1
+        "connectionUrl",
+        sensor.connectionUrl ? sensor.connectionUrl : ""
       );
 
-      setValue("connHostname", sensor.connHostname ? sensor.connHostname : "");
-      setValue("connPort", sensor.connPort ? sensor.connPort : "");
-      setValue("connUsername", sensor.connUsername ? sensor.connUsername : "");
-      setValue("connPassword", sensor.connPassword ? sensor.connPassword : "");
+      setValue(
+        "connectionUsername",
+        sensor.connectionUsername ? sensor.connectionUsername : ""
+      );
+      setValue(
+        "connectionPassword",
+        sensor.connectionPassword ? sensor.connectionPassword : ""
+      );
     }
   }, [sensor]);
 
@@ -152,31 +158,31 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   fullWidth
                   size="small"
                   // id="filled-hidden-label-small"
-                  {...register("sensor", {
+                  {...register("name", {
                     required: "Campo requerido",
                     minLength: 5,
                   })}
-                  error={!!errors.sensor}
-                  helperText={errors.sensor ? "Campo requerido" : ""}
+                  error={!!errors.name}
+                  helperText={errors.name ? "Campo requerido" : ""}
                 />
               </Grid>
 
-              <Grid item xs={12} sx={{ mt: 2 }}>
-                <TextField
-                  label="Nombre"
-                  type="text"
-                  placeholder="Arduino Nano"
-                  fullWidth
-                  size="small"
-                  id="filled-hidden-label-small"
-                  {...register("nombre", {
-                    required: "Campo requerido",
-                    minLength: 5,
-                  })}
-                  error={!!errors.nombre}
-                  helperText={errors.nombre ? "Campo requerido" : ""}
-                />
-              </Grid>
+              {/* <Grid item xs={12} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre"
+                      type="text"
+                      placeholder="Arduino Nano"
+                      fullWidth
+                      size="small"
+                      // id="filled-hidden-label-small"
+                      {...register("nombre", {
+                        required: "Campo requerido",
+                        minLength: 5,
+                      })}
+                      error={!!errors.nombre}
+                      helperText={errors.nombre ? "Campo requerido" : ""}
+                    />
+                  </Grid> */}
 
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
@@ -190,8 +196,8 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                     required: "Campo requerido",
                     minLength: 5,
                   })}
-                  error={!!errors.description}
                   helperText={errors.description ? "Campo requerido" : ""}
+                  error={!!errors.description}
                 />
               </Grid>
 
@@ -203,29 +209,31 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   fullWidth
                   size="small"
                   // id="filled-hidden-label-small"
-                  {...register("unit", {
+                  {...register("measurementUnit", {
                     required: "Campo requerido",
                     minLength: 5,
                   })}
-                  error={!!errors.unit}
-                  helperText={errors.unit ? "Campo requerido" : ""}
+                  error={!!errors.measurementUnit}
+                  helperText={errors.measurementUnit ? "Campo requerido" : ""}
                 />
               </Grid>
 
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
+                  // no mayor a 100 caracteres
                   label="Lugar"
                   type="text"
                   placeholder="Ejemplo: Facultad de Ciencias Informáticas"
                   fullWidth
                   size="small"
                   // id="filled-hidden-label-small"
-                  {...register("place", {
+                  {...register("locationName", {
                     required: "Campo requerido",
                     minLength: 5,
+                    maxLength: 99,
                   })}
-                  error={!!errors.place}
-                  helperText={errors.place ? "Campo requerido" : ""}
+                  error={!!errors.locationName}
+                  helperText={errors.locationName ? "Campo requerido" : ""}
                 />
               </Grid>
 
@@ -295,18 +303,18 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
 
                 <Grid item xs={12} sx={{ mt: 2 }}>
                   <TextField
-                    label="Tipo de conexión"
+                    label="Protocolo de conexión "
                     select
-                    defaultValue="1"
+                    defaultValue=""
                     placeholder="Ejemplo: MQTT"
                     fullWidth
                     size="small"
                     // id="filled-hidden-label-small"
-                    {...register("connectionType", {
+                    {...register("protocolId", {
                       required: "Campo requerido",
                     })}
-                    helperText={errors.connectionType ? "Campo requerido" : ""}
-                    error={!!errors.connectionType}
+                    helperText={errors.protocolId ? "Campo requerido" : ""}
+                    error={!!errors.protocolId}
                   >
                     {protocolo.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -316,73 +324,77 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   </TextField>
                 </Grid>
                 <Grid container justifyContent="space-between">
-                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                  <Grid item xs={12} sx={{ mt: 2, mr: 1 }}>
                     <TextField
-                      label="Hostname"
+                      label="URL de conexión"
                       type="text"
-                      placeholder="Ejemplo: Hostname"
+                      placeholder="Ejemplo: www.algo.com"
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("connHostname", {
+                      {...register("connectionUrl", {
                         required: "Campo requerido",
                         minLength: 5,
                       })}
-                      helperText={errors.connHostname ? "Campo requerido" : ""}
-                      error={!!errors.connHostname}
+                      helperText={errors.connectionUrl ? "Campo requerido" : ""}
+                      error={!!errors.connectionUrl}
                     />
                   </Grid>
-                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                    <TextField
-                      label="Puerto"
-                      type="text"
-                      placeholder="Ejemplo: Port"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("connPort", {
-                        required: "Campo requerido",
-                        minLength: 4,
-                        maxLength: 4,
-                      })}
-                      helperText={errors.connPort ? "Campo inválido" : ""}
-                      error={!!errors.connPort}
-                    />
-                  </Grid>
+                  {/* <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
+                        <TextField
+                          label="Puerto"
+                          type="number"
+                          placeholder="Ejemplo: Port"
+                          fullWidth
+                          size="small"
+                          // id="filled-hidden-label-small"
+                          {...register("connPort", {
+                            required: "Campo requerido",
+                            minLength: 4,
+                            maxLength: 4,
+                          })}
+                          helperText={errors.connPort ? "Campo inválido" : ""}
+                          error={!!errors.connPort}
+                        />
+                      </Grid> */}
                 </Grid>
 
                 <Grid container justifyContent="space-between">
                   <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
                     <TextField
-                      label="Usuario de Conexión"
+                      label="Usuario"
                       type="text"
                       placeholder="Ejemplo: username connection"
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("connUsername", {
+                      {...register("connectionUsername", {
                         required: "Campo requerido",
                         minLength: 5,
                       })}
-                      error={!!errors.connUsername}
-                      helperText={errors.connUsername ? "Campo requerido" : ""}
+                      error={!!errors.connectionUsername}
+                      helperText={
+                        errors.connectionUsername ? "Campo requerido" : ""
+                      }
                     />
                   </Grid>
 
                   <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
                     <TextField
-                      label="Contraseña de conexión"
+                      label="Contraseña"
                       type="password"
                       placeholder="***********"
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("connPassword", {
+                      {...register("connectionPassword", {
                         required: "Campo requerido",
                         minLength: 5,
                       })}
-                      error={!!errors.connPassword}
-                      helperText={errors.connPassword ? "Campo requerido" : ""}
+                      error={!!errors.connectionPassword}
+                      helperText={
+                        errors.connectionPassword ? "Campo requerido" : ""
+                      }
                     />
                   </Grid>
                 </Grid>
