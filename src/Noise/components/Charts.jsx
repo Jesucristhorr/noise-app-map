@@ -105,37 +105,36 @@ export const Charts = () => {
   }, []);
 
   const { data } = useCheckSocket();
-  console.log(data);
+  // console.log(data);
 
   // sensors.map((sensor) => {
   //   console.log(sensor.id);
   // });
 
-  const lineChart = {
-    labels: data.map((d) => getHoursMinutes(d.timestamp)), //horas
-    datasets: [
-      {
-        fill: true,
-        label: `Niveles de Ruido (dB)`,
-        data: data.map((d) => d.measurement),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-        borderColor: "rgb(53, 162, 235)",
-        borderWidth: 2,
-      },
-      // {
-      //   fill: true,
-      //   label: "Nivel máximo recomendado (dB) TULSMA 2015",
-      //   data: dataset3.map((data) => data.decibelios),
-      //   backgroundColor: "rgba(53, 162, 235, 0.5)",
-      //   borderColor: "rgb(53, 162, 235)",
-      //   borderWidth: 2,
-      // },
-    ],
-  };
+  // const lineChart = {
+  //   labels: data.map((d) => getHoursMinutes(d.timestamp)), //horas
+  //   datasets: [
+  //     {
+  //       fill: true,
+  //       label: `Niveles de Ruido (dB)`,
+  //       data: data.map((d) => d.measurement),
+  //       backgroundColor: "rgba(53, 162, 235, 0.5)",
+  //       borderColor: "rgb(53, 162, 235)",
+  //       borderWidth: 2,
+  //     },
+  //     // {
+  //     //   fill: true,
+  //     //   label: "Nivel máximo recomendado (dB) TULSMA 2015",
+  //     //   data: dataset3.map((data) => data.decibelios),
+  //     //   backgroundColor: "rgba(53, 162, 235, 0.5)",
+  //     //   borderColor: "rgb(53, 162, 235)",
+  //     //   borderWidth: 2,
+  //     // },
+  //   ],
+  // };
 
   return (
     <>
-      {/* <Typography variant="h6">Este apartado es para graficos</Typography> */}
       <Box
         sx={{
           display: "flex",
@@ -147,8 +146,14 @@ export const Charts = () => {
       >
         {/* <LineChart chartData={lineChart} /> */}
         {sensors.map((sensor) => (
-          <LineChart key={sensor.id} sensor={sensor} chartData={lineChart} />
+          <LineChart key={sensor.id} sensor={sensor} dataSensor={data} />
+          // TODO: data.filter((d) => d.sensorId === sensor.id )
         ))}
+
+        {/* {
+          let dataSensor = data.filter((d) => d.sensorId === 1)
+          console.log(dataSensor)
+        } */}
       </Box>
     </>
   );
