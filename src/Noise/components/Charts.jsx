@@ -7,6 +7,8 @@ import { io } from "socket.io-client";
 import { getToken } from "../../helpers/getToken";
 import { getHoursMinutes } from "../../helpers/getHoursMinutes";
 import { useCheckSocket } from "../../hooks/useCheckSocket";
+import { useDispatch, useSelector } from "react-redux";
+import { startLoadingSensors } from "../../store/map/thunks";
 
 const dataset2 = [
   {
@@ -95,7 +97,19 @@ const dataset3 = [
 ];
 
 export const Charts = () => {
+  const { sensors } = useSelector((state) => state.map);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(startLoadingSensors());
+  }, []);
+
   const { data } = useCheckSocket();
+  console.log(data);
+
+  // sensors.map((sensor) => {
+  //   console.log(sensor.id);
+  // });
 
   const lineChart = {
     labels: data.map((d) => getHoursMinutes(d.timestamp)), //horas
@@ -131,8 +145,10 @@ export const Charts = () => {
           margin: "70px auto",
         }}
       >
-        {/* <BarChart chartData={userData} /> */}
-        <LineChart chartData={lineChart} />
+        {/* <LineChart chartData={lineChart} /> */}
+        {sensors.map((sensor) => (
+          <LineChart key={sensor.id} sensor={sensor} chartData={lineChart} />
+        ))}
       </Box>
     </>
   );

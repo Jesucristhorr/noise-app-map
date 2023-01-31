@@ -20,29 +20,14 @@ export const NoiseLeves = () => {
     formState: { errors },
   } = useForm();
 
-  // const [isConnected, setIsConnected] = useState(socket.connected);
-  // useEffect(() => {
-  //   const authToken = getToken();
-  //   const socket = io("wss://iot-api.codefilia.com", {
-  //     auth: { token: authToken },
-  //   });
-
-  //   socket.on("connect", () => {
-  //     console.log("Connected to socket");
-  //     // socket.emit("authenticate", { token: authToken });
-  //   });
-
-  //   socket.on("sensor-data", (data) => {
-  //     console.log(data);
-  //   });
-  // }, []);
-
   return (
     <NoiseLayout>
       <Typography variant="h4" color={"primary"} sx={{ fontWeight: "bold" }}>
         MONITOREO DE RUIDO AMBIENTAL EN MANTA
       </Typography>
-      <Typography variant="h6">Ruido en Manta</Typography>
+      <Typography variant="h6" sx={{ mb: 4 }}>
+        Ruido en Manta
+      </Typography>
       <form
         onSubmit={handleSubmit((data) => {
           console.log(data);
@@ -60,41 +45,49 @@ export const NoiseLeves = () => {
           columnSpacing={2}
         >
           <Grid item>
-            {/* <TextField
-              sx={{ width: "300px" }}
-              fullWidth
-              // label="Fecha"
-              id="datefl"
-              type="date"
-              {...register("datefl")}
-            /> */}
-          </Grid>
-          <Grid item>
-            {/* <TextField
-              fullWidth
-              label="Lugar"
-              select
-              defaultValue=""
-              id="place"
-              sx={{ width: "300px" }}
-              {...register("place")}
-            >
-              {sensors.map((option) => (
-                <MenuItem key={option.sensor} value={option.place}>
-                  {option.place}
-                </MenuItem>
-              ))}
-            </TextField> */}
-
             <TextField
+              label="Fecha desde"
+              InputLabelProps={{ shrink: true }}
+              // value={"2023-01-31T09:48"}
               sx={{ width: "300px" }}
               fullWidth
               // label="Fecha"
               id="datefl"
               // type="datetime"
               type="datetime-local"
-              {...register("dateTimefl")}
+              {...register("dateTimeflFrom")}
             />
+          </Grid>
+          <Grid item>
+            <TextField
+              label="Fecha hasta"
+              InputLabelProps={{ shrink: true }}
+              // value={"2023-01-31T09:48"}
+              sx={{ width: "300px" }}
+              fullWidth
+              // label="Fecha"
+              id="datefl"
+              // type="datetime"
+              type="datetime-local"
+              // value={"2023-01-3109:45"}
+              {...register("dateTimeflTo")}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              fullWidth
+              select
+              label="Sensor"
+              defaultValue=""
+              sx={{ width: "300px" }}
+              {...register("sensorId")}
+            >
+              {sensors.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item>
             <Button variant="contained" sx={{ color: "#fff" }} type="submit">

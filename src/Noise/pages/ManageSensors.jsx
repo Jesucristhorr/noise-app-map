@@ -78,6 +78,7 @@ export const ManageSensors = () => {
   const [openAlertDelete, setOpenAlertDelete] = useState(true);
   const [openAlertUpdate, setOpenAlertUpdate] = useState(true);
   const [loadingSensors, setOpenLoadingSensors] = useState(false);
+  const [savingSensor, setSavingSensor] = useState(false);
 
   const {
     register,
@@ -112,6 +113,12 @@ export const ManageSensors = () => {
           Agregar Sensor
         </Button>
 
+        {/* SPINNER CUANDO SE GUARDA */}
+        {savingSensor && (
+          <Box sx={{ position: "absolute", top: "20%", left: "50%" }}>
+            <CircularProgress color="primary" />
+          </Box>
+        )}
         <Collapse in={openAlert}>
           {!!messageSaved ? (
             <Alert
@@ -265,9 +272,12 @@ export const ManageSensors = () => {
                   // console.log(data);
                   dispatch(startNewSensor(data)).then(() => {
                     setOpenAlert(true);
+                    setSavingSensor(false);
+
                     dispatch(startLoadingSensors());
                   });
                   setOpen(false);
+                  setSavingSensor(true);
                   reset();
                 })}
               >

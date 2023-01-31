@@ -53,7 +53,7 @@ export const mapSlice = createSlice({
         }
         return sensor;
       });
-      state.messageUpdated = `Sensor ${action.payload.sensor}, actualizado correctamente`;
+      state.messageUpdated = `Sensor ${action.payload.name}, actualizado correctamente`;
     },
 
     // Eliminar sensor

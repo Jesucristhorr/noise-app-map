@@ -23,11 +23,11 @@ ChartJS.register(
   Filler
 );
 
-export const LineChart = ({ chartData }) => {
+export const LineChart = ({ chartData, sensor }) => {
   return (
     <>
       <Typography>
-        Niveles de ruido obtenidos del sensor: AWESR (ID: 1)
+        Niveles de ruido obtenidos del sensor: {sensor.name} (ID: {sensor.id})
       </Typography>
       <Line data={chartData} />
     </>
