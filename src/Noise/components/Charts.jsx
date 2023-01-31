@@ -5,6 +5,7 @@ import { width } from "@mui/system";
 import { LineChart } from "./LineChart";
 import { io } from "socket.io-client";
 import { getToken } from "../../helpers/getToken";
+import { getHoursMinutes } from "../../helpers/getHoursMinutes";
 
 const dataset2 = [
   {
@@ -112,28 +113,34 @@ export const Charts = () => {
     });
   }, []);
 
-  console.log(data);
-  const [userData, setUserData] = useState({
-    labels: dataset2.map((data) => data.hora),
+  // console.log(data);
+  // data.map((d) => {
+  //   let horasSensor = getHoursMinutes(d.timestamp);
+  //   console.log(d.measurement);
+  // });
+
+  const lineChart = {
+    labels: data.map((d) => getHoursMinutes(d.timestamp)), //horas
     datasets: [
       {
         // fill: true,
         label: "Niveles de Ruido (dB)",
-        data: dataset2.map((data) => data.decibelios),
+        data: data.map((d) => d.measurement),
         backgroundColor: "rgba(255, 99, 132, 0.5)",
         borderColor: "rgb(255, 99, 132)",
         borderWidth: 2,
       },
-      {
-        fill: true,
-        label: "Nivel máximo recomendado (dB) TULSMA 2015",
-        data: dataset3.map((data) => data.decibelios),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-        borderColor: "rgb(53, 162, 235)",
-        borderWidth: 2,
-      },
+      // {
+      //   fill: true,
+      //   label: "Nivel máximo recomendado (dB) TULSMA 2015",
+      //   data: dataset3.map((data) => data.decibelios),
+      //   backgroundColor: "rgba(53, 162, 235, 0.5)",
+      //   borderColor: "rgb(53, 162, 235)",
+      //   borderWidth: 2,
+      // },
     ],
-  });
+  };
+
   return (
     <>
       {/* <Typography variant="h6">Este apartado es para graficos</Typography> */}
@@ -147,7 +154,7 @@ export const Charts = () => {
         }}
       >
         {/* <BarChart chartData={userData} /> */}
-        <LineChart chartData={userData} />
+        <LineChart chartData={lineChart} />
       </Box>
     </>
   );
