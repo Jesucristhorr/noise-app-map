@@ -5,12 +5,17 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Charts } from "../components/Charts";
 import { NoiseLayout } from "../layout/NoiseLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { getToken } from "../../helpers/getToken";
+import { DateTime } from "luxon";
+import { getISOFormat } from "../../helpers/getISOFormat";
+import { getMetricSensors } from "../../store/map/thunks";
 
 export const NoiseLeves = () => {
   const { sensors } = useSelector((state) => state.map);
+
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -30,7 +35,9 @@ export const NoiseLeves = () => {
       </Typography>
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+          // console.log(data.dateTimeflFrom);
+
+          dispatch(getMetricSensors(data));
         })}
       >
         <Grid
@@ -55,7 +62,13 @@ export const NoiseLeves = () => {
               id="datefl"
               // type="datetime"
               type="datetime-local"
-              {...register("dateTimeflFrom")}
+              {...register("dateTimeflFrom", { required: "Campo requerido" })}
+              error={!!errors.dateTimeflFrom}
+              helperText={
+                errors.dateTimeflFrom
+                  ? "Campo requerido"
+                  : "Ingrese fecha desde"
+              }
             />
           </Grid>
           <Grid item>
@@ -71,6 +84,7 @@ export const NoiseLeves = () => {
               type="datetime-local"
               // value={"2023-01-3109:45"}
               {...register("dateTimeflTo")}
+              helperText={"Ingrese fecha hasta"}
             />
           </Grid>
           <Grid item>
@@ -81,6 +95,7 @@ export const NoiseLeves = () => {
               defaultValue=""
               sx={{ width: "300px" }}
               {...register("sensorId")}
+              helperText={"Selecciones sensor"}
             >
               {sensors.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -89,7 +104,7 @@ export const NoiseLeves = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item>
+          <Grid item sx={{ mb: 3 }}>
             <Button variant="contained" sx={{ color: "#fff" }} type="submit">
               <Search />
               Buscar

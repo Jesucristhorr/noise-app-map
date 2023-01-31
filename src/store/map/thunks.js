@@ -14,6 +14,7 @@ import "sweetalert2/dist/sweetalert2.css";
 import { autenticacionPorEmailPassword } from "../../api/auth";
 import { getToken } from "../../helpers/getToken";
 import { loadSensors } from "../../helpers/getSensors";
+import { getISOFormat } from "../../helpers/getISOFormat";
 
 export const getUserLocation = () => {
   return async (dispatch) => {
@@ -135,6 +136,36 @@ export const startLoadingSensors = () => {
     } catch (error) {
       console.log(error);
       console.log("Algo salio mal");
+    }
+  };
+};
+
+export const getMetricSensors = ({
+  dateTimeflFrom,
+  dateTimeflTo,
+  sensorId,
+}) => {
+  return async (dispatch) => {
+    try {
+      const token = getToken();
+      let from = getISOFormat(dateTimeflFrom);
+      let to = getISOFormat(dateTimeflTo);
+      // let sensorId = sensorId ? sensorId : 0;
+      const resp = await autenticacionPorEmailPassword.get(
+        "metrics",
+        {
+          params: { from, to, sensorId: sensorId ? sensorId : 0 },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(resp.data.metrics);
+    } catch (error) {
+      console.log("Algo salió mal :(");
+      console.log(error);
     }
   };
 };
