@@ -26,7 +26,9 @@ ChartJS.register(
 export const LineChart = ({ chartData }) => {
   return (
     <>
-      <Typography>Ruido Ambiental </Typography>
+      <Typography>
+        Niveles de ruido obtenidos del sensor: AWESR (ID: 1)
+      </Typography>
       <Line data={chartData} />
     </>
   );

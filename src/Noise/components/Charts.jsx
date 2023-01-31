@@ -6,6 +6,7 @@ import { LineChart } from "./LineChart";
 import { io } from "socket.io-client";
 import { getToken } from "../../helpers/getToken";
 import { getHoursMinutes } from "../../helpers/getHoursMinutes";
+import { useCheckSocket } from "../../hooks/useCheckSocket";
 
 const dataset2 = [
   {
@@ -94,40 +95,17 @@ const dataset3 = [
 ];
 
 export const Charts = () => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const authToken = getToken();
-    const socket = io("wss://iot-api.codefilia.com", {
-      auth: { token: authToken },
-    });
-
-    socket.on("connect", () => {
-      console.log("Connected to socket");
-      // socket.emit("authenticate", { token: authToken });
-    });
-
-    socket.on("sensor-data", (dataSensor) => {
-      // console.log(dataSensor);
-      // setData([...data, dataSensor]);
-      setData((currentData) => [...currentData, dataSensor]);
-    });
-  }, []);
-
-  // console.log(data);
-  // data.map((d) => {
-  //   let horasSensor = getHoursMinutes(d.timestamp);
-  //   console.log(d.measurement);
-  // });
+  const { data } = useCheckSocket();
 
   const lineChart = {
     labels: data.map((d) => getHoursMinutes(d.timestamp)), //horas
     datasets: [
       {
-        // fill: true,
-        label: "Niveles de Ruido (dB)",
+        fill: true,
+        label: `Niveles de Ruido (dB)`,
         data: data.map((d) => d.measurement),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        borderColor: "rgb(53, 162, 235)",
         borderWidth: 2,
       },
       // {

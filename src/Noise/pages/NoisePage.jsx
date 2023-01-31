@@ -11,7 +11,7 @@ import { NoiseLayout } from "../layout/NoiseLayout";
 export const NoisePage = () => {
   const { isLoading, userLocation } = useSelector((state) => state.map);
   const dispatch = useDispatch();
-  console.log(`coords ${userLocation}`);
+  // console.log(`coords ${userLocation}`);
 
   //obtener la geolocalizacion de la persona
   useEffect(() => {

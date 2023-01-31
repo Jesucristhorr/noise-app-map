@@ -11,6 +11,7 @@ import { setMapa } from "../../store/map/mapSlice";
 import { Typography } from "@mui/material";
 import { AddLocationAltOutlined } from "@mui/icons-material";
 import { PopupMap } from "./PopupMap";
+import { useCheckSocket } from "../../hooks/useCheckSocket";
 
 export const MapView = () => {
   const { isLoading, userLocation, isMapReady, mapa, sensors } = useSelector(
@@ -23,6 +24,9 @@ export const MapView = () => {
   useEffect(() => {
     dispatch(startLoadingSensors());
   }, []);
+
+  const { data } = useCheckSocket();
+  console.log(data);
 
   useLayoutEffect(() => {
     if (!isLoading) {
@@ -47,17 +51,17 @@ export const MapView = () => {
 
       const newMarkets = [];
       sensors.forEach((sensor) => {
-        console.log(sensor);
+        // console.log(sensor);
         const { longitude, latitude } = sensor;
         const market = [longitude, latitude];
         const myLocationPopup = new Popup().setHTML(
           `
         <div style='background-color: #15AABF; padding: 5px; color: #fff '>
-          <h3>Sensor ${sensor.sensor}</h3>
+          <h3>Sensor ${sensor.name}</h3>
         </div>
-        <p><strong>Sensor</strong>: ${sensor.nombre}</p>
+        <p><strong>Sensor</strong>: ${sensor.name}</p>
         <p><strong>Descripcion:</strong> ${sensor.description}</p>
-        <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.place}</p>
+        <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.locationName}</p>
 
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: #a29bfe; border-radius: 50%; display: flex; align-items: center;'>

@@ -77,6 +77,7 @@ export const ManageSensors = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlertDelete, setOpenAlertDelete] = useState(true);
   const [openAlertUpdate, setOpenAlertUpdate] = useState(true);
+  const [loadingSensors, setOpenLoadingSensors] = useState(false);
 
   const {
     register,
@@ -93,12 +94,20 @@ export const ManageSensors = () => {
   };
 
   useEffect(() => {
-    dispatch(startLoadingSensors());
+    dispatch(startLoadingSensors()).then(() => {
+      setOpenLoadingSensors(false);
+    });
+    setOpenLoadingSensors(true);
   }, []);
 
   return (
     <>
       <NoiseLayout>
+        {loadingSensors && (
+          <Box sx={{ position: "absolute", top: "20%", left: "50%" }}>
+            <CircularProgress color="primary" />
+          </Box>
+        )}
         <Button variant="contained" onClick={handleOpen} sx={{ color: "#fff" }}>
           Agregar Sensor
         </Button>
@@ -256,6 +265,7 @@ export const ManageSensors = () => {
                   // console.log(data);
                   dispatch(startNewSensor(data)).then(() => {
                     setOpenAlert(true);
+                    dispatch(startLoadingSensors());
                   });
                   setOpen(false);
                   reset();
