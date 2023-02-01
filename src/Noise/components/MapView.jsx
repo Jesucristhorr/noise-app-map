@@ -26,7 +26,7 @@ export const MapView = () => {
   }, []);
 
   const { data } = useCheckSocket();
-  console.log(data);
+  // console.log(data);
 
   useLayoutEffect(() => {
     if (!isLoading) {

@@ -9,6 +9,7 @@ import { getHoursMinutes } from "../../helpers/getHoursMinutes";
 import { useCheckSocket } from "../../hooks/useCheckSocket";
 import { useDispatch, useSelector } from "react-redux";
 import { startLoadingSensors } from "../../store/map/thunks";
+import { LineMetricChart } from "./LineMetricChart";
 
 const dataset2 = [
   {
@@ -98,6 +99,8 @@ const dataset3 = [
 
 export const Charts = () => {
   const { sensors } = useSelector((state) => state.map);
+  const { metrics, isLoading } = useSelector((state) => state.metric);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -144,16 +147,21 @@ export const Charts = () => {
           margin: "70px auto",
         }}
       >
-        {/* <LineChart chartData={lineChart} /> */}
-        {sensors.map((sensor) => (
-          <LineChart key={sensor.id} sensor={sensor} dataSensor={data} />
-          // TODO: data.filter((d) => d.sensorId === sensor.id )
-        ))}
+        {isLoading
+          ? sensors.map((sensor) => (
+              <LineChart key={sensor.id} sensor={sensor} dataSensor={data} />
+            ))
+          : sensors.map((sensor) => (
+              <LineMetricChart
+                key={sensor.id}
+                metric={metrics}
+                sensor={sensor}
+              />
+            ))}
 
-        {/* {
-          let dataSensor = data.filter((d) => d.sensorId === 1)
-          console.log(dataSensor)
-        } */}
+        {/* {sensors.map((sensor) => (
+          <LineMetricChart key={sensor.id} metric={metrics} sensor={sensor} />
+        ))} */}
       </Box>
     </>
   );

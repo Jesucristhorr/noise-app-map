@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 import { getToken } from "../../helpers/getToken";
 import { DateTime } from "luxon";
 import { getISOFormat } from "../../helpers/getISOFormat";
-import { getMetricSensors } from "../../store/map/thunks";
+import { getMetricSensors } from "../../store/metrics/thunks";
 
 export const NoiseLeves = () => {
   const { sensors } = useSelector((state) => state.map);
@@ -36,7 +36,6 @@ export const NoiseLeves = () => {
       <form
         onSubmit={handleSubmit((data) => {
           // console.log(data.dateTimeflFrom);
-
           dispatch(getMetricSensors(data));
         })}
       >
