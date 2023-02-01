@@ -17,6 +17,8 @@ export const MapView = () => {
   const { isLoading, userLocation, isMapReady, mapa, sensors } = useSelector(
     (state) => state.map
   );
+  const { metrics } = useSelector((state) => state.metric);
+
   const dispatch = useDispatch();
 
   const mapDiv = useRef(null);
@@ -51,9 +53,29 @@ export const MapView = () => {
 
       const newMarkets = [];
       sensors.forEach((sensor) => {
-        // console.log(sensor);
         const { longitude, latitude } = sensor;
         const market = [longitude, latitude];
+
+        const metricasPorSensor = metrics.filter(
+          (metric) => metric.sensorId === sensor.id
+        );
+
+        const ultimoValor = metricasPorSensor.map(
+          (element, index, metricasPorSensor) =>
+            metricasPorSensor[metricasPorSensor.length - 1]
+        );
+
+        if (ultimoValor[0] === undefined) {
+          ultimoValor[0] = {
+            uuid: "e2b14c88-9608-44f2-89a7-3b4a1875aa70",
+            value: "60",
+            sensorId: 2,
+            createdAt: "2023-01-31T22:20:06.730Z",
+          };
+        }
+
+        // console.log(ultimoValor[0]);
+
         const myLocationPopup = new Popup().setHTML(
           `
         <div style='background-color: #15AABF; padding: 5px; color: #fff '>
@@ -66,7 +88,9 @@ export const MapView = () => {
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: #a29bfe; border-radius: 50%; display: flex; align-items: center;'>
         <div style='padding: 10px'>
-          <p style='text-align: center;'><strong>dB:</strong> 75dB (umbral de dolor)</p>
+          <p style='text-align: center;'><strong>dB:</strong> ${JSON.stringify(
+            ultimoValor[0].value
+          )} (umbral de dolor)</p>
         </div>
         </div>
         </div>
