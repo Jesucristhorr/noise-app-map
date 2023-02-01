@@ -11,6 +11,7 @@ import { getToken } from "../../helpers/getToken";
 import { DateTime } from "luxon";
 import { getISOFormat } from "../../helpers/getISOFormat";
 import { getMetricSensors } from "../../store/metrics/thunks";
+import { setMetric } from "../../store/metrics/metricSlice";
 
 export const NoiseLeves = () => {
   const { sensors } = useSelector((state) => state.map);
@@ -37,6 +38,11 @@ export const NoiseLeves = () => {
         onSubmit={handleSubmit((data) => {
           // console.log(data.dateTimeflFrom);
           dispatch(getMetricSensors(data));
+
+          // if (data.sensorId !== "0") {
+          //   // console.log(`sensor distinto de cero`);
+          //   dispatch(setMetric(data));
+          // }
         })}
       >
         <Grid
@@ -94,8 +100,11 @@ export const NoiseLeves = () => {
               defaultValue=""
               sx={{ width: "300px" }}
               {...register("sensorId")}
-              helperText={"Selecciones sensor"}
+              helperText={"Seleccione sensor"}
             >
+              <MenuItem value="0">
+                <em style={{ color: "white" }}>None</em>
+              </MenuItem>
               {sensors.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
                   {option.name}

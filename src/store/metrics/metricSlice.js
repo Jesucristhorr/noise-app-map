@@ -5,14 +5,19 @@ export const metricSlice = createSlice({
   initialState: {
     isLoading: true,
     metrics: [],
+    metric: null,
   },
   reducers: {
     setMetrics: (state, action) => {
       state.metrics = action.payload;
       state.isLoading = false;
     },
+
+    setMetric: (state, action) => {
+      state.metric = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setMetrics } = metricSlice.actions;
+export const { setMetrics, setMetric } = metricSlice.actions;

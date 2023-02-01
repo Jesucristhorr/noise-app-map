@@ -99,7 +99,7 @@ const dataset3 = [
 
 export const Charts = () => {
   const { sensors } = useSelector((state) => state.map);
-  const { metrics, isLoading } = useSelector((state) => state.metric);
+  const { metrics, isLoading, metric } = useSelector((state) => state.metric);
 
   const dispatch = useDispatch();
 
@@ -158,10 +158,6 @@ export const Charts = () => {
                 sensor={sensor}
               />
             ))}
-
-        {/* {sensors.map((sensor) => (
-          <LineMetricChart key={sensor.id} metric={metrics} sensor={sensor} />
-        ))} */}
       </Box>
     </>
   );
