@@ -1,5 +1,12 @@
-import { Search } from "@mui/icons-material";
-import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Search, StreamOutlined } from "@mui/icons-material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,12 +18,19 @@ import { getToken } from "../../helpers/getToken";
 import { DateTime } from "luxon";
 import { getISOFormat } from "../../helpers/getISOFormat";
 import { getMetricSensors } from "../../store/metrics/thunks";
-import { setMetric } from "../../store/metrics/metricSlice";
+import {
+  changeLoading,
+  cleanMetric,
+  setMetric,
+  setSensor,
+} from "../../store/metrics/metricSlice";
 
 export const NoiseLeves = () => {
   const { sensors } = useSelector((state) => state.map);
 
   const dispatch = useDispatch();
+  const [btnDisable, setBtnDisable] = useState(false);
+  const [loadingMetrics, setLoadingMetrics] = useState(false);
 
   const {
     register,
@@ -26,6 +40,10 @@ export const NoiseLeves = () => {
     formState: { errors },
   } = useForm();
 
+  const handleCharts = () => {
+    dispatch(changeLoading());
+  };
+
   return (
     <NoiseLayout>
       <Typography variant="h4" color={"primary"} sx={{ fontWeight: "bold" }}>
@@ -34,15 +52,34 @@ export const NoiseLeves = () => {
       <Typography variant="h6" sx={{ mb: 4 }}>
         Ruido en Manta
       </Typography>
+
+      {loadingMetrics && (
+        <Box sx={{ position: "absolute", top: "34%", left: "50%" }}>
+          <CircularProgress color="primary" />
+        </Box>
+      )}
+
       <form
         onSubmit={handleSubmit((data) => {
           // console.log(data.dateTimeflFrom);
-          dispatch(getMetricSensors(data));
+          dispatch(getMetricSensors(data)).then(() => {
+            setBtnDisable(false);
+            setLoadingMetrics(false);
+          });
+          setBtnDisable(true);
+          setLoadingMetrics(true);
 
-          // if (data.sensorId !== "0") {
-          //   // console.log(`sensor distinto de cero`);
-          //   dispatch(setMetric(data));
-          // }
+          if (data.sensorId !== 0 && data.sensorId !== "") {
+            // console.log(`sensor distinto de cero`);
+            dispatch(setMetric(data));
+
+            let sensorActivo = sensors.filter(
+              (sensor) => sensor.id === data.sensorId
+            );
+            dispatch(setSensor(sensorActivo));
+          } else {
+            dispatch(cleanMetric());
+          }
         })}
       >
         <Grid
@@ -102,7 +139,7 @@ export const NoiseLeves = () => {
               {...register("sensorId")}
               helperText={"Seleccione sensor"}
             >
-              <MenuItem value="0">
+              <MenuItem value={0}>
                 <em style={{ color: "white" }}>None</em>
               </MenuItem>
               {sensors.map((option) => (
@@ -113,13 +150,25 @@ export const NoiseLeves = () => {
             </TextField>
           </Grid>
           <Grid item sx={{ mb: 3 }}>
-            <Button variant="contained" sx={{ color: "#fff" }} type="submit">
+            <Button
+              variant="contained"
+              sx={{ color: "#fff" }}
+              type="submit"
+              disabled={btnDisable}
+            >
               <Search />
               Buscar
             </Button>
           </Grid>
+          <Grid item sx={{ mb: 3 }}>
+            <Button variant="outlined" onClick={handleCharts}>
+              <StreamOutlined />
+              Niveles de ruido en tiempo real
+            </Button>
+          </Grid>
         </Grid>
       </form>
+
       {/* Charts */}
       <Charts />
     </NoiseLayout>
