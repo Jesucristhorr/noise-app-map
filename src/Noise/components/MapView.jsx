@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserLocation,
@@ -28,6 +28,7 @@ export const MapView = () => {
   }, []);
 
   const { data } = useCheckSocket();
+
   // console.log(data);
 
   useLayoutEffect(() => {
@@ -57,7 +58,7 @@ export const MapView = () => {
         const market = [longitude, latitude];
 
         const metricasPorSensor = metrics.filter(
-          (metric) => metric.sensorId === sensor.id
+          (d) => d.sensorId === sensor.id
         );
 
         const ultimoValor = metricasPorSensor.map(
@@ -74,12 +75,16 @@ export const MapView = () => {
           };
         }
 
-        // console.log(ultimoValor[0]);
+        // console.log(ultimoValor[0].value);
 
         const myLocationPopup = new Popup().setHTML(
           `
         <div style='background-color: #15AABF; padding: 5px; color: #fff '>
           <h3>Sensor ${sensor.name}</h3>
+          <p>Última actualización ${JSON.stringify(
+            ultimoValor[0].createdAt
+          )}</p>
+
         </div>
         <p><strong>Sensor</strong>: ${sensor.name}</p>
         <p><strong>Descripcion:</strong> ${sensor.description}</p>
