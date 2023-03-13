@@ -37,10 +37,6 @@ export const Cards = () => {
                   Docente de la Facultad de Ciencias Informáticas
                 </Typography>
               </Box>
-              <Box display="flex" gap={1}>
-                <GitHub sx={{ color: "#636e72" }} />
-                <Typography>pending</Typography>
-              </Box>
             </CardContent>
           </Card>
         </Grid>
