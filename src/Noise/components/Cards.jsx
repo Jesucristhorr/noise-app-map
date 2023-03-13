@@ -25,7 +25,7 @@ export const Cards = () => {
               <Typography variant="h8" fontWeight="bold" color="primary">
                 Supervisor del Proyecto
               </Typography>
-              <Avatar sx={{ bgcolor: "#2AB0C3" }}>MA</Avatar>
+              <Avatar sx={{ bgcolor: "#2AB0C3" }}>MM</Avatar>
               <Typography fontWeight="bold">Ing. Mike Machuca, Mg.</Typography>
               <Box display="flex" gap={1}>
                 <AlternateEmail sx={{ color: "#636e72" }} />
