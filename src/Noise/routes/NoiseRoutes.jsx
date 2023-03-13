@@ -29,7 +29,7 @@ export const NoiseRoutes = () => {
       <Route path="/manage-sensors" element={<ManageSensors />} />
       <Route path="/manage-users" element={<Register />} />
 
-      <Route path="/*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
