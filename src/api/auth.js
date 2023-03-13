@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const autenticacionPorEmailPassword = axios.create({
-  baseURL: "https://iot-api.codefilia.com/v1/",
+  baseURL: import.meta.env.VITE_API_URL,
 });

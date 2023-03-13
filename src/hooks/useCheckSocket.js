@@ -9,7 +9,7 @@ export const useCheckSocket = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const authToken = getToken();
-    const socket = io("wss://iot-api.codefilia.com", {
+    const socket = io(import.meta.env.VITE_WEB_SOCKET_URL, {
       auth: { token: authToken },
     });
 
