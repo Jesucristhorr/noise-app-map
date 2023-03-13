@@ -29,7 +29,7 @@ export const Cards = () => {
               <Typography fontWeight="bold">Ing. Mike Machuca, Mg.</Typography>
               <Box display="flex" gap={1}>
                 <AlternateEmail sx={{ color: "#636e72" }} />
-                <Typography>mike@uleam.edu.ec</Typography>
+                <Typography>mike.machuca@uleam.edu.ec</Typography>
               </Box>
               <Box display="flex" gap={1}>
                 <InfoOutlined sx={{ color: "#636e72" }} />
