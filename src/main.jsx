@@ -10,8 +10,7 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 
 //Configuracion de mapbox
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiamVubmlmZXIyODAzIiwiYSI6ImNsYWd6bGR4MDA4eWMzb204b2Rub21oZG8ifQ.KLpITuBJe3LCokg7ncnQFQ";
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY;
 
 // Evaluar si el user cuenta con geolocalizacion
 if (!navigator.geolocation) {
