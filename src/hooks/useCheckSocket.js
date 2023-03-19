@@ -19,7 +19,7 @@ export const useCheckSocket = () => {
     });
 
     socket.on("sensor-data", (dataSensor) => {
-      // console.log(dataSensor);
+      console.log(dataSensor);
       // setData([...data, dataSensor]);
       setData((currentData) => [...currentData, dataSensor]);
     });

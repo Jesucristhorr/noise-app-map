@@ -1,3 +1,8 @@
+import {
+  materialCells,
+  materialRenderers,
+} from "@jsonforms/material-renderers";
+import { JsonForms } from "@jsonforms/react";
 import { AddLocationAlt } from "@mui/icons-material";
 import {
   Box,
@@ -20,19 +25,8 @@ import {
   updateSensorForm,
 } from "../../store/map/thunks";
 
-const protocolo = [
-  {
-    value: 1,
-    label: "MQTT",
-  },
-  {
-    value: 2,
-    label: "AMQP",
-  },
-];
-
 export const ModalEditSensor = ({ open, setOpen, sensor }) => {
-  const { userLocation, messageDelete, messageSaved } = useSelector(
+  const { userLocation, protocols, messageDelete, messageSaved } = useSelector(
     (state) => state.map
   );
 
@@ -45,7 +39,21 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: sensor?.name,
+      description: sensor?.description,
+      measurementUnit: sensor?.measurementUnit,
+      measurementKeyName: sensor?.measurementKeyName,
+      locationName: sensor?.locationName,
+      longitude: sensor?.longitude,
+      latitude: sensor?.latitude,
+      protocolId: sensor?.connectionTypeId ? sensor.connectionTypeId : 1,
+      connectionData: sensor?.connectionData?.data
+        ? sensor.connectionData.data
+        : {},
+    },
+  });
 
   useEffect(() => {
     dispatch(getUserLocation());
@@ -54,31 +62,31 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const protocolId = watch("protocolId");
+
   // setear valores
   useEffect(() => {
     if (!!sensor) {
-      setValue("name", sensor.name ? sensor.name : "");
-      setValue("description", sensor.description ? sensor.description : "");
+      setValue("name", sensor?.name ? sensor.name : "");
+      setValue("description", sensor?.description ? sensor.description : "");
       setValue(
         "measurementUnit",
-        sensor.measurementUnit ? sensor.measurementUnit : ""
-      );
-      setValue("longitude", sensor.longitude ? sensor.longitude : "");
-      setValue("latitude", sensor.latitude ? sensor.latitude : "");
-      setValue("locationName", sensor.locationName ? sensor.locationName : "");
-
-      setValue(
-        "connectionUrl",
-        sensor.connectionUrl ? sensor.connectionUrl : ""
-      );
-
-      setValue(
-        "connectionUsername",
-        sensor.connectionUsername ? sensor.connectionUsername : ""
+        sensor?.measurementUnit ? sensor.measurementUnit : ""
       );
       setValue(
-        "connectionPassword",
-        sensor.connectionPassword ? sensor.connectionPassword : ""
+        "measurementKeyName",
+        sensor?.measurementKeyName ? sensor.measurementKeyName : ""
+      );
+      setValue("longitude", sensor?.longitude ? sensor.longitude : "");
+      setValue("latitude", sensor?.latitude ? sensor.latitude : "");
+      setValue("locationName", sensor?.locationName ? sensor.locationName : "");
+      setValue(
+        "protocolId",
+        sensor?.connectionTypeId ? sensor.connectionTypeId : 1
+      );
+      setValue(
+        "connectionData",
+        sensor?.connectionData?.data ? sensor.connectionData?.data : {}
       );
     }
   }, [sensor]);
@@ -128,15 +136,17 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
           </Typography>
           <form
             onSubmit={handleSubmit((data) => {
-              // dispatch(startNewNote(data));
               const { id } = sensor;
-              const newSensor = { id, ...data };
+              const sensorToUpdate = {
+                id,
+                ...data,
+                sensorOriginalData: { ...sensor },
+              };
 
-              dispatch(updateSensorForm(newSensor));
+              dispatch(updateSensorForm(sensorToUpdate));
               // mostrar alerta
               reset();
               setOpen(false);
-              // setOpenAlert(true);
             })}
           >
             <Divider
@@ -193,8 +203,11 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   size="small"
                   // id="filled-hidden-label-small"
                   {...register("description", {
-                    required: "Campo requerido",
-                    minLength: 5,
+                    minLength: {
+                      value: 5,
+                      message:
+                        "La descripción debe ser de al menos 5 caracteres",
+                    },
                   })}
                   helperText={errors.description ? "Campo requerido" : ""}
                   error={!!errors.description}
@@ -211,7 +224,11 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   // id="filled-hidden-label-small"
                   {...register("measurementUnit", {
                     required: "Campo requerido",
-                    minLength: 5,
+                    minLength: {
+                      value: 1,
+                      message:
+                        "La unidad de medida debe tener al menos un caracter",
+                    },
                   })}
                   error={!!errors.measurementUnit}
                   helperText={errors.measurementUnit ? "Campo requerido" : ""}
@@ -303,9 +320,9 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
 
                 <Grid item xs={12} sx={{ mt: 2 }}>
                   <TextField
-                    label="Protocolo de conexión "
+                    label="Protocolo de conexión"
                     select
-                    defaultValue=""
+                    defaultValue={sensor?.connectionTypeId ?? 1}
                     placeholder="Ejemplo: MQTT"
                     fullWidth
                     size="small"
@@ -316,94 +333,52 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                     helperText={errors.protocolId ? "Campo requerido" : ""}
                     error={!!errors.protocolId}
                   >
-                    {protocolo.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {protocols.map(({ id: protocolId, protocol }) => (
+                      <MenuItem key={protocolId} value={protocolId}>
+                        {protocol}
                       </MenuItem>
                     ))}
                   </TextField>
                 </Grid>
-                <Grid container justifyContent="space-between">
-                  <Grid item xs={12} sx={{ mt: 2, mr: 1 }}>
-                    <TextField
-                      label="URL de conexión"
-                      type="text"
-                      placeholder="Ejemplo: www.algo.com"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("connectionUrl", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                      })}
-                      helperText={errors.connectionUrl ? "Campo requerido" : ""}
-                      error={!!errors.connectionUrl}
-                    />
-                  </Grid>
-                  {/* <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                        <TextField
-                          label="Puerto"
-                          type="number"
-                          placeholder="Ejemplo: Port"
-                          fullWidth
-                          size="small"
-                          // id="filled-hidden-label-small"
-                          {...register("connPort", {
-                            required: "Campo requerido",
-                            minLength: 4,
-                            maxLength: 4,
-                          })}
-                          helperText={errors.connPort ? "Campo inválido" : ""}
-                          error={!!errors.connPort}
-                        />
-                      </Grid> */}
-                </Grid>
-
-                <Grid container justifyContent="space-between">
-                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                    <TextField
-                      label="Usuario"
-                      type="text"
-                      placeholder="Ejemplo: username connection"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("connectionUsername", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                      })}
-                      error={!!errors.connectionUsername}
-                      helperText={
-                        errors.connectionUsername ? "Campo requerido" : ""
-                      }
-                    />
-                  </Grid>
-
-                  <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                    <TextField
-                      label="Contraseña"
-                      type="password"
-                      placeholder="***********"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("connectionPassword", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                      })}
-                      error={!!errors.connectionPassword}
-                      helperText={
-                        errors.connectionPassword ? "Campo requerido" : ""
-                      }
-                    />
-                  </Grid>
-                </Grid>
-
-                {/* TODO: NUEVOS CAMPOS */}
               </Grid>
               {/*  */}
 
-              {/*  */}
+              {sensor && protocolId
+                ? protocols
+                    .filter(({ id }) => Number(id) === Number(protocolId))
+                    .map(
+                      ({
+                        connectionDetail: { dataSchema, uiSchema, initialData },
+                        id,
+                        protocol,
+                      }) => (
+                        <Grid
+                          key={`${id}-${protocol}`}
+                          item
+                          xs={12}
+                          sx={{ mt: 2 }}
+                        >
+                          <JsonForms
+                            schema={dataSchema}
+                            uischema={uiSchema}
+                            data={
+                              sensor.connectionData?.data &&
+                              sensor.connectionTypeId === protocolId
+                                ? sensor.connectionData.data
+                                : initialData
+                            }
+                            renderers={materialRenderers}
+                            cells={materialCells}
+                            vald
+                            onChange={({ data, errors }) => {
+                              setValue("connectionData", { ...data });
+                            }}
+                          ></JsonForms>
+                        </Grid>
+                      )
+                    )
+                : null}
+
               <Grid container sx={{ mb: 2, mt: 1, justifyContent: "center" }}>
                 <Grid item xs={12} sm={6}>
                   <Button

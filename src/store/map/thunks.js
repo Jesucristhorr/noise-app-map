@@ -8,6 +8,7 @@ import {
   deleteSensorById,
   errorSensor,
   setSensors,
+  setProtocols,
 } from "./mapSlice";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
@@ -15,6 +16,7 @@ import { autenticacionPorEmailPassword } from "../../api/auth";
 import { getToken } from "../../helpers/getToken";
 import { loadSensors } from "../../helpers/getSensors";
 import { getISOFormat } from "../../helpers/getISOFormat";
+import { fetchProtocols } from "../../helpers/fetchProtocols";
 
 export const getUserLocation = () => {
   return async (dispatch) => {
@@ -47,13 +49,12 @@ export const startNewSensor = ({
   name,
   description,
   measurementUnit,
+  measurementKeyName,
   locationName,
   longitude,
   latitude,
-  connectionPassword,
-  connectionUrl,
-  connectionUsername,
   protocolId,
+  connectionData,
 }) => {
   return async (dispatch, getState) => {
     dispatch(savingNewSensor());
@@ -69,12 +70,9 @@ export const startNewSensor = ({
           latitude,
           longitude,
           locationName,
-          connection: {
-            protocolId,
-            connectionUrl,
-            connectionUsername,
-            connectionPassword,
-          },
+          measurementKeyName,
+          connectionData,
+          protocolId,
         },
         {
           headers: {
@@ -87,13 +85,12 @@ export const startNewSensor = ({
           name,
           description,
           measurementUnit,
+          measurementKeyName,
           locationName,
           longitude,
           latitude,
-          connectionPassword,
-          connectionUrl,
-          connectionUsername,
           protocolId,
+          connectionData,
         })
       );
       console.log(resp.data.msg);
@@ -111,19 +108,88 @@ export const setActiveSensorForm = (data) => {
   };
 };
 
-export const updateSensorForm = (sensor) => {
+export const updateSensorForm = ({
+  id,
+  name,
+  description,
+  measurementUnit,
+  measurementKeyName,
+  locationName,
+  longitude,
+  latitude,
+  protocolId,
+  connectionData,
+  sensorOriginalData,
+}) => {
   return async (dispatch) => {
-    dispatch(updateSensor(sensor));
+    const token = getToken();
+
+    try {
+      const resp = await autenticacionPorEmailPassword.put(
+        "sensors",
+        {
+          sensorId: id,
+          name,
+          description,
+          measurementUnit,
+          latitude,
+          longitude,
+          locationName,
+          measurementKeyName,
+          connectionData,
+          protocolId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(
+        updateSensor({
+          id,
+          name,
+          description,
+          measurementUnit,
+          measurementKeyName,
+          locationName,
+          longitude,
+          latitude,
+          protocolId,
+          connectionData,
+          sensorOriginalData,
+        })
+      );
+    } catch (error) {
+      console.log("Algo salió mal :(");
+      console.log(error);
+      dispatch(errorSensor(error));
+    }
   };
 };
 
 export const startDeletingSensor = () => {
   return async (dispatch, getState) => {
-    const { uid } = getState().auth;
     const { sensor } = getState().map;
-    // todo borrar sensor por usuario autenticado
+    const token = getToken();
 
-    dispatch(deleteSensorById(sensor.id));
+    try {
+      const resp = await autenticacionPorEmailPassword.delete(
+        `sensors/${sensor.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(deleteSensorById(sensor.id));
+    } catch (error) {
+      console.log("Algo salió mal :(");
+      console.log(error);
+      dispatch(errorSensor(error));
+    }
   };
 };
 
@@ -136,6 +202,18 @@ export const startLoadingSensors = () => {
     } catch (error) {
       console.log(error);
       console.log("Algo salio mal");
+    }
+  };
+};
+
+export const startLoadingProtocols = () => {
+  return async (dispatch) => {
+    try {
+      const protocols = await fetchProtocols();
+
+      dispatch(setProtocols(protocols));
+    } catch (error) {
+      console.error("Error getting protocols:", error);
     }
   };
 };

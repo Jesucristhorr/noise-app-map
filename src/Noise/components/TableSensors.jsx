@@ -40,7 +40,7 @@ export const TableSensors = ({ sensors }) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Sensor</TableCell>
-            <TableCell>Descripcion</TableCell>
+            <TableCell>Descripción</TableCell>
             <TableCell>Unidad de Medida</TableCell>
             <TableCell>Lugar</TableCell>
             <TableCell>Latitud</TableCell>
@@ -70,24 +70,28 @@ export const TableSensors = ({ sensors }) => {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    dispatch(setActiveSensorForm(sensor));
-                    Swal.fire({
-                      title: "Esta seguro de eliminar este Nodo?",
-                      text: "Esta acción no se puede revertir",
-                      icon: "warning",
-                      showCancelButton: true,
-                      confirmButtonColor: "#15AABF",
-                      cancelButtonColor: "#fc5c65",
-                      confirmButtonText: "Sí, eliminar!",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        dispatch(startDeletingSensor());
-                        Swal.fire(
-                          "Borrado!",
-                          "Este Nodo ha sido eliminado",
-                          "success"
-                        );
-                      }
+                    dispatch(setActiveSensorForm(sensor)).then(() => {
+                      const sensorName = sensor.name;
+                      Swal.fire({
+                        title: "¿Está seguro de eliminar este sensor?",
+                        text: "Esta acción es irreversible",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#15AABF",
+                        cancelButtonColor: "#fc5c65",
+                        confirmButtonText: "Sí, eliminar",
+                        cancelButtonText: "No, cancelar",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          dispatch(startDeletingSensor()).then(() => {
+                            Swal.fire(
+                              "Eliminado",
+                              `El sensor "${sensorName}" ha sido eliminado satisfactoriamente`,
+                              "success"
+                            );
+                          });
+                        }
+                      });
                     });
                   }}
                 >

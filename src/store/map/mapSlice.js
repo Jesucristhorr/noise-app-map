@@ -9,6 +9,7 @@ export const mapSlice = createSlice({
     mapa: undefined,
     sensors: [],
     sensor: null,
+    protocols: [],
     isSaving: false,
     messageSaved: "",
     messageUpdated: "",
@@ -48,12 +49,18 @@ export const mapSlice = createSlice({
 
     updateSensor: (state, action) => {
       state.sensors = state.sensors.map((sensor) => {
-        if (sensor.id === action.payload.id) {
-          return action.payload;
+        if (
+          sensor.id === action.payload.id &&
+          action.payload.sensorOriginalData
+        ) {
+          return {
+            ...action.payload.sensorOriginalData,
+            ...action.payload,
+          };
         }
         return sensor;
       });
-      state.messageUpdated = `Sensor ${action.payload.name}, actualizado correctamente`;
+      state.messageUpdated = `Sensor "${action.payload.name}" actualizado correctamente`;
     },
 
     // Eliminar sensor
@@ -62,7 +69,7 @@ export const mapSlice = createSlice({
       state.sensors = state.sensors.filter(
         (sensor) => sensor.id !== action.payload
       );
-      state.messageDelete = `Sensor con ID ${action.payload} borrado correctamente`;
+      state.messageDelete = `Sensor con ID ${action.payload} eliminado correctamente`;
     },
 
     errorSensor: (state, action) => {
@@ -72,6 +79,10 @@ export const mapSlice = createSlice({
 
     setSensors: (state, action) => {
       state.sensors = action.payload;
+    },
+
+    setProtocols: (state, action) => {
+      state.protocols = action.payload;
     },
   },
 });
@@ -87,4 +98,5 @@ export const {
   deleteSensorById,
   errorSensor,
   setSensors,
+  setProtocols,
 } = mapSlice.actions;

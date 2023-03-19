@@ -35,6 +35,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserLocation, updateSensor } from "../../store/map/mapSlice";
 import {
   getUserLocation,
+  startLoadingProtocols,
   startLoadingSensors,
   startNewSensor,
 } from "../../store/map/thunks";
@@ -43,23 +44,25 @@ import { TableSensors } from "../components/TableSensors";
 import { NoiseLayout } from "../layout/NoiseLayout";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { setAjv } from "@jsonforms/core";
+import Ajv from "ajv";
+import AjvErrors from "ajv-errors";
+import { JsonForms } from "@jsonforms/react";
+import {
+  materialCells,
+  materialRenderers,
+} from "@jsonforms/material-renderers";
 
-const protocolo = [
-  {
-    value: 1,
-    label: "MQTT",
-  },
-  {
-    value: 2,
-    label: "MQTTS",
-  },
-];
+const ajv = new Ajv({ allErrors: true, verbose: true, strict: false });
+const ajv2 = AjvErrors(ajv);
 
 export const ManageSensors = () => {
+  setAjv(ajv2);
   const {
     isLoading,
     userLocation,
     sensors,
+    protocols,
     isSaving,
     messageSaved,
     messageDelete,
@@ -87,7 +90,19 @@ export const ManageSensors = () => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      measurementUnit: "",
+      measurementKeyName: "",
+      locationName: "",
+      longitude: 0,
+      latitude: 0,
+      protocolId: 1,
+      connectionData: {},
+    },
+  });
 
   const handleUserLocationInForm = () => {
     setValue("longitude", userLocation[0]);
@@ -96,10 +111,14 @@ export const ManageSensors = () => {
 
   useEffect(() => {
     dispatch(startLoadingSensors()).then(() => {
-      setOpenLoadingSensors(false);
+      dispatch(startLoadingProtocols()).then(() => {
+        setOpenLoadingSensors(false);
+      });
     });
     setOpenLoadingSensors(true);
   }, []);
+
+  const protocolId = watch("protocolId");
 
   return (
     <>
@@ -309,23 +328,6 @@ export const ManageSensors = () => {
                     />
                   </Grid>
 
-                  {/* <Grid item xs={12} sx={{ mt: 2 }}>
-                    <TextField
-                      label="Nombre"
-                      type="text"
-                      placeholder="Arduino Nano"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("nombre", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                      })}
-                      error={!!errors.nombre}
-                      helperText={errors.nombre ? "Campo requerido" : ""}
-                    />
-                  </Grid> */}
-
                   <Grid item xs={12} sx={{ mt: 2 }}>
                     <TextField
                       label="Descripción"
@@ -335,8 +337,11 @@ export const ManageSensors = () => {
                       size="small"
                       // id="filled-hidden-label-small"
                       {...register("description", {
-                        required: "Campo requerido",
-                        minLength: 5,
+                        minLength: {
+                          value: 5,
+                          message:
+                            "La descripción debe ser de al menos 5 caracteres",
+                        },
                       })}
                       helperText={errors.description ? "Campo requerido" : ""}
                       error={!!errors.description}
@@ -353,11 +358,35 @@ export const ManageSensors = () => {
                       // id="filled-hidden-label-small"
                       {...register("measurementUnit", {
                         required: "Campo requerido",
-                        minLength: 5,
+                        minLength: {
+                          value: 1,
+                          message:
+                            "La unidad de medida debe tener al menos un caracter",
+                        },
                       })}
                       error={!!errors.measurementUnit}
                       helperText={
                         errors.measurementUnit ? "Campo requerido" : ""
+                      }
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre de la llave JSON con datos de medición"
+                      type="text"
+                      placeholder="Ej. measurement"
+                      fullWidth
+                      size="small"
+                      // id="filled-hidden-label-small"
+                      {...register("measurementKeyName", {
+                        required: "Campo requerido",
+                        minLength: 2,
+                        maxLength: 100,
+                      })}
+                      error={!!errors.measurementKeyName}
+                      helperText={
+                        errors.measurementKeyName ? "Campo requerido" : ""
                       }
                     />
                   </Grid>
@@ -386,7 +415,7 @@ export const ManageSensors = () => {
                       <TextField
                         label="Longitud"
                         type="text"
-                        placeholder="0987890"
+                        placeholder="0.987890"
                         fullWidth
                         size="small"
                         // id="filled-hidden-label-small"
@@ -405,7 +434,7 @@ export const ManageSensors = () => {
                       <TextField
                         label="Latitud"
                         type="text"
-                        placeholder="0987890"
+                        placeholder="2.987890"
                         fullWidth
                         size="small"
                         // id="filled-hidden-label-small"
@@ -448,9 +477,9 @@ export const ManageSensors = () => {
 
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       <TextField
-                        label="Protocolo de conexión "
+                        label="Protocolo de conexión"
                         select
-                        defaultValue=""
+                        defaultValue={1}
                         placeholder="Ejemplo: MQTT"
                         fullWidth
                         size="small"
@@ -461,94 +490,50 @@ export const ManageSensors = () => {
                         helperText={errors.protocolId ? "Campo requerido" : ""}
                         error={!!errors.protocolId}
                       >
-                        {protocolo.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
+                        {protocols.map(({ id: protocolId, protocol }) => (
+                          <MenuItem key={protocolId} value={protocolId}>
+                            {protocol}
                           </MenuItem>
                         ))}
                       </TextField>
                     </Grid>
-                    <Grid container justifyContent="space-between">
-                      <Grid item xs={12} sx={{ mt: 2, mr: 1 }}>
-                        <TextField
-                          label="URL de conexión"
-                          type="text"
-                          placeholder="Ejemplo: www.algo.com"
-                          fullWidth
-                          size="small"
-                          // id="filled-hidden-label-small"
-                          {...register("connectionUrl", {
-                            required: "Campo requerido",
-                            minLength: 5,
-                          })}
-                          helperText={
-                            errors.connectionUrl ? "Campo requerido" : ""
-                          }
-                          error={!!errors.connectionUrl}
-                        />
-                      </Grid>
-                      {/* <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                        <TextField
-                          label="Puerto"
-                          type="number"
-                          placeholder="Ejemplo: Port"
-                          fullWidth
-                          size="small"
-                          // id="filled-hidden-label-small"
-                          {...register("connPort", {
-                            required: "Campo requerido",
-                            minLength: 4,
-                            maxLength: 4,
-                          })}
-                          helperText={errors.connPort ? "Campo inválido" : ""}
-                          error={!!errors.connPort}
-                        />
-                      </Grid> */}
-                    </Grid>
-
-                    <Grid container justifyContent="space-between">
-                      <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                        <TextField
-                          label="Usuario"
-                          type="text"
-                          placeholder="Ejemplo: username connection"
-                          fullWidth
-                          size="small"
-                          // id="filled-hidden-label-small"
-                          {...register("connectionUsername", {
-                            required: "Campo requerido",
-                            minLength: 5,
-                          })}
-                          error={!!errors.connectionUsername}
-                          helperText={
-                            errors.connectionUsername ? "Campo requerido" : ""
-                          }
-                        />
-                      </Grid>
-
-                      <Grid item xs={5.5} sx={{ mt: 2, mr: 1 }}>
-                        <TextField
-                          label="Contraseña"
-                          type="password"
-                          placeholder="***********"
-                          fullWidth
-                          size="small"
-                          // id="filled-hidden-label-small"
-                          {...register("connectionPassword", {
-                            required: "Campo requerido",
-                            minLength: 5,
-                          })}
-                          error={!!errors.connectionPassword}
-                          helperText={
-                            errors.connectionPassword ? "Campo requerido" : ""
-                          }
-                        />
-                      </Grid>
-                    </Grid>
-
-                    {/* TODO: NUEVOS CAMPOS */}
                   </Grid>
                   {/*  */}
+
+                  {protocolId
+                    ? protocols
+                        .filter(({ id }) => Number(id) === Number(protocolId))
+                        .map(
+                          ({
+                            connectionDetail: {
+                              dataSchema,
+                              uiSchema,
+                              initialData,
+                            },
+                            id,
+                            protocol,
+                          }) => (
+                            <Grid
+                              key={`${id}-${protocol}`}
+                              item
+                              xs={12}
+                              sx={{ mt: 2 }}
+                            >
+                              <JsonForms
+                                schema={dataSchema}
+                                uischema={uiSchema}
+                                data={initialData}
+                                renderers={materialRenderers}
+                                cells={materialCells}
+                                vald
+                                onChange={({ data, errors }) => {
+                                  setValue("connectionData", { ...data });
+                                }}
+                              ></JsonForms>
+                            </Grid>
+                          )
+                        )
+                    : null}
 
                   {/*  */}
                   <Grid
