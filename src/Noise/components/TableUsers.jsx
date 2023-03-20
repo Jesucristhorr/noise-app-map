@@ -111,56 +111,68 @@ export const TableUsers = ({ users }) => {
 
                 <TableCell>
                   {/* send mail */}
-                  <Tooltip title="Reenviar Email de verificación">
-                    <IconButton
-                      onClick={() => {
-                        // console.log("clic para reenviar mail");
-                        // TODO: Depachar thunk de reenvio
-
-                        dispatch(resendEmailConfirmation(user)).then(() => {});
-                      }}
-                    >
-                      <MarkEmailUnread color="primary" />
-                    </IconButton>
+                  <Tooltip title="Reenviar email de verificación">
+                    <span>
+                      <IconButton
+                        onClick={() => {
+                          dispatch(resendEmailConfirmation(user)).then(
+                            () => {}
+                          );
+                        }}
+                        disabled={user.active}
+                      >
+                        <MarkEmailUnread
+                          color={user.active ? "disabled" : "primary"}
+                        />
+                      </IconButton>
+                    </span>
                   </Tooltip>
 
                   {/* edit */}
-                  <IconButton
-                    onClick={() => {
-                      setOpen(true);
-                      dispatch(setActiveUserForm(user));
+                  <Tooltip title="Editar usuario">
+                    <IconButton
+                      onClick={() => {
+                        setOpen(true);
+                        dispatch(setActiveUserForm(user));
 
-                      // TODO: Depachar thunk de editar
-                      // dispatch(updateUserById(user))
-                    }}
-                  >
-                    <Edit sx={{ color: "#f9ca24" }} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      dispatch(setActiveUserForm(user));
-                      Swal.fire({
-                        title: "Esta seguro de eliminar este Usuario?",
-                        text: "Esta acción no se puede revertir",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#15AABF",
-                        cancelButtonColor: "#fc5c65",
-                        confirmButtonText: "Sí, eliminar!",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          dispatch(startDeletingUser());
-                          Swal.fire(
-                            "Borrado!",
-                            "Este Usuario ha sido eliminado",
-                            "success"
-                          );
-                        }
-                      });
-                    }}
-                  >
-                    <DeleteOutline sx={{ color: "#c23616" }} />
-                  </IconButton>
+                        // TODO: Depachar thunk de editar
+                        // dispatch(updateUserById(user))
+                      }}
+                    >
+                      <Edit sx={{ color: "#f9ca24" }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Eliminar usuario">
+                    <IconButton
+                      onClick={() => {
+                        dispatch(setActiveUserForm(user)).then(() => {
+                          Swal.fire({
+                            title:
+                              "¿Está seguro de que desea eliminar este usuario?",
+                            text: "Esta acción es irreversible",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#15AABF",
+                            cancelButtonColor: "#fc5c65",
+                            confirmButtonText: "Sí, eliminar",
+                            cancelButtonText: "No, cancelar",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              dispatch(startDeletingUser()).then(() => {
+                                Swal.fire(
+                                  "Usuario eliminado",
+                                  "El usuario ha sido eliminado satisfactoriamente",
+                                  "success"
+                                );
+                              });
+                            }
+                          });
+                        });
+                      }}
+                    >
+                      <DeleteOutline sx={{ color: "#c23616" }} />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
