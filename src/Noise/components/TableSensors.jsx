@@ -1,4 +1,10 @@
-import { DeleteOutline, Edit } from "@mui/icons-material";
+import {
+  DeleteOutline,
+  Edit,
+  SensorsOff,
+  SignalCellularAlt,
+  Pending,
+} from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -9,6 +15,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { ModalEditSensor } from "./ModalEditSensor";
 import { useState } from "react";
@@ -45,6 +52,7 @@ export const TableSensors = ({ sensors }) => {
             <TableCell>Lugar</TableCell>
             <TableCell>Latitud</TableCell>
             <TableCell>Longitud</TableCell>
+            <TableCell>Estado de conexión</TableCell>
             <TableCell>Acciones</TableCell>
           </TableRow>
         </TableHead>
@@ -59,6 +67,21 @@ export const TableSensors = ({ sensors }) => {
               <TableCell>{sensor.locationName}</TableCell>
               <TableCell>{sensor.latitude}</TableCell>
               <TableCell>{sensor.longitude}</TableCell>
+              <TableCell>
+                {sensor.connectionStatus === "connected" ? (
+                  <Tooltip title="Conectado">
+                    <SignalCellularAlt sx={{ color: "#78e08f" }} />
+                  </Tooltip>
+                ) : sensor.connectionStatus === "pending" ? (
+                  <Tooltip title="Conexión pendiente">
+                    <Pending sx={{ color: "#f9ca23" }} />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Desconectado">
+                    <SensorsOff sx={{ color: "#c23616" }} />
+                  </Tooltip>
+                )}
+              </TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => {
