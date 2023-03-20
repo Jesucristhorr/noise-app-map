@@ -98,15 +98,17 @@ export const MapView = () => {
           } = {},
         ] = sensorMetric || [];
 
-        const { color, message, hasToShowWarning } = checkNoiseLevel(
+        const { color, textColor, message, hasToShowWarning } = checkNoiseLevel(
           measurement ? Number(measurement) : null
         );
 
         const myLocationPopup = new Popup().setHTML(
           `
         <div style='background-color: #15AABF; padding: 5px; color: #fff '>
-          <h3>Sensor "${sensor.name}" (ID: ${sensor.id})</h3>
-          <p>${
+          <h3 style='text-align: center;'><span style='font-weight: 700;'>(ID: ${
+            sensor.id
+          })</span> Sensor "${sensor.name}"</h3>
+          <p style='text-align: center;'>${
             timestamp
               ? `Última actualización ${DateTime.fromMillis(timestamp)
                   .setLocale("es-EC")
@@ -128,10 +130,12 @@ export const MapView = () => {
 
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: ${color}; border-radius: 50%; display: flex; align-items: center;'>
-        <div style='padding: 10px'>
-          <p style='text-align: center;'><strong>dB:</strong> ${
+        <div style='padding: 10px; color: ${textColor}'>
+          <p style='text-align: center;'>${
             measurement ? Number(measurement) : "--"
-          } (${message})</p>
+          } <span style='font-weight: 500;'>${
+            sensor.measurementUnit
+          }</span> (${message})</p>
         </div>
         </div>
         </div>
