@@ -182,7 +182,7 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                 <TextField
                   label="Tipo de sensor"
                   select
-                  defaultValue={"NOISE"}
+                  defaultValue={sensor?.type ?? "NOISE"}
                   fullWidth
                   size="small"
                   // id="filled-hidden-label-small"
