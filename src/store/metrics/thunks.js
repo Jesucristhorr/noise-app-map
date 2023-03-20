@@ -1,7 +1,8 @@
+import { DateTime } from "luxon";
 import { autenticacionPorEmailPassword } from "../../api/auth";
 import { getISOFormat } from "../../helpers/getISOFormat";
 import { getToken } from "../../helpers/getToken";
-import { setMetrics } from "./metricSlice";
+import { setLastSensorMetrics, setMetrics } from "./metricSlice";
 
 export const getMetricSensors = ({
   dateTimeflFrom,
@@ -27,6 +28,27 @@ export const getMetricSensors = ({
       );
       //   console.log(resp.data.metrics);
       dispatch(setMetrics(resp.data.metrics));
+    } catch (error) {
+      console.log("Algo salió mal :(");
+      console.log(error);
+    }
+  };
+};
+
+export const getLastSensorMetrics = () => {
+  return async (dispatch) => {
+    try {
+      const token = getToken();
+      const resp = await autenticacionPorEmailPassword.get(
+        "metrics/last-values-by-sensors",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(setLastSensorMetrics(resp.data.metrics));
     } catch (error) {
       console.log("Algo salió mal :(");
       console.log(error);

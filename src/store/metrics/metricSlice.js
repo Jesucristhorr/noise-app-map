@@ -5,6 +5,7 @@ export const metricSlice = createSlice({
   initialState: {
     isLoading: true,
     metrics: [],
+    lastSensorMetrics: [],
     metricSeleted: null,
     sensorSelected: null,
   },
@@ -16,6 +17,10 @@ export const metricSlice = createSlice({
 
     setMetric: (state, action) => {
       state.metricSeleted = action.payload;
+    },
+
+    setLastSensorMetrics: (state, action) => {
+      state.lastSensorMetrics = action.payload;
     },
 
     setSensor: (state, action) => {
@@ -33,5 +38,11 @@ export const metricSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setMetrics, setMetric, setSensor, cleanMetric, changeLoading } =
-  metricSlice.actions;
+export const {
+  setMetrics,
+  setMetric,
+  setLastSensorMetrics,
+  setSensor,
+  cleanMetric,
+  changeLoading,
+} = metricSlice.actions;

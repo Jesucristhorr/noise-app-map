@@ -106,79 +106,75 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
         <Divider />
         <List>
           {/*  */}
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <MapIcon color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Mapa"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <InfoOutlined color="primary" />
-              </ListItemIcon>
-              <Grid container>
-                {/* <ListItemText primary={"hola"} /> */}
-                <NavLink
-                  to="/information"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <ListItemText primary={"Información"} />
-                </NavLink>
-              </Grid>
-            </ListItemButton>
-          </ListItem>
-
-          {status === "authenticated" ? (
+          <NavLink to="/" style={{ textDecoration: "none", color: "black" }}>
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <NoiseControlOff color="primary" />
+                  <MapIcon color="primary" />
                 </ListItemIcon>
                 <Grid container>
                   {/* <ListItemText primary={"hola"} /> */}
-                  <NavLink
-                    to="/noise-leves"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <ListItemText primary={"Niveles de ruido"} />
-                  </NavLink>
+                  <ListItemText primary={"Mapa"} />
                 </Grid>
               </ListItemButton>
             </ListItem>
+          </NavLink>
+
+          <NavLink
+            to="/information"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InfoOutlined color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <ListItemText primary={"Información"} />
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+
+          {status === "authenticated" ? (
+            <NavLink
+              to="/noise-leves"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <NoiseControlOff color="primary" />
+                  </ListItemIcon>
+                  <Grid container>
+                    {/* <ListItemText primary={"hola"} /> */}
+                    <ListItemText primary={"Niveles de ruido"} />
+                  </Grid>
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ) : (
             <p></p>
           )}
           {/*  */}
 
           {status === "authenticated" && (role.id === 1 || role.id === 2) ? (
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Sensors color="primary" />
-                </ListItemIcon>
-                <Grid container>
-                  {/* <ListItemText primary={"hola"} /> */}
-                  <NavLink
-                    to="/manage-sensors"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
+            <NavLink
+              to="/manage-sensors"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Sensors color="primary" />
+                  </ListItemIcon>
+                  <Grid container>
                     <ListItemText primary={"Administrar Sensores"} />
-                  </NavLink>
-                </Grid>
-              </ListItemButton>
-            </ListItem>
+                  </Grid>
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ) : (
             <p></p>
           )}
@@ -186,21 +182,21 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           {/*  */}
 
           {status === "authenticated" && role.id === 1 ? (
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Person color="primary" />
-                </ListItemIcon>
-                <Grid container>
-                  <NavLink
-                    to="/manage-users"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
+            <NavLink
+              to="/manage-users"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <Person color="primary" />
+                  </ListItemIcon>
+                  <Grid container>
                     <ListItemText primary={"Administrar Usuarios"} />
-                  </NavLink>
-                </Grid>
-              </ListItemButton>
-            </ListItem>
+                  </Grid>
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ) : (
             <p></p>
           )}

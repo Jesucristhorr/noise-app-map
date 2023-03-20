@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 
 export const useCheckSocket = () => {
   const [data, setData] = useState([]);
+  const [lastSensorData, setLastSensorData] = useState([]);
   useEffect(() => {
     const authToken = getToken();
     const socket = io(import.meta.env.VITE_WEB_SOCKET_URL, {
@@ -19,13 +20,17 @@ export const useCheckSocket = () => {
     });
 
     socket.on("sensor-data", (dataSensor) => {
-      console.log(dataSensor);
-      // setData([...data, dataSensor]);
       setData((currentData) => [...currentData, dataSensor]);
+      const cleanPreviousData = lastSensorData.filter(
+        (sensorData) => sensorData.sensorId !== dataSensor.sensorId
+      );
+      cleanPreviousData.push({ ...dataSensor });
+      setLastSensorData(() => [...cleanPreviousData]);
     });
   }, []);
 
   return {
     data,
+    lastSensorData,
   };
 };

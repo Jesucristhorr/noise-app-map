@@ -1,3 +1,3 @@
 export const Loading = () => {
-  return <div>Localizando...</div>;
+  return <div>Cargando mapa...</div>;
 };

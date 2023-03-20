@@ -12,111 +12,50 @@ import { Typography } from "@mui/material";
 import { AddLocationAltOutlined } from "@mui/icons-material";
 import { PopupMap } from "./PopupMap";
 import { useCheckSocket } from "../../hooks/useCheckSocket";
+import { DateTime } from "luxon";
+import { checkNoiseLevel } from "../../helpers/checkNoiseLevel";
+import { getLastSensorMetrics } from "../../store/metrics/thunks";
 
 export const MapView = () => {
+  const [mapInstance, setMapInstance] = useState();
+  const [markersBySensor, setMarkersBySensor] = useState({});
   const { isLoading, userLocation, isMapReady, mapa, sensors } = useSelector(
     (state) => state.map
   );
-  const { metrics } = useSelector((state) => state.metric);
+  const { lastSensorMetrics } = useSelector((state) => state.metric);
 
   const dispatch = useDispatch();
 
   const mapDiv = useRef(null);
 
   useEffect(() => {
-    dispatch(startLoadingSensors());
+    dispatch(startLoadingSensors()).then(() => {
+      dispatch(getLastSensorMetrics());
+    });
+
+    return () => {
+      setMarkersBySensor(() => ({}));
+    };
   }, []);
 
-  const { data } = useCheckSocket();
-
-  // console.log(data);
+  const { lastSensorData } = useCheckSocket();
 
   useLayoutEffect(() => {
     if (!isLoading) {
       const map = new Map({
         container: mapDiv.current, // container ID
-        style: "mapbox://styles/mapbox/streets-v11", // style URL
+        style: "mapbox://styles/mapbox/light-v11", // style URL
         center: userLocation, // starting position [lng, lat]
         zoom: 15, // starting zoom
         projection: "globe", // display the map as a 3D globe
       });
 
-      // dispatch(setMap(map));
-
       const myLocationPopup = new Popup().setHTML(`
         <h4>Ubicación Actual</h4>
-        
     `);
 
       map.on("style.load", () => {
         map.setFog({}); // Set the default atmosphere style
-      });
-
-      const newMarkets = [];
-      sensors.forEach((sensor) => {
-        const { longitude, latitude } = sensor;
-        const market = [longitude, latitude];
-
-        const metricasPorSensor = metrics.filter(
-          (d) => d.sensorId === sensor.id
-        );
-
-        const ultimoValor = metricasPorSensor.map(
-          (element, index, metricasPorSensor) =>
-            metricasPorSensor[metricasPorSensor.length - 1]
-        );
-
-        if (ultimoValor[0] === undefined) {
-          ultimoValor[0] = {
-            uuid: "e2b14c88-9608-44f2-89a7-3b4a1875aa70",
-            value: "60",
-            sensorId: 2,
-            createdAt: "2023-01-31T22:20:06.730Z",
-          };
-        }
-
-        // console.log(ultimoValor[0].value);
-
-        const myLocationPopup = new Popup().setHTML(
-          `
-        <div style='background-color: #15AABF; padding: 5px; color: #fff '>
-          <h3>Sensor ${sensor.name}</h3>
-          <p>Última actualización ${JSON.stringify(
-            ultimoValor[0].createdAt
-          )}</p>
-
-        </div>
-        <p><strong>Sensor</strong>: ${sensor.name}</p>
-        <p><strong>Descripcion:</strong> ${sensor.description}</p>
-        <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.locationName}</p>
-
-        <div style='display: flex; justify-content: center;'>
-        <div style='width: 100px; height: 100px; background-color: #a29bfe; border-radius: 50%; display: flex; align-items: center;'>
-        <div style='padding: 10px'>
-          <p style='text-align: center;'><strong>dB:</strong> ${JSON.stringify(
-            ultimoValor[0].value
-          )} (umbral de dolor)</p>
-        </div>
-        </div>
-        </div>
-        
-       
-        <div style='display: flex; justify-content: center;  margin-top: 10px;'>
-          <img style='width: 80px'; object-fit: cover; margin: 0 auto:' src=${"https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c"} />
-        </div>
-
-        `
-        );
-        const newMarket = new Marker({
-          color: "#29AFC3",
-          // draggable: true,
-          // element: "<AddLocationAltOutlined />",
-        })
-          .setLngLat(market)
-          .setPopup(myLocationPopup)
-          .addTo(map);
-        // newMarkets.push(newMarket);
-        // console.log(newMarkets);
       });
       //
       //
@@ -127,8 +66,123 @@ export const MapView = () => {
         .setLngLat(userLocation)
         .setPopup(myLocationPopup)
         .addTo(map);
+
+      setMapInstance(map);
     }
   }, [isLoading]);
+
+  useLayoutEffect(() => {
+    if (mapInstance) {
+      console.log("Me ejecuté con last sensor metrics:", lastSensorMetrics);
+      sensors.forEach((sensor) => {
+        const { longitude, latitude } = sensor;
+        const marker = [longitude, latitude];
+
+        const sensorMetric = lastSensorData.filter(
+          (data) => data.sensorId === sensor.id
+        );
+
+        const dbSensorMetric = lastSensorMetrics.filter(
+          (data) => data.sensorId === sensor.id
+        );
+
+        const [{ value, createdAt } = {}] = dbSensorMetric || [];
+
+        const [
+          {
+            measurement = value ? value : 50,
+            timestamp = createdAt
+              ? DateTime.fromJSDate(new Date(createdAt)).toMillis()
+              : DateTime.now().minus({ minutes: 5 }).toMillis(),
+          } = {},
+        ] = sensorMetric || [];
+
+        const { color, message, hasToShowWarning } = checkNoiseLevel(
+          Number(measurement)
+        );
+
+        const myLocationPopup = new Popup().setHTML(
+          `
+        <div style='background-color: #15AABF; padding: 5px; color: #fff '>
+          <h3>Sensor "${sensor.name}" (ID: ${sensor.id})</h3>
+          <p>Última actualización ${DateTime.fromMillis(timestamp)
+            .setLocale("es-EC")
+            .toRelative()}</p>
+
+        </div>
+        <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.locationName}</p>
+
+        <div style='display: flex; justify-content: center;'>
+        <div style='width: 100px; height: 100px; background-color: ${color}; border-radius: 50%; display: flex; align-items: center;'>
+        <div style='padding: 10px'>
+          <p style='text-align: center;'><strong>dB:</strong> ${Number(
+            measurement
+          )} (${message})</p>
+        </div>
+        </div>
+        </div>
+        
+        ${
+          hasToShowWarning
+            ? `
+        <div style='display: flex; justify-content: center; padding: 10px'>
+          <p style='text-align: center;'><strong style='color: ${color}'>ADVERTENCIA:</strong> Exponerse en esta zona por períodos prolongados de tiempo podría afectar permanentemente a su audición</p>
+        </div>
+        `
+            : ""
+        }
+
+        <div style='display: flex; justify-content: center;  margin-top: 10px;'>
+          <img style='width: 80px'; object-fit: cover; margin: 0 auto:' src=${"https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c"} />
+        </div>
+
+        `
+        );
+
+        const el = document.createElement("div");
+        el.className = "marker";
+        el.style.backgroundImage = `url(https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c)`;
+        el.style.width = `35px`;
+        el.style.height = `35px`;
+        el.style.backgroundSize = "contain";
+
+        let markerInstance = new Marker(el).setLngLat(marker);
+
+        if (sensor.id in markersBySensor) {
+          const previousMarker = markersBySensor[sensor.id];
+
+          markerInstance = previousMarker;
+
+          const hasBeenOpened = markerInstance.getPopup().isOpen();
+
+          markerInstance.remove();
+
+          const el = document.createElement("div");
+          el.className = "marker";
+          el.style.backgroundImage = `url(https://cdn-icons-png.flaticon.com/512/853/853483.png?w=740&t=st=1671568416~exp=1671569016~hmac=dc7cb683e4ce77f84b41e4284fafb7cf96b71222c160dc89fad5e4e9f215990c)`;
+          el.style.width = `35px`;
+          el.style.height = `35px`;
+          el.style.backgroundSize = "contain";
+
+          const newMarker = new Marker(el).setLngLat(marker);
+
+          newMarker.setPopup(myLocationPopup);
+          if (hasBeenOpened) newMarker.togglePopup();
+          newMarker.addTo(mapInstance);
+
+          markerInstance = newMarker;
+        } else {
+          markerInstance.setPopup(myLocationPopup);
+          markerInstance.addTo(mapInstance);
+        }
+
+        setMarkersBySensor((currentData) => ({
+          ...currentData,
+          [sensor.id]: markerInstance,
+        }));
+      });
+    }
+  }, [mapInstance, lastSensorMetrics, lastSensorData]);
 
   if (isLoading) {
     return <Loading />;
@@ -145,9 +199,7 @@ export const MapView = () => {
           top: "0",
           left: "0",
         }}
-      >
-        {/* {userLocation?.join(",")} */}
-      </div>
+      ></div>
     </>
   );
 };
