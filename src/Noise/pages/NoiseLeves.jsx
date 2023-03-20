@@ -140,7 +140,7 @@ export const NoiseLeves = () => {
               helperText={"Seleccione sensor"}
             >
               <MenuItem value={0}>
-                <em style={{ color: "white" }}>None</em>
+                <em style={{ color: "gray" }}>Todos</em>
               </MenuItem>
               {sensors.map((option) => (
                 <MenuItem key={option.id} value={option.id}>

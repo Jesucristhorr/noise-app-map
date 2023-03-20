@@ -27,7 +27,7 @@ export const NoisePage = () => {
       <MapView />
 
       {/* BOTON FLOTANTE */}
-      <Tooltip title="Agregar Sensor">
+      {/* <Tooltip title="Agregar Sensor">
         <IconButton
           size="large"
           sx={{
@@ -41,7 +41,7 @@ export const NoisePage = () => {
         >
           <AddOutlined sx={{ fontSize: 30 }} />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
     </NoiseLayout>
   );
 };

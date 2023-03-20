@@ -37,6 +37,32 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
     dispatch(startLogout({ errorMessage: "" }));
   };
 
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  }
+
+  const getAvatarInitials = (fullName) => {
+    const [firstName = "S", lastName = ""] = fullName.split(" ");
+
+    return `${firstName.at(0)}${lastName.at(0)}`;
+  };
+
   return (
     <Box
       component="nav"
@@ -60,8 +86,13 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
                 alignItems: "center",
               }}
             >
-              <Avatar sx={{ bgcolor: "#2AB0C3", marginRight: "10px" }}>
-                JI
+              <Avatar
+                sx={{
+                  bgcolor: stringToColor(displayName),
+                  marginRight: "10px",
+                }}
+              >
+                {getAvatarInitials(displayName)}
               </Avatar>
               <Typography variant="p" noWrap component="div">
                 {displayName}
