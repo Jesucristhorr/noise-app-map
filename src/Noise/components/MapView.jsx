@@ -90,24 +90,28 @@ export const MapView = () => {
 
         const [
           {
-            measurement = value ? value : 50,
+            measurement = value ? value : null,
             timestamp = createdAt
               ? DateTime.fromJSDate(new Date(createdAt)).toMillis()
-              : DateTime.now().minus({ minutes: 5 }).toMillis(),
+              : null,
           } = {},
         ] = sensorMetric || [];
 
         const { color, message, hasToShowWarning } = checkNoiseLevel(
-          Number(measurement)
+          measurement ? Number(measurement) : null
         );
 
         const myLocationPopup = new Popup().setHTML(
           `
         <div style='background-color: #15AABF; padding: 5px; color: #fff '>
           <h3>Sensor "${sensor.name}" (ID: ${sensor.id})</h3>
-          <p>Última actualización ${DateTime.fromMillis(timestamp)
-            .setLocale("es-EC")
-            .toRelative()}</p>
+          <p>${
+            timestamp
+              ? `Última actualización ${DateTime.fromMillis(timestamp)
+                  .setLocale("es-EC")
+                  .toRelative()}`
+              : "No se ha realizado medición"
+          }</p>
 
         </div>
         <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.locationName}</p>
@@ -115,9 +119,9 @@ export const MapView = () => {
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: ${color}; border-radius: 50%; display: flex; align-items: center;'>
         <div style='padding: 10px'>
-          <p style='text-align: center;'><strong>dB:</strong> ${Number(
-            measurement
-          )} (${message})</p>
+          <p style='text-align: center;'><strong>dB:</strong> ${
+            measurement ? Number(measurement) : "--"
+          } (${message})</p>
         </div>
         </div>
         </div>

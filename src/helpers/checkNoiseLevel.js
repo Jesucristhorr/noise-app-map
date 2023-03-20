@@ -1,4 +1,12 @@
 export const checkNoiseLevel = (noiseLevel = 0) => {
+  if (!noiseLevel)
+    return {
+      color: "#eaeaec",
+      message: "Sin medida",
+      examples: "Sin medida",
+      hasToShowWarning: false,
+    };
+
   if (noiseLevel <= 19)
     return {
       color: "#039432",
