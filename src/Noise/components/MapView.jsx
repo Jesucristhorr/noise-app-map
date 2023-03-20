@@ -50,9 +50,9 @@ export const MapView = () => {
         projection: "globe", // display the map as a 3D globe
       });
 
-      const myLocationPopup = new Popup().setHTML(`
-        <h4>Ubicación Actual</h4>
-    `);
+      //   const myLocationPopup = new Popup().setHTML(`
+      //     <h4>Ubicación Actual</h4>
+      // `);
 
       map.on("style.load", () => {
         map.setFog({}); // Set the default atmosphere style
@@ -60,12 +60,13 @@ export const MapView = () => {
       //
       //
       //Centro
-      new Marker({
-        color: "#29AFC3",
-      })
-        .setLngLat(userLocation)
-        .setPopup(myLocationPopup)
-        .addTo(map);
+
+      // new Marker({
+      //   color: "#29AFC3",
+      // })
+      //   .setLngLat(userLocation)
+      //   .setPopup(myLocationPopup)
+      //   .addTo(map);
 
       setMapInstance(map);
     }
@@ -115,6 +116,13 @@ export const MapView = () => {
 
         </div>
         <p><strong>Lugar:</strong> Sensor ubicado en ${sensor.locationName}</p>
+        <p><strong>Estado:</strong> ${
+          sensor.connectionStatus === "connected"
+            ? `<span style='color: #78e08f; font-weight: bold;'>Conectado</span>`
+            : sensor.connectionStatus === "pending"
+            ? `<span style='color: #f9ca23; font-weight: bold;'>Pendiente</span>`
+            : `<span style='color: #c23616; font-weight: bold;'>Desconectado</span>`
+        }</p>
 
         <div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: ${color}; border-radius: 50%; display: flex; align-items: center;'>

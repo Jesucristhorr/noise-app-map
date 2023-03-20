@@ -206,6 +206,29 @@ export const startLoadingSensors = () => {
   };
 };
 
+export const setSensorStatusState = (sensorStatusArray) => {
+  return async (dispatch, getState) => {
+    const { sensors } = getState().map;
+    const newSensors = sensors.map((sensor) => {
+      const sensorFound = sensorStatusArray.find(
+        (sen) => sen.sensorId === sensor.id
+      );
+
+      if (sensorFound)
+        return {
+          ...sensor,
+          connectionStatus: sensorFound.connectionStatus,
+          connectionErrorMsg: sensorFound.connectionErrorMsg ?? undefined,
+        };
+
+      return {
+        ...sensor,
+      };
+    });
+    dispatch(setSensors(newSensors));
+  };
+};
+
 export const startLoadingProtocols = () => {
   return async (dispatch) => {
     try {

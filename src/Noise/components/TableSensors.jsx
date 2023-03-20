@@ -18,20 +18,29 @@ import {
   Tooltip,
 } from "@mui/material";
 import { ModalEditSensor } from "./ModalEditSensor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setActiveSensorForm,
+  setSensorStatusState,
   startDeletingSensor,
 } from "../../store/map/thunks";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { useCheckSocket } from "../../hooks/useCheckSocket";
 
 export const TableSensors = ({ sensors }) => {
   const [open, setOpen] = useState(false);
 
   const { sensor } = useSelector((state) => state.map);
   const dispatch = useDispatch();
+  const { lastSensorStatus } = useCheckSocket();
+
+  useEffect(() => {
+    if (lastSensorStatus) {
+      dispatch(setSensorStatusState(lastSensorStatus));
+    }
+  }, [lastSensorStatus]);
 
   const handleModalEdit = () => {
     console.log("le dieron clic");
@@ -77,7 +86,13 @@ export const TableSensors = ({ sensors }) => {
                     <Pending sx={{ color: "#f9ca23" }} />
                   </Tooltip>
                 ) : (
-                  <Tooltip title="Desconectado">
+                  <Tooltip
+                    title={
+                      sensor.connectionErrorMsg
+                        ? `Desconectado. Motivo: ${sensor.connectionErrorMsg}`
+                        : "Desconectado"
+                    }
+                  >
                     <SensorsOff sx={{ color: "#c23616" }} />
                   </Tooltip>
                 )}

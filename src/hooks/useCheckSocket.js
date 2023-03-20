@@ -8,6 +8,8 @@ import { io } from "socket.io-client";
 export const useCheckSocket = () => {
   const [data, setData] = useState([]);
   const [lastSensorData, setLastSensorData] = useState([]);
+  const [lastSensorStatus, setLastSensorStatus] = useState([]);
+
   useEffect(() => {
     const authToken = getToken();
     const socket = io(import.meta.env.VITE_WEB_SOCKET_URL, {
@@ -27,10 +29,19 @@ export const useCheckSocket = () => {
       cleanPreviousData.push({ ...dataSensor });
       setLastSensorData(() => [...cleanPreviousData]);
     });
+
+    socket.on("sensor-status", (dataSensor) => {
+      const cleanPreviousData = lastSensorStatus.filter(
+        (sensorData) => sensorData.sensorId !== dataSensor.sensorId
+      );
+      cleanPreviousData.push({ ...dataSensor });
+      setLastSensorStatus(() => [...cleanPreviousData]);
+    });
   }, []);
 
   return {
     data,
     lastSensorData,
+    lastSensorStatus,
   };
 };
