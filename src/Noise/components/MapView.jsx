@@ -121,6 +121,8 @@ export const MapView = () => {
             ? `<span style='color: #78e08f; font-weight: bold;'>Conectado</span>`
             : sensor.connectionStatus === "pending"
             ? `<span style='color: #f9ca23; font-weight: bold;'>Pendiente</span>`
+            : sensor.connectionStatus === "parse-issue"
+            ? `<span style='color: #8fd301; font-weight: bold;'>Problema de parseo</span>`
             : `<span style='color: #c23616; font-weight: bold;'>Desconectado</span>`
         }</p>
 

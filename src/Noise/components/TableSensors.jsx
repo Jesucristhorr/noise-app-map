@@ -4,6 +4,7 @@ import {
   SensorsOff,
   SignalCellularAlt,
   Pending,
+  BrokenImage,
 } from "@mui/icons-material";
 import {
   Box,
@@ -84,6 +85,10 @@ export const TableSensors = ({ sensors }) => {
                 ) : sensor.connectionStatus === "pending" ? (
                   <Tooltip title="Conexión pendiente">
                     <Pending sx={{ color: "#f9ca23" }} />
+                  </Tooltip>
+                ) : sensor.connectionStatus === "parse-issue" ? (
+                  <Tooltip title="Problema de parseo de datos">
+                    <BrokenImage sx={{ color: "#8fd301" }} />
                   </Tooltip>
                 ) : (
                   <Tooltip
