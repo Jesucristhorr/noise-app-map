@@ -167,8 +167,9 @@ export const MapView = () => {
           const newMarker = new Marker(el).setLngLat(marker);
 
           newMarker.setPopup(myLocationPopup);
-          if (hasBeenOpened) newMarker.togglePopup();
           newMarker.addTo(mapInstance);
+
+          if (hasBeenOpened) newMarker.togglePopup();
 
           markerInstance = newMarker;
         } else {
