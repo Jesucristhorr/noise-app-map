@@ -421,7 +421,7 @@ export const ManageSensors = () => {
                     // no mayor a 100 caracteres
                     label="Lugar"
                     type="text"
-                    placeholder="Ejemplo: Facultad de Ciencias Informáticas"
+                    placeholder="Ejemplo: Facultad de Ciencias de la Vida y Tecnologías"
                     fullWidth
                     size="small"
                     // id="filled-hidden-label-small"

@@ -37,7 +37,7 @@ export const Cards = () => {
               <Box display="flex" gap={1}>
                 <InfoOutlined sx={{ color: "#636e72" }} />
                 <Typography>
-                  Estudiante de la Facultad de Ciencias Informáticas
+                  Estudiante de la Facultad de Ciencias de la Vida y Tecnologías
                 </Typography>
               </Box>
               <Box display="flex" gap={1}>
@@ -66,7 +66,7 @@ export const Cards = () => {
               <Box display="flex" gap={1}>
                 <InfoOutlined sx={{ color: "#636e72" }} />
                 <Typography>
-                  Estudiante de la Facultad de Ciencias Informáticas
+                  Estudiante de la Facultad de Ciencias de la Vida y Tecnologías
                 </Typography>
               </Box>
               <Box display="flex" gap={1}>
@@ -92,7 +92,7 @@ export const Cards = () => {
               <Box display="flex" gap={1}>
                 <InfoOutlined sx={{ color: "#636e72" }} />
                 <Typography>
-                  Docente de la Facultad de Ciencias Informáticas
+                  Docente de la Facultad de Ciencias de la Vida y Tecnologías
                 </Typography>
               </Box>
             </CardContent>

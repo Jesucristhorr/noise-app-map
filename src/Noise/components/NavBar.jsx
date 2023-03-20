@@ -91,7 +91,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
                   component="div"
                   sx={{ color: "#000", fontWeight: "bold" }}
                 >
-                  Facultad de Ciencias Informáticas
+                  Facultad de Ciencias de la Vida y Tecnologías
                 </Typography>
                 <Typography sx={{ color: "gray", fontSize: "12px" }}>
                   Medición de Ruido Ambiental
