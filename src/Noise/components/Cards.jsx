@@ -19,28 +19,6 @@ export const Cards = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Grid item>
-          <Card>
-            <CardContent>
-              <Typography variant="h8" fontWeight="bold" color="primary">
-                Supervisor del Proyecto
-              </Typography>
-              <Avatar sx={{ bgcolor: "#2AB0C3" }}>MM</Avatar>
-              <Typography fontWeight="bold">Ing. Mike Machuca, Mg.</Typography>
-              <Box display="flex" gap={1}>
-                <AlternateEmail sx={{ color: "#636e72" }} />
-                <Typography>mike.machuca@uleam.edu.ec</Typography>
-              </Box>
-              <Box display="flex" gap={1}>
-                <InfoOutlined sx={{ color: "#636e72" }} />
-                <Typography>
-                  Docente de la Facultad de Ciencias Informáticas
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
         {/*  */}
         <Grid item>
           <Card>
@@ -94,6 +72,28 @@ export const Cards = () => {
               <Box display="flex" gap={1}>
                 <GitHub sx={{ color: "#636e72" }} />
                 <Typography>Jesucristhorr</Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item>
+          <Card>
+            <CardContent>
+              <Typography variant="h8" fontWeight="bold" color="primary">
+                Supervisor del Proyecto
+              </Typography>
+              <Avatar sx={{ bgcolor: "#2AB0C3" }}>MM</Avatar>
+              <Typography fontWeight="bold">Ing. Mike Machuca, Mg.</Typography>
+              <Box display="flex" gap={1}>
+                <AlternateEmail sx={{ color: "#636e72" }} />
+                <Typography>mike.machuca@uleam.edu.ec</Typography>
+              </Box>
+              <Box display="flex" gap={1}>
+                <InfoOutlined sx={{ color: "#636e72" }} />
+                <Typography>
+                  Docente de la Facultad de Ciencias Informáticas
+                </Typography>
               </Box>
             </CardContent>
           </Card>

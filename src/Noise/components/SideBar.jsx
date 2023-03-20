@@ -151,23 +151,6 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
             </ListItem>
           </NavLink>
 
-          <NavLink
-            to="/information"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <InfoOutlined color="primary" />
-                </ListItemIcon>
-                <Grid container>
-                  {/* <ListItemText primary={"hola"} /> */}
-                  <ListItemText primary={"Información"} />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
-          </NavLink>
-
           {status === "authenticated" ? (
             <NavLink
               to="/noise-leves"
@@ -180,7 +163,7 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
                   </ListItemIcon>
                   <Grid container>
                     {/* <ListItemText primary={"hola"} /> */}
-                    <ListItemText primary={"Niveles de ruido"} />
+                    <ListItemText primary={"Mediciones"} />
                   </Grid>
                 </ListItemButton>
               </ListItem>
@@ -231,6 +214,23 @@ export const SideBar = ({ drawerWidth = 240, open }) => {
           ) : (
             <p></p>
           )}
+
+          <NavLink
+            to="/information"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InfoOutlined color="primary" />
+                </ListItemIcon>
+                <Grid container>
+                  {/* <ListItemText primary={"hola"} /> */}
+                  <ListItemText primary={"Información"} />
+                </Grid>
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
         </List>
       </Drawer>
     </Box>

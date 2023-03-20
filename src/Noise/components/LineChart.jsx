@@ -33,7 +33,11 @@ export const LineChart = ({ dataSensor, sensor }) => {
     datasets: [
       {
         fill: true,
-        label: `Niveles de Ruido (dB)`,
+        label: `${
+          sensor.type === "NOISE"
+            ? `Niveles de ruido (${sensor.measurementUnit})`
+            : `Medición (${sensor.measurementUnit})`
+        }`,
         data: filtrarSensores.map((d) => d.measurement),
         backgroundColor: "rgba(53, 162, 235, 0.5)",
         borderColor: "rgb(53, 162, 235)",
@@ -56,9 +60,23 @@ export const LineChart = ({ dataSensor, sensor }) => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold", color: "#747d8c" }}
         >
-          Niveles de ruido obtenidos del sensor: {sensor.name} (ID: {sensor.id})
+          {sensor.type === "NOISE"
+            ? `Niveles de ruido obtenidos del sensor: "${sensor.name}" (ID: ${sensor.id})`
+            : `Mediciones obtenidas del sensor tipo ${sensor.type}: "${sensor.name}" (ID: ${sensor.id})`}
         </Typography>
-        <Line data={lineChart} />
+        <Line
+          data={lineChart}
+          options={{
+            scales: {
+              y: {
+                min: 0,
+                type: "linear",
+                grace: "10%",
+                beginAtZero: 0,
+              },
+            },
+          }}
+        />
       </Box>
     </>
   );

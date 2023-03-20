@@ -46,11 +46,12 @@ export const NoiseLeves = () => {
 
   return (
     <NoiseLayout>
-      <Typography variant="h4" color={"primary"} sx={{ fontWeight: "bold" }}>
+      <Typography
+        variant="h4"
+        color={"primary"}
+        sx={{ fontWeight: "bold", mb: 4 }}
+      >
         MONITOREO DE RUIDO AMBIENTAL EN MANTA
-      </Typography>
-      <Typography variant="h6" sx={{ mb: 4 }}>
-        Ruido en Manta
       </Typography>
 
       {loadingMetrics && (
@@ -163,7 +164,7 @@ export const NoiseLeves = () => {
           <Grid item sx={{ mb: 3 }}>
             <Button variant="outlined" onClick={handleCharts}>
               <StreamOutlined />
-              Niveles de ruido en tiempo real
+              Mediciones en tiempo real
             </Button>
           </Grid>
         </Grid>

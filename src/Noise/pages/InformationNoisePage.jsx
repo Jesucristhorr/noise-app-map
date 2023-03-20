@@ -116,18 +116,18 @@ export const InformationNoisePage = () => {
         Solución de IoT para la medición de Ruido Ambiental
       </Typography>
       <p>
-        La contaminación acústica es un problema creciente en las cuidades y
+        La contaminación acústica es un problema creciente en las ciudades y
         zonas urbanas debido a la evolución industrial y crecimiento
         territorial. Estudios han demostrado que la exposición constante al
         ruido tiene serias consecuencias en la salud de las personas afectando
         la calidad de vida. Por lo tanto, es necesario contar con soluciones
-        tecnológicas que permitan la recolección y medición de ruido ambiental
-        para conocer su estado y de esta manera proponer soluciones de este
-        contexto. El presente proyecto de investigación y desarrollo tecnológico
-        está basado en la creación de una solución de IoT para monitoriar los
-        niveles de ruido presente y brindar esta información a la comunidad
-        universitaria. Esta solución consta de un Sistema Web y un Prototipo
-        encargado de capturar los niveles de ruido.
+        tecnológicas que permitan la recolección y medición del ruido ambiental
+        para conocer su estado, y por consecuencia facilitar propuestas para la
+        reducción del mismo. El presente proyecto de investigación y desarrollo
+        tecnológico está basado en la creación de una solución de IoT para
+        monitorear los niveles de ruido presentes y brindar esta información a
+        la comunidad universitaria. Esta solución consta de un Sistema Web y un
+        Prototipo encargado de capturar los niveles de ruido.
       </p>
       <Typography variant="h6">
         Escala de Ruido recomendado por la OMS
@@ -161,51 +161,6 @@ export const InformationNoisePage = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* <Box marginTop={5}>
-        <Grid container spacing={2} columns={16}>
-          <Grid item md={8} xs={16}>
-            <Typography variant="h6" color="#636e72">
-              Solución de IoT de Ruido Ambiental
-            </Typography>
-            <Typography variant="p" fontWeight="bold" color="primary">
-              2023 - ULEAM
-            </Typography>
-            <Avatar
-              sx={{ width: 300, height: 200 }}
-              variant="square"
-              src="https://ik.imagekit.io/hpmztn0eqra/LOGO-ULEAM-HORIZONTAL_0youY46RE.png?ik-sdk-version=javascript-1.4.3&updatedAt=1609345113962"
-            />
-          </Grid>
-          <Grid item md={8} xs={16}>
-            <Typography variant="h8" fontWeight="bold" color="primary">
-              SUPERVISOR DEL PROYECTO
-            </Typography>
-            <Typography>Ing. Mike Machuca, Mg.</Typography>
-            <Typography>mike@uleam.edu.ec</Typography>
-            <Typography fontWeight="bold">
-              Docente de la Facultad de Ciencias Informáticas
-            </Typography>
-            <Divider sx={{ padding: "10px" }} />
-            <Typography variant="h8" fontWeight="bold" color="primary">
-              DESARROLLADORES DEL PROYECTO
-            </Typography>
-            <Typography>Jesús Ricardo Moreira Cedeño</Typography>
-            <Typography>e1351673460@live.uleam.edu.ec</Typography>
-            <Typography fontWeight="bold">
-              Estudiante de la Facultad de Ciencias Informáticas
-            </Typography>
- 
-            <Typography sx={{ marginTop: "15px" }}>
-              Jennifer Gabriela Intriago Reyes
-            </Typography>
-            <Typography>e1313817817@live.uleam.edu.ec</Typography>
-            <Typography fontWeight="bold">
-              Estudiante de la Facultad de Ciencias Informáticas
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box> */}
       <Typography
         variant="h6"
         fontWeight="bold"

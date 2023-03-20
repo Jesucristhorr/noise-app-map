@@ -10,7 +10,11 @@ export const LineMetricChart = ({ metric, sensor }) => {
     datasets: [
       {
         fill: true,
-        label: `Niveles de Ruido (dB)`,
+        label: `${
+          sensor.type === "NOISE"
+            ? `Niveles de ruido (${sensor.measurementUnit})`
+            : `Medición (${sensor.measurementUnit})`
+        }`,
         data: metricasBdd.map((m) => m.value),
         backgroundColor: "#07B8AF",
         borderColor: "#07B8AF",
@@ -25,9 +29,23 @@ export const LineMetricChart = ({ metric, sensor }) => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold", color: "#747d8c" }}
         >
-          Niveles de ruido obtenidos del sensor: {sensor.name} (ID: {sensor.id})
+          {sensor.type === "NOISE"
+            ? `Niveles de ruido obtenidos del sensor: "${sensor.name}" (ID: ${sensor.id})`
+            : `Mediciones obtenidas del sensor tipo ${sensor.type}: "${sensor.name}" (ID: ${sensor.id})`}
         </Typography>
-        <Line data={lineChart} />
+        <Line
+          data={lineChart}
+          options={{
+            scales: {
+              y: {
+                min: 0,
+                type: "linear",
+                grace: "10%",
+                beginAtZero: 0,
+              },
+            },
+          }}
+        />
       </Box>
     </>
   );
