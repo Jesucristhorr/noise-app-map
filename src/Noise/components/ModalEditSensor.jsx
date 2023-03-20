@@ -177,23 +177,6 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                 />
               </Grid>
 
-              {/* <Grid item xs={12} sx={{ mt: 2 }}>
-                    <TextField
-                      label="Nombre"
-                      type="text"
-                      placeholder="Arduino Nano"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("nombre", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                      })}
-                      error={!!errors.nombre}
-                      helperText={errors.nombre ? "Campo requerido" : ""}
-                    />
-                  </Grid> */}
-
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
                   label="Descripción"
@@ -237,10 +220,29 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
 
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <TextField
+                  label="Nombre de la llave JSON con datos de medición"
+                  type="text"
+                  placeholder="Ej. measurement"
+                  fullWidth
+                  size="small"
+                  // id="filled-hidden-label-small"
+                  {...register("measurementKeyName", {
+                    minLength: 1,
+                    maxLength: 100,
+                  })}
+                  error={!!errors.measurementKeyName}
+                  helperText={
+                    errors.measurementKeyName ? "Campo requerido" : ""
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ mt: 2 }}>
+                <TextField
                   // no mayor a 100 caracteres
                   label="Lugar"
                   type="text"
-                  placeholder="Ejemplo: Facultad de Ciencias Informáticas"
+                  placeholder="Ejemplo: Facultad de Ciencias de la Vida y Tecnologías"
                   fullWidth
                   size="small"
                   // id="filled-hidden-label-small"

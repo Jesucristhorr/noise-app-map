@@ -380,8 +380,7 @@ export const ManageSensors = () => {
                       size="small"
                       // id="filled-hidden-label-small"
                       {...register("measurementKeyName", {
-                        required: "Campo requerido",
-                        minLength: 2,
+                        minLength: 1,
                         maxLength: 100,
                       })}
                       error={!!errors.measurementKeyName}

@@ -56,6 +56,11 @@ export const mapSlice = createSlice({
           return {
             ...action.payload.sensorOriginalData,
             ...action.payload,
+            connectionTypeId: action.payload.protocolId,
+            connectionData: {
+              ...action.payload.sensorOriginalData.connectionData,
+              data: action.payload.connectionData,
+            },
           };
         }
         return sensor;
