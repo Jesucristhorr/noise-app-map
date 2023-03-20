@@ -9,6 +9,7 @@ export const mapSlice = createSlice({
     mapa: undefined,
     sensors: [],
     sensor: null,
+    sensorTypes: [],
     protocols: [],
     isSaving: false,
     messageSaved: "",
@@ -89,6 +90,10 @@ export const mapSlice = createSlice({
     setProtocols: (state, action) => {
       state.protocols = action.payload;
     },
+
+    setSensorTypes: (state, action) => {
+      state.sensorTypes = action.payload;
+    },
   },
 });
 
@@ -104,4 +109,5 @@ export const {
   errorSensor,
   setSensors,
   setProtocols,
+  setSensorTypes,
 } = mapSlice.actions;

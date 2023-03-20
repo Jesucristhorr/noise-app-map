@@ -9,6 +9,7 @@ import {
   errorSensor,
   setSensors,
   setProtocols,
+  setSensorTypes,
 } from "./mapSlice";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
@@ -17,6 +18,7 @@ import { getToken } from "../../helpers/getToken";
 import { loadSensors } from "../../helpers/getSensors";
 import { getISOFormat } from "../../helpers/getISOFormat";
 import { fetchProtocols } from "../../helpers/fetchProtocols";
+import { fetchSensorTypes } from "../../helpers/fetchSensorTypes";
 
 export const getUserLocation = () => {
   return async (dispatch) => {
@@ -47,6 +49,7 @@ export const setMap = (map) => {
 
 export const startNewSensor = ({
   name,
+  type,
   description,
   measurementUnit,
   measurementKeyName,
@@ -65,6 +68,7 @@ export const startNewSensor = ({
         "sensors",
         {
           name,
+          type,
           description,
           measurementUnit,
           latitude,
@@ -83,6 +87,7 @@ export const startNewSensor = ({
       dispatch(
         addNewSensor({
           name,
+          type,
           description,
           measurementUnit,
           measurementKeyName,
@@ -111,6 +116,7 @@ export const setActiveSensorForm = (data) => {
 export const updateSensorForm = ({
   id,
   name,
+  type,
   description,
   measurementUnit,
   measurementKeyName,
@@ -130,6 +136,7 @@ export const updateSensorForm = ({
         {
           sensorId: id,
           name,
+          type,
           description,
           measurementUnit,
           latitude,
@@ -150,6 +157,7 @@ export const updateSensorForm = ({
         updateSensor({
           id,
           name,
+          type,
           description,
           measurementUnit,
           measurementKeyName,
@@ -237,6 +245,18 @@ export const startLoadingProtocols = () => {
       dispatch(setProtocols(protocols));
     } catch (error) {
       console.error("Error getting protocols:", error);
+    }
+  };
+};
+
+export const startLoadingSensorTypes = () => {
+  return async (dispatch) => {
+    try {
+      const sensorTypes = await fetchSensorTypes();
+
+      dispatch(setSensorTypes(sensorTypes));
+    } catch (error) {
+      console.error("Error getting sensor types:", error);
     }
   };
 };

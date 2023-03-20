@@ -57,6 +57,7 @@ export const TableSensors = ({ sensors }) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Sensor</TableCell>
+            <TableCell>Tipo</TableCell>
             <TableCell>Descripción</TableCell>
             <TableCell>Unidad de Medida</TableCell>
             <TableCell>Lugar</TableCell>
@@ -72,6 +73,7 @@ export const TableSensors = ({ sensors }) => {
             <TableRow key={sensor.name}>
               <TableCell>{sensor.id}</TableCell>
               <TableCell>{sensor.name}</TableCell>
+              <TableCell>{sensor.type}</TableCell>
               <TableCell>{sensor.description}</TableCell>
               <TableCell>{sensor.measurementUnit}</TableCell>
               <TableCell>{sensor.locationName}</TableCell>

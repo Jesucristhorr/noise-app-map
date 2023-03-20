@@ -98,6 +98,8 @@ export const MapView = () => {
           } = {},
         ] = sensorMetric || [];
 
+        const hasToShowNoiseWarnings = sensor.type === "NOISE";
+
         const { color, textColor, message, hasToShowWarning } = checkNoiseLevel(
           measurement ? Number(measurement) : null
         );
@@ -127,15 +129,18 @@ export const MapView = () => {
             ? `<span style='color: #8fd301; font-weight: bold;'>Problema de parseo</span>`
             : `<span style='color: #c23616; font-weight: bold;'>Desconectado</span>`
         }</p>
+        <p><strong>Tipo:</strong> ${sensor.type}</p>
 
-        <div style='display: flex; justify-content: center;'>
+        ${
+          hasToShowNoiseWarnings
+            ? `<div style='display: flex; justify-content: center;'>
         <div style='width: 100px; height: 100px; background-color: ${color}; border-radius: 50%; display: flex; align-items: center;'>
         <div style='padding: 10px; color: ${textColor}'>
           <p style='text-align: center;'>${
             measurement ? Number(measurement) : "--"
           } <span style='font-weight: 500;'>${
-            sensor.measurementUnit
-          }</span> (${message})</p>
+                sensor.measurementUnit
+              }</span> (${message})</p>
         </div>
         </div>
         </div>
@@ -148,6 +153,17 @@ export const MapView = () => {
         </div>
         `
             : ""
+        }`
+            : `<div style='display: flex; justify-content: center;'>
+        <div style='width: 100px; height: 100px; background-color: #79BBE6; border-radius: 10%; display: flex; align-items: center; justify-content: center;'>
+        <div style='padding: 10px; color: #000000; text-align: center;'>
+          <p style='margin: 0; padding-bottom: 10px; font-weight: 600;'>Medición:</p>
+          <p style='text-align: center;'>${
+            measurement ? Number(measurement) : "--"
+          } <span style='font-weight: 500;'>${sensor.measurementUnit}</span></p>
+        </div>
+        </div>
+        </div>`
         }
 
         <div style='display: flex; justify-content: center;  margin-top: 10px;'>

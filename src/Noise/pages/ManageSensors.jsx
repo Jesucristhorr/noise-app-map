@@ -37,6 +37,7 @@ import {
   getUserLocation,
   startLoadingProtocols,
   startLoadingSensors,
+  startLoadingSensorTypes,
   startNewSensor,
 } from "../../store/map/thunks";
 import { Alerts } from "../components/Alerts";
@@ -63,6 +64,7 @@ export const ManageSensors = () => {
     userLocation,
     sensors,
     protocols,
+    sensorTypes,
     isSaving,
     messageSaved,
     messageDelete,
@@ -94,6 +96,7 @@ export const ManageSensors = () => {
     defaultValues: {
       name: "",
       description: "",
+      type: "NOISE",
       measurementUnit: "",
       measurementKeyName: "",
       locationName: "",
@@ -112,7 +115,9 @@ export const ManageSensors = () => {
   useEffect(() => {
     dispatch(startLoadingSensors()).then(() => {
       dispatch(startLoadingProtocols()).then(() => {
-        setOpenLoadingSensors(false);
+        dispatch(startLoadingSensorTypes()).then(() => {
+          setOpenLoadingSensors(false);
+        });
       });
     });
     setOpenLoadingSensors(true);
@@ -330,225 +335,242 @@ export const ManageSensors = () => {
 
                   <Grid item xs={12} sx={{ mt: 2 }}>
                     <TextField
-                      label="Descripción"
-                      type="text"
-                      placeholder="Mide el ruido ambiental"
+                      label="Tipo de sensor"
+                      select
+                      defaultValue={"NOISE"}
                       fullWidth
                       size="small"
                       // id="filled-hidden-label-small"
-                      {...register("description", {
-                        minLength: {
-                          value: 5,
-                          message:
-                            "La descripción debe ser de al menos 5 caracteres",
-                        },
-                      })}
-                      helperText={errors.description ? "Campo requerido" : ""}
-                      error={!!errors.description}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sx={{ mt: 2 }}>
-                    <TextField
-                      label="Unidad de Medida"
-                      type="text"
-                      placeholder="dB(A)"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("measurementUnit", {
+                      {...register("type", {
                         required: "Campo requerido",
-                        minLength: {
-                          value: 1,
-                          message:
-                            "La unidad de medida debe tener al menos un caracter",
-                        },
                       })}
-                      error={!!errors.measurementUnit}
-                      helperText={
-                        errors.measurementUnit ? "Campo requerido" : ""
-                      }
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sx={{ mt: 2 }}>
-                    <TextField
-                      label="Nombre de la llave JSON con datos de medición"
-                      type="text"
-                      placeholder="Ej. measurement"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("measurementKeyName", {
-                        minLength: 1,
-                        maxLength: 100,
-                      })}
-                      error={!!errors.measurementKeyName}
-                      helperText={
-                        errors.measurementKeyName ? "Campo requerido" : ""
-                      }
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sx={{ mt: 2 }}>
-                    <TextField
-                      // no mayor a 100 caracteres
-                      label="Lugar"
-                      type="text"
-                      placeholder="Ejemplo: Facultad de Ciencias Informáticas"
-                      fullWidth
-                      size="small"
-                      // id="filled-hidden-label-small"
-                      {...register("locationName", {
-                        required: "Campo requerido",
-                        minLength: 5,
-                        maxLength: 99,
-                      })}
-                      error={!!errors.locationName}
-                      helperText={errors.locationName ? "Campo requerido" : ""}
-                    />
-                  </Grid>
-
-                  <Grid container justifyContent="space-between">
-                    <Grid item xs={5} sx={{ mt: 2 }}>
-                      <TextField
-                        label="Longitud"
-                        type="text"
-                        placeholder="0.987890"
-                        fullWidth
-                        size="small"
-                        // id="filled-hidden-label-small"
-                        {...register("longitude", {
-                          required: "Campo requerido",
-                          pattern:
-                            /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/,
-                        })}
-                        error={!!errors.longitude}
-                        helperText={errors.longitude ? "Campo inválido" : ""}
-                        // value={userLocation[0] ? userLocation[0] : ""}
-                      />
-                    </Grid>
-
-                    <Grid item xs={5} sx={{ mt: 2 }}>
-                      <TextField
-                        label="Latitud"
-                        type="text"
-                        placeholder="2.987890"
-                        fullWidth
-                        size="small"
-                        // id="filled-hidden-label-small"
-                        {...register("latitude", {
-                          required: "Campo requerido",
-                          pattern:
-                            /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/,
-                        })}
-                        error={!!errors.latitude}
-                        helperText={errors.latitude ? "Campo inválido" : ""}
-                        // value={userLocation[1] ? userLocation[1] : ""}
-                      />
-                    </Grid>
-                    <Grid item xs={1} sx={{ mt: 2, mr: 2 }}>
-                      <Tooltip title="Fija ubicación actual">
-                        <IconButton
-                          color="inherit"
-                          edge="start"
-                          onClick={handleUserLocationInForm}
-                        >
-                          <AddLocationAlt sx={{ fontSize: 35 }} />
-                        </IconButton>
-                      </Tooltip>
-                    </Grid>
-
-                    {/* TODO: NUEVOS CAMPOS */}
-
-                    <Divider
-                      textAlign="left"
-                      sx={{
-                        mt: 2,
-                        mb: 2,
-                        width: "100%",
-                        fontWeight: "bold",
-                        color: "#073940",
-                      }}
+                      helperText={errors.type ? "Campo requerido" : ""}
+                      error={!!errors.type}
                     >
-                      Configuración del Sensor
-                    </Divider>
-
-                    <Grid item xs={12} sx={{ mt: 2 }}>
-                      <TextField
-                        label="Protocolo de conexión"
-                        select
-                        defaultValue={1}
-                        placeholder="Ejemplo: MQTT"
-                        fullWidth
-                        size="small"
-                        // id="filled-hidden-label-small"
-                        {...register("protocolId", {
-                          required: "Campo requerido",
-                        })}
-                        helperText={errors.protocolId ? "Campo requerido" : ""}
-                        error={!!errors.protocolId}
-                      >
-                        {protocols.map(({ id: protocolId, protocol }) => (
-                          <MenuItem key={protocolId} value={protocolId}>
-                            {protocol}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
+                      {sensorTypes.map((type) => (
+                        <MenuItem key={type} value={type}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                  {/*  */}
+                </Grid>
 
-                  {protocolId
-                    ? protocols
-                        .filter(({ id }) => Number(id) === Number(protocolId))
-                        .map(
-                          ({
-                            connectionDetail: {
-                              dataSchema,
-                              uiSchema,
-                              initialData,
-                            },
-                            id,
-                            protocol,
-                          }) => (
-                            <Grid
-                              key={`${id}-${protocol}`}
-                              item
-                              xs={12}
-                              sx={{ mt: 2 }}
-                            >
-                              <JsonForms
-                                schema={dataSchema}
-                                uischema={uiSchema}
-                                data={initialData}
-                                renderers={materialRenderers}
-                                cells={materialCells}
-                                vald
-                                onChange={({ data, errors }) => {
-                                  setValue("connectionData", { ...data });
-                                }}
-                              ></JsonForms>
-                            </Grid>
-                          )
-                        )
-                    : null}
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <TextField
+                    label="Descripción"
+                    type="text"
+                    placeholder="Mide el ruido ambiental"
+                    fullWidth
+                    size="small"
+                    // id="filled-hidden-label-small"
+                    {...register("description", {
+                      minLength: {
+                        value: 5,
+                        message:
+                          "La descripción debe ser de al menos 5 caracteres",
+                      },
+                    })}
+                    helperText={errors.description ? "Campo requerido" : ""}
+                    error={!!errors.description}
+                  />
+                </Grid>
 
-                  {/*  */}
-                  <Grid
-                    container
-                    sx={{ mb: 2, mt: 1, justifyContent: "center" }}
-                  >
-                    <Grid item xs={12} sm={6}>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        type="submit"
-                        sx={{ color: "#fff" }}
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <TextField
+                    label="Unidad de Medida"
+                    type="text"
+                    placeholder="dB(A)"
+                    fullWidth
+                    size="small"
+                    // id="filled-hidden-label-small"
+                    {...register("measurementUnit", {
+                      required: "Campo requerido",
+                      minLength: {
+                        value: 1,
+                        message:
+                          "La unidad de medida debe tener al menos un caracter",
+                      },
+                    })}
+                    error={!!errors.measurementUnit}
+                    helperText={errors.measurementUnit ? "Campo requerido" : ""}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <TextField
+                    label="Nombre de la llave JSON con datos de medición"
+                    type="text"
+                    placeholder="Ej. measurement"
+                    fullWidth
+                    size="small"
+                    // id="filled-hidden-label-small"
+                    {...register("measurementKeyName", {
+                      minLength: 1,
+                      maxLength: 100,
+                    })}
+                    error={!!errors.measurementKeyName}
+                    helperText={
+                      errors.measurementKeyName ? "Campo requerido" : ""
+                    }
+                  />
+                </Grid>
+
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <TextField
+                    // no mayor a 100 caracteres
+                    label="Lugar"
+                    type="text"
+                    placeholder="Ejemplo: Facultad de Ciencias Informáticas"
+                    fullWidth
+                    size="small"
+                    // id="filled-hidden-label-small"
+                    {...register("locationName", {
+                      required: "Campo requerido",
+                      minLength: 5,
+                      maxLength: 99,
+                    })}
+                    error={!!errors.locationName}
+                    helperText={errors.locationName ? "Campo requerido" : ""}
+                  />
+                </Grid>
+
+                <Grid container justifyContent="space-between">
+                  <Grid item xs={5} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Longitud"
+                      type="text"
+                      placeholder="0.987890"
+                      fullWidth
+                      size="small"
+                      // id="filled-hidden-label-small"
+                      {...register("longitude", {
+                        required: "Campo requerido",
+                        pattern:
+                          /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/,
+                      })}
+                      error={!!errors.longitude}
+                      helperText={errors.longitude ? "Campo inválido" : ""}
+                      // value={userLocation[0] ? userLocation[0] : ""}
+                    />
+                  </Grid>
+
+                  <Grid item xs={5} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Latitud"
+                      type="text"
+                      placeholder="2.987890"
+                      fullWidth
+                      size="small"
+                      // id="filled-hidden-label-small"
+                      {...register("latitude", {
+                        required: "Campo requerido",
+                        pattern:
+                          /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/,
+                      })}
+                      error={!!errors.latitude}
+                      helperText={errors.latitude ? "Campo inválido" : ""}
+                      // value={userLocation[1] ? userLocation[1] : ""}
+                    />
+                  </Grid>
+                  <Grid item xs={1} sx={{ mt: 2, mr: 2 }}>
+                    <Tooltip title="Fija ubicación actual">
+                      <IconButton
+                        color="inherit"
+                        edge="start"
+                        onClick={handleUserLocationInForm}
                       >
-                        <Typography>Guardar</Typography>
-                      </Button>
-                    </Grid>
+                        <AddLocationAlt sx={{ fontSize: 35 }} />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+
+                  {/* TODO: NUEVOS CAMPOS */}
+
+                  <Divider
+                    textAlign="left"
+                    sx={{
+                      mt: 2,
+                      mb: 2,
+                      width: "100%",
+                      fontWeight: "bold",
+                      color: "#073940",
+                    }}
+                  >
+                    Configuración del Sensor
+                  </Divider>
+
+                  <Grid item xs={12} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Protocolo de conexión"
+                      select
+                      defaultValue={1}
+                      placeholder="Ejemplo: MQTT"
+                      fullWidth
+                      size="small"
+                      // id="filled-hidden-label-small"
+                      {...register("protocolId", {
+                        required: "Campo requerido",
+                      })}
+                      helperText={errors.protocolId ? "Campo requerido" : ""}
+                      error={!!errors.protocolId}
+                    >
+                      {protocols.map(({ id: protocolId, protocol }) => (
+                        <MenuItem key={protocolId} value={protocolId}>
+                          {protocol}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </Grid>
+                {/*  */}
+
+                {protocolId
+                  ? protocols
+                      .filter(({ id }) => Number(id) === Number(protocolId))
+                      .map(
+                        ({
+                          connectionDetail: {
+                            dataSchema,
+                            uiSchema,
+                            initialData,
+                          },
+                          id,
+                          protocol,
+                        }) => (
+                          <Grid
+                            key={`${id}-${protocol}`}
+                            item
+                            xs={12}
+                            sx={{ mt: 2 }}
+                          >
+                            <JsonForms
+                              schema={dataSchema}
+                              uischema={uiSchema}
+                              data={initialData}
+                              renderers={materialRenderers}
+                              cells={materialCells}
+                              vald
+                              onChange={({ data, errors }) => {
+                                setValue("connectionData", { ...data });
+                              }}
+                            ></JsonForms>
+                          </Grid>
+                        )
+                      )
+                  : null}
+
+                {/*  */}
+                <Grid container sx={{ mb: 2, mt: 1, justifyContent: "center" }}>
+                  <Grid item xs={12} sm={6}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                      sx={{ color: "#fff" }}
+                    >
+                      <Typography>Guardar</Typography>
+                    </Button>
                   </Grid>
                 </Grid>
               </form>
