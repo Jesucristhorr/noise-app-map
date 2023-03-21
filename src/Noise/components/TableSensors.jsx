@@ -30,7 +30,12 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
 import { useCheckSocket } from "../../hooks/useCheckSocket";
 
-export const TableSensors = ({ sensors }) => {
+export const TableSensors = ({
+  sensors,
+  savingSensor,
+  loadingSensors,
+  setSavingSensor,
+}) => {
   const [open, setOpen] = useState(false);
 
   const { sensor } = useSelector((state) => state.map);
@@ -42,6 +47,8 @@ export const TableSensors = ({ sensors }) => {
       dispatch(setSensorStatusState(lastSensorStatus));
     }
   }, [lastSensorStatus]);
+
+  const isStillLoading = savingSensor || loadingSensors;
 
   const handleModalEdit = () => {
     console.log("le dieron clic");
@@ -105,49 +112,77 @@ export const TableSensors = ({ sensors }) => {
                 )}
               </TableCell>
               <TableCell>
-                <IconButton
-                  onClick={() => {
-                    setOpen(true);
-                    dispatch(setActiveSensorForm(sensor));
-                  }}
-                >
-                  <Edit sx={{ color: "#f9ca24" }} />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    dispatch(setActiveSensorForm(sensor)).then(() => {
-                      const sensorName = sensor.name;
-                      Swal.fire({
-                        title: "¿Está seguro de eliminar este sensor?",
-                        text: "Esta acción es irreversible",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#15AABF",
-                        cancelButtonColor: "#fc5c65",
-                        confirmButtonText: "Sí, eliminar",
-                        cancelButtonText: "No, cancelar",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          dispatch(startDeletingSensor()).then(() => {
-                            Swal.fire(
-                              "Eliminado",
-                              `El sensor "${sensorName}" ha sido eliminado satisfactoriamente`,
-                              "success"
-                            );
+                <Tooltip title="Editar sensor">
+                  <span>
+                    <IconButton
+                      disabled={isStillLoading}
+                      onClick={() => {
+                        setOpen(true);
+                        dispatch(setActiveSensorForm(sensor));
+                      }}
+                    >
+                      <Edit
+                        sx={isStillLoading ? {} : { color: "#f9ca24" }}
+                        color={isStillLoading ? "disabled" : undefined}
+                      />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title="Eliminar sensor">
+                  <span>
+                    <IconButton
+                      disabled={isStillLoading}
+                      onClick={() => {
+                        dispatch(setActiveSensorForm(sensor)).then(() => {
+                          const sensorName = sensor.name;
+                          Swal.fire({
+                            title: "¿Está seguro de eliminar este sensor?",
+                            text: "Esta acción es irreversible",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#15AABF",
+                            cancelButtonColor: "#fc5c65",
+                            confirmButtonText: "Sí, eliminar",
+                            cancelButtonText: "No, cancelar",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              setSavingSensor(true);
+
+                              dispatch(startDeletingSensor())
+                                .then(() => {
+                                  Swal.fire(
+                                    "Eliminado",
+                                    `El sensor "${sensorName}" ha sido eliminado satisfactoriamente`,
+                                    "success"
+                                  );
+                                })
+                                .finally(() => {
+                                  setSavingSensor(false);
+                                });
+                            }
                           });
-                        }
-                      });
-                    });
-                  }}
-                >
-                  <DeleteOutline sx={{ color: "#c23616" }} />
-                </IconButton>
+                        });
+                      }}
+                    >
+                      <DeleteOutline
+                        sx={isStillLoading ? {} : { color: "#c23616" }}
+                        color={isStillLoading ? "disabled" : undefined}
+                      />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <ModalEditSensor open={open} setOpen={setOpen} sensor={sensor} />
+      <ModalEditSensor
+        open={open}
+        setOpen={setOpen}
+        sensor={sensor}
+        savingSensor={savingSensor}
+        setSavingSensor={setSavingSensor}
+      />
     </TableContainer>
   );
 };

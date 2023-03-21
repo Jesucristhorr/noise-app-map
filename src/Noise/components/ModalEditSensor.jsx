@@ -25,7 +25,13 @@ import {
   updateSensorForm,
 } from "../../store/map/thunks";
 
-export const ModalEditSensor = ({ open, setOpen, sensor }) => {
+export const ModalEditSensor = ({
+  open,
+  setOpen,
+  sensor,
+  setSavingSensor,
+  savingSensor,
+}) => {
   const { userLocation, protocols, sensorTypes, messageDelete, messageSaved } =
     useSelector((state) => state.map);
 
@@ -144,10 +150,14 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                 sensorOriginalData: { ...sensor },
               };
 
-              dispatch(updateSensorForm(sensorToUpdate));
-              // mostrar alerta
-              reset();
-              setOpen(false);
+              setSavingSensor(true);
+
+              dispatch(updateSensorForm(sensorToUpdate)).finally(() => {
+                setSavingSensor(false);
+                // mostrar alerta
+                reset();
+                setOpen(false);
+              });
             })}
           >
             <Divider
@@ -409,6 +419,7 @@ export const ModalEditSensor = ({ open, setOpen, sensor }) => {
                   fullWidth
                   type="submit"
                   sx={{ color: "#fff" }}
+                  disabled={savingSensor}
                 >
                   <Typography>Guardar</Typography>
                 </Button>

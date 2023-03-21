@@ -578,7 +578,12 @@ export const ManageSensors = () => {
           </Modal>
         </div>
         {/* Tabla de sensores */}
-        <TableSensors sensors={sensors} />
+        <TableSensors
+          sensors={sensors}
+          savingSensor={savingSensor}
+          loadingSensors={loadingSensors}
+          setSavingSensor={setSavingSensor}
+        />
       </NoiseLayout>
       {/* {openAlert && <Alerts alert={true} />} */}
     </>
