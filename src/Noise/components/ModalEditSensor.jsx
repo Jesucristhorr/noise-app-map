@@ -16,7 +16,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,6 +24,7 @@ import {
   startNewSensor,
   updateSensorForm,
 } from "../../store/map/thunks";
+import { Map, Marker, Popup } from "mapbox-gl";
 
 export const ModalEditSensor = ({
   open,
@@ -34,6 +35,11 @@ export const ModalEditSensor = ({
 }) => {
   const { userLocation, protocols, sensorTypes, messageDelete, messageSaved } =
     useSelector((state) => state.map);
+  const [mapDivExists, setMapDivExists] = useState(false);
+  const [mapInstance, setMapInstance] = useState(null);
+  const [positionMarker, setPositionMarker] = useState(null);
+
+  const editMapDiv = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -69,6 +75,8 @@ export const ModalEditSensor = ({
   const handleClose = () => setOpen(false);
 
   const protocolId = watch("protocolId");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
 
   // setear valores
   useEffect(() => {
@@ -84,8 +92,8 @@ export const ModalEditSensor = ({
         "measurementKeyName",
         sensor?.measurementKeyName ? sensor.measurementKeyName : ""
       );
-      setValue("longitude", sensor?.longitude ? sensor.longitude : "");
-      setValue("latitude", sensor?.latitude ? sensor.latitude : "");
+      // setValue("longitude", sensor?.longitude ? sensor.longitude : "");
+      // setValue("latitude", sensor?.latitude ? sensor.latitude : "");
       setValue("locationName", sensor?.locationName ? sensor.locationName : "");
       setValue(
         "protocolId",
@@ -103,11 +111,69 @@ export const ModalEditSensor = ({
     setValue("latitude", userLocation[1]);
   };
 
-  // useEffect(() => {
-  //   if (messageDelete.length > 0) {
-  //     Swal.fire("Sensor Borrado", messageDelete, "success");
-  //   }
-  // }, [messageDelete]);
+  useLayoutEffect(() => {
+    if (!editMapDiv.current) return;
+
+    let center;
+    if (sensor?.latitude && sensor?.longitude)
+      center = [sensor.longitude, sensor.latitude];
+    else if (userLocation) center = userLocation;
+    else center = [-80.707692, -0.966826];
+
+    console.log("CENTER", center);
+
+    const map = new Map({
+      container: editMapDiv.current, // container ID
+      style: "mapbox://styles/mapbox/light-v11", // style URL
+      center, // starting position [lng, lat]
+      zoom: 15, // starting zoom
+      projection: "globe", // display the map as a 3D globe
+    });
+
+    map.on("style.load", () => {
+      map.setFog({}); // Set the default atmosphere style
+    });
+
+    let marker = new Marker({
+      color: "#29AFC3",
+    });
+
+    map.on("click", (event) => {
+      const newPos = [event.lngLat.lng, event.lngLat.lat];
+
+      marker.setLngLat(newPos);
+      map.easeTo({ center: newPos });
+
+      setValue("longitude", newPos[0]);
+      setValue("latitude", newPos[1]);
+    });
+
+    marker.setLngLat(center).addTo(map);
+
+    setValue("longitude", center[0] ?? -80.707692);
+    setValue("latitude", center[1] ?? -0.966826);
+
+    setMapInstance(map);
+    setPositionMarker(marker);
+  }, [mapDivExists]);
+
+  useEffect(() => {
+    if (!mapInstance) return;
+    if (!positionMarker) return;
+    if (!latitude || isNaN(Number(latitude))) return;
+    if (!longitude || isNaN(Number(longitude))) return;
+
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+
+    if (!(lat >= -90 && lat <= 90)) return;
+    if (!(lng >= -180 && lng <= 180)) return;
+
+    const newPos = [lng, lat];
+
+    positionMarker.setLngLat(newPos);
+    mapInstance.easeTo({ center: newPos });
+  }, [latitude, longitude, mapInstance, positionMarker]);
 
   return (
     <>
@@ -324,17 +390,20 @@ export const ModalEditSensor = ({
                   // value={userLocation[1] ? userLocation[1] : ""}
                 />
               </Grid>
-              <Grid item xs={1} sx={{ mt: 2, mr: 2 }}>
-                <Tooltip title="Fija ubicación actual">
-                  <IconButton
-                    color="inherit"
-                    edge="start"
-                    onClick={handleUserLocationInForm}
-                  >
-                    <AddLocationAlt sx={{ fontSize: 35 }} />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
+
+              <div
+                ref={(el) => {
+                  if (el) setMapDivExists(true);
+                  else setMapDivExists(false);
+
+                  editMapDiv.current = el;
+                }}
+                style={{
+                  marginTop: "2rem",
+                  height: "20vh",
+                  width: "100%",
+                }}
+              ></div>
 
               {/* TODO: NUEVOS CAMPOS */}
 

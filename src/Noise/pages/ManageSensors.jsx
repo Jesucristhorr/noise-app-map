@@ -29,7 +29,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserLocation, updateSensor } from "../../store/map/mapSlice";
@@ -53,6 +53,7 @@ import {
   materialCells,
   materialRenderers,
 } from "@jsonforms/material-renderers";
+import { Map, Marker, Popup } from "mapbox-gl";
 
 const ajv = new Ajv({ allErrors: true, verbose: true, strict: false });
 const ajv2 = AjvErrors(ajv);
@@ -84,6 +85,11 @@ export const ManageSensors = () => {
   const [openAlertUpdate, setOpenAlertUpdate] = useState(true);
   const [loadingSensors, setOpenLoadingSensors] = useState(false);
   const [savingSensor, setSavingSensor] = useState(false);
+  const [mapDivExists, setMapDivExists] = useState(false);
+  const [mapInstance, setMapInstance] = useState(null);
+  const [positionMarker, setPositionMarker] = useState(null);
+
+  const formMapDiv = useRef(null);
 
   const {
     register,
@@ -123,7 +129,65 @@ export const ManageSensors = () => {
     setOpenLoadingSensors(true);
   }, []);
 
+  useLayoutEffect(() => {
+    if (!formMapDiv.current) return;
+
+    const map = new Map({
+      container: formMapDiv.current, // container ID
+      style: "mapbox://styles/mapbox/light-v11", // style URL
+      center: userLocation ?? [-80.707692, -0.966826], // starting position [lng, lat]
+      zoom: 15, // starting zoom
+      projection: "globe", // display the map as a 3D globe
+    });
+
+    map.on("style.load", () => {
+      map.setFog({}); // Set the default atmosphere style
+    });
+
+    let marker = new Marker({
+      color: "#29AFC3",
+    });
+
+    map.on("click", (event) => {
+      const newPos = [event.lngLat.lng, event.lngLat.lat];
+
+      marker.setLngLat(newPos);
+      map.easeTo({ center: newPos });
+
+      setValue("longitude", newPos[0]);
+      setValue("latitude", newPos[1]);
+    });
+
+    marker.setLngLat(userLocation).addTo(map);
+
+    setValue("longitude", userLocation[0] ?? -80.707692);
+    setValue("latitude", userLocation[1] ?? -0.966826);
+
+    setMapInstance(map);
+    setPositionMarker(marker);
+  }, [mapDivExists]);
+
   const protocolId = watch("protocolId");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  useEffect(() => {
+    if (!mapInstance) return;
+    if (!positionMarker) return;
+    if (!latitude || isNaN(Number(latitude))) return;
+    if (!longitude || isNaN(Number(longitude))) return;
+
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+
+    if (!(lat >= -90 && lat <= 90)) return;
+    if (!(lng >= -180 && lng <= 180)) return;
+
+    const newPos = [lng, lat];
+
+    positionMarker.setLngLat(newPos);
+    mapInstance.easeTo({ center: newPos });
+  }, [latitude, longitude, mapInstance, positionMarker]);
 
   return (
     <>
@@ -473,17 +537,20 @@ export const ManageSensors = () => {
                       // value={userLocation[1] ? userLocation[1] : ""}
                     />
                   </Grid>
-                  <Grid item xs={1} sx={{ mt: 2, mr: 2 }}>
-                    <Tooltip title="Fija ubicación actual">
-                      <IconButton
-                        color="inherit"
-                        edge="start"
-                        onClick={handleUserLocationInForm}
-                      >
-                        <AddLocationAlt sx={{ fontSize: 35 }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
+
+                  <div
+                    ref={(el) => {
+                      if (el) setMapDivExists(true);
+                      else setMapDivExists(false);
+
+                      formMapDiv.current = el;
+                    }}
+                    style={{
+                      marginTop: "2rem",
+                      height: "20vh",
+                      width: "100%",
+                    }}
+                  ></div>
 
                   {/* TODO: NUEVOS CAMPOS */}
 
