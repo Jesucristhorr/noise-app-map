@@ -37,14 +37,14 @@ import {
 } from "../../store/auth";
 import { RegisterEdit } from "./RegisterEdit";
 
-export const TableUsers = ({ users }) => {
+export const TableUsers = ({ users, loadingUsers, setOpenLoadingUsers }) => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { sensor } = useSelector((state) => state.map);
   const { roles } = useSelector((state) => state.role);
-  const { user } = useSelector((state) => state.auth);
+  const { user, id: currentUserId } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -130,55 +130,93 @@ export const TableUsers = ({ users }) => {
 
                   {/* edit */}
                   <Tooltip title="Editar usuario">
-                    <IconButton
-                      onClick={() => {
-                        setOpen(true);
-                        dispatch(setActiveUserForm(user));
+                    <span>
+                      <IconButton
+                        disabled={loadingUsers}
+                        onClick={() => {
+                          setOpen(true);
+                          dispatch(setActiveUserForm(user));
 
-                        // TODO: Depachar thunk de editar
-                        // dispatch(updateUserById(user))
-                      }}
-                    >
-                      <Edit sx={{ color: "#f9ca24" }} />
-                    </IconButton>
+                          // TODO: Depachar thunk de editar
+                          // dispatch(updateUserById(user))
+                        }}
+                      >
+                        <Edit
+                          sx={loadingUsers ? {} : { color: "#f9ca24" }}
+                          color={loadingUsers ? "disabled" : undefined}
+                        />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                   <Tooltip title="Eliminar usuario">
-                    <IconButton
-                      onClick={() => {
-                        dispatch(setActiveUserForm(user)).then(() => {
-                          Swal.fire({
-                            title:
-                              "¿Está seguro de que desea eliminar este usuario?",
-                            text: "Esta acción es irreversible",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#15AABF",
-                            cancelButtonColor: "#fc5c65",
-                            confirmButtonText: "Sí, eliminar",
-                            cancelButtonText: "No, cancelar",
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              dispatch(startDeletingUser()).then(() => {
-                                Swal.fire(
-                                  "Usuario eliminado",
-                                  "El usuario ha sido eliminado satisfactoriamente",
-                                  "success"
-                                );
-                              });
-                            }
+                    <span>
+                      <IconButton
+                        disabled={
+                          currentUserId === user.id ||
+                          user.username === "system" ||
+                          loadingUsers
+                        }
+                        onClick={() => {
+                          dispatch(setActiveUserForm(user)).then(() => {
+                            Swal.fire({
+                              title:
+                                "¿Está seguro de que desea eliminar este usuario?",
+                              text: "Esta acción es irreversible",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#15AABF",
+                              cancelButtonColor: "#fc5c65",
+                              confirmButtonText: "Sí, eliminar",
+                              cancelButtonText: "No, cancelar",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                setOpenLoadingUsers(true);
+                                dispatch(startDeletingUser())
+                                  .then(() => {
+                                    Swal.fire(
+                                      "Usuario eliminado",
+                                      "El usuario ha sido eliminado satisfactoriamente",
+                                      "success"
+                                    );
+                                  })
+                                  .finally(() => {
+                                    setOpenLoadingUsers(false);
+                                  });
+                              }
+                            });
                           });
-                        });
-                      }}
-                    >
-                      <DeleteOutline sx={{ color: "#c23616" }} />
-                    </IconButton>
+                        }}
+                      >
+                        <DeleteOutline
+                          sx={
+                            currentUserId === user.id ||
+                            user.username === "system" ||
+                            loadingUsers
+                              ? {}
+                              : { color: "#c23616" }
+                          }
+                          color={
+                            currentUserId === user.id ||
+                            user.username === "system" ||
+                            loadingUsers
+                              ? "disabled"
+                              : undefined
+                          }
+                        />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        <RegisterEdit open={open} setOpen={setOpen} user={user} />
+        <RegisterEdit
+          open={open}
+          setOpen={setOpen}
+          user={user}
+          setOpenLoadingUsers={setOpenLoadingUsers}
+        />
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}

@@ -289,7 +289,7 @@ export const ManageSensors = () => {
                 component="h2"
                 color="primary"
               >
-                Ingresar Nuevo Sensor
+                Ingresar nuevo sensor
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {

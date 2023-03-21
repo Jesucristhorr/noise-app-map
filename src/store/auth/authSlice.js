@@ -70,7 +70,7 @@ export const authSlice = createSlice({
     deleteUserById: (state, action) => {
       state.user = null;
       state.users = state.users.filter((user) => user.email !== action.payload);
-      state.messageDelete = `Usuario con email ${action.payload} borrado correctamente`;
+      state.messageDelete = `Usuario con email "${action.payload}" eliminado correctamente`;
     },
 
     showErrorRegister: (state, { payload }) => {
@@ -94,11 +94,14 @@ export const authSlice = createSlice({
       state.isSaving = false;
       state.users = state.users.map((user) => {
         if (user.id === action.payload.id) {
-          return action.payload;
+          return {
+            ...user,
+            ...action.payload,
+          };
         }
         return user;
       });
-      state.messageUpdated = `${action.payload.displayName}, actualizada correctamente`;
+      state.messageUpdated = `Usuario "${action.payload.displayName}" actualizado satisfactoriamente`;
     },
 
     clearMessages: (state, action) => {

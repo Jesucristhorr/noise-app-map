@@ -15,8 +15,10 @@ import {
   startLoadingUsers,
   updateUserById,
 } from "../../store/auth";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-export const RegisterEdit = ({ open, setOpen, user }) => {
+export const RegisterEdit = ({ open, setOpen, user, setOpenLoadingUsers }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [loading, setLoading] = useState(false);
@@ -31,15 +33,24 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: user?.email,
+      displayName: user?.displayName,
+      username: user?.username,
+      roleId: user?.role?.id ?? 1,
+      previousPassword: "",
+      password: "",
+    },
+  });
   // setear valores
   useEffect(() => {
-    if (!!user) {
-      setValue("email", user.email ? user.email : "");
-      setValue("displayName", user.displayName ? user.displayName : "");
-      setValue("username", user.username ? user.username : "");
-      // setValue("roleId", "name", user.role ? user.role.id : "");
-    }
+    setValue("email", user?.email ? user.email : "");
+    setValue("displayName", user?.displayName ? user.displayName : "");
+    setValue("username", user?.username ? user.username : "");
+    setValue("roleId", user?.role?.id ? user.role.id : 1);
+    setValue("previousPassword", "");
+    setValue("password", "");
   }, [user]);
 
   return (
@@ -72,7 +83,7 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
           component="h2"
           color="primary"
         >
-          Actualizar Nuevo usuario
+          Actualizar nuevo usuario
         </Typography>
         <form
           onSubmit={handleSubmit((data) => {
@@ -80,10 +91,36 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
             const newUser = { id, ...data };
             // console.log(newUser);
 
-            dispatch(updateUserById(newUser)).then(() => {
-              // dispatch(clearMessages());
-              dispatch(startLoadingUsers());
-            });
+            setOpenLoadingUsers(true);
+
+            dispatch(updateUserById(newUser))
+              .catch((error) => {
+                if (axios.isAxiosError(error)) {
+                  const message = error.response?.data?.msg;
+                  const formattedMessage =
+                    message === "Previous password is invalid"
+                      ? "El usuario no se pudo actualizar porque la credencial proporcionada es inválida"
+                      : message === "User does not exist"
+                      ? "El usuario no se pudo actualizar porque no existe"
+                      : "Ocurrió un error inesperado al intentar actualizar el usuario";
+
+                  Swal.fire("Error", formattedMessage, "error");
+                  return;
+                }
+
+                Swal.fire(
+                  "Error",
+                  "Ocurrió un error inesperado al intentar actualizar el usuario",
+                  "error"
+                );
+
+                return;
+              })
+              .finally(() => {
+                dispatch(startLoadingUsers()).finally(() => {
+                  setOpenLoadingUsers(false);
+                });
+              });
 
             // dispatch(clearMessages());
 
@@ -96,7 +133,8 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
               <TextField
                 label="Email"
                 type="email"
-                placeholder="jenn@gmail.com"
+                disabled={true}
+                placeholder="usuario@correo.com"
                 fullWidth
                 size="small"
                 //   id="filled-hidden-label-small"
@@ -130,6 +168,7 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
               <TextField
                 label="Usuario"
                 type="text"
+                disabled={true}
                 placeholder="jennIntriago"
                 fullWidth
                 size="small"
@@ -147,7 +186,7 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
               <TextField
                 label="Tipo de Usuario"
                 select
-                defaultValue=""
+                defaultValue={user?.role?.id ?? 1}
                 fullWidth
                 size="small"
                 //   id="filled-hidden-label-small"
@@ -167,6 +206,28 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
 
             <Grid item xs={12} sx={{ mt: 2 }}>
               <TextField
+                label="Contraseña anterior"
+                type="password"
+                placeholder="************"
+                fullWidth
+                size="small"
+                id="filled-hidden-label-small"
+                {...register("previousPassword", {
+                  required: "Campo requerido",
+                  minLength: 10,
+                  maxLength: 32,
+                })}
+                error={!!errors.previousPassword}
+                helperText={
+                  errors.previousPassword
+                    ? "La contraseña debe tener entre 10 y 32 caracteres"
+                    : ""
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              <TextField
                 label="Contraseña"
                 type="password"
                 placeholder="************"
@@ -176,11 +237,12 @@ export const RegisterEdit = ({ open, setOpen, user }) => {
                 {...register("password", {
                   required: "Campo requerido",
                   minLength: 10,
+                  maxLength: 32,
                 })}
                 error={!!errors.password}
                 helperText={
                   errors.password
-                    ? "La contraseña debe tener mínimo 10 caracteres"
+                    ? "La contraseña debe tener entre 10 y 32 caracteres"
                     : ""
                 }
               />

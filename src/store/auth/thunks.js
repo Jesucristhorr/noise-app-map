@@ -133,10 +133,25 @@ export const startLoadingUsers = () => {
 
 export const startDeletingUser = () => {
   return async (dispatch, getState) => {
-    const { id, user } = getState().auth;
+    const { user } = getState().auth;
+
+    try {
+      const token = getToken();
+      const resp = await autenticacionPorEmailPassword.delete(
+        `/users/${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      await dispatch(deleteUserById(user.email));
+    } catch (error) {
+      console.error("Something went wrong when deleting user", error);
+      throw error;
+    }
 
     // TODO borrar sensor por usuario autenticado
-    dispatch(deleteUserById(user.email));
   };
 };
 
@@ -163,12 +178,45 @@ export const resendEmailConfirmation = ({ id }) => {
   };
 };
 
-export const updateUserById = (user) => {
+export const updateUserById = ({
+  id,
+  displayName,
+  roleId,
+  previousPassword,
+  password,
+}) => {
   return async (dispatch, getState) => {
     // TODO despachar reducer para actualizar usuario
+    try {
+      const token = getToken();
+      const resp = await autenticacionPorEmailPassword.put(
+        "users",
+        {
+          userId: id,
+          displayName,
+          roleId,
+          previousPassword,
+          password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    dispatch(updateUser(user));
-    // const users = await loadUsers();
-    // dispatch(setUsers(users));
+      dispatch(
+        updateUser({
+          id,
+          displayName,
+          roleId,
+          previousPassword,
+          password,
+        })
+      );
+    } catch (error) {
+      console.error("Error updating user by id", error);
+      throw error;
+    }
   };
 };

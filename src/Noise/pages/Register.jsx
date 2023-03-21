@@ -56,7 +56,15 @@ export const Register = () => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "",
+      displayName: "",
+      username: "",
+      password: "",
+      roleId: 1,
+    },
+  });
 
   useEffect(() => {
     dispatch(getRoles()).then(() => {
@@ -95,7 +103,7 @@ export const Register = () => {
             disabled={loading}
             sx={{ color: "#fff" }}
           >
-            Agregar Nuevo Usuario
+            Agregar nuevo usuario
           </Button>
 
           {loading && (
@@ -280,12 +288,12 @@ export const Register = () => {
                 component="h2"
                 color="primary"
               >
-                Ingresar Nuevo usuario
+                Ingresar nuevo usuario
               </Typography>
               <form
                 onSubmit={handleSubmit((data) => {
                   // console.log(data);
-                  dispatch(startCreatingUserWithEmailPassword(data)).then(
+                  dispatch(startCreatingUserWithEmailPassword(data)).finally(
                     () => {
                       setOpenAlert(true);
                       setLoading(false);
@@ -305,7 +313,7 @@ export const Register = () => {
                     <TextField
                       label="Email"
                       type="email"
-                      placeholder="jenn@gmail.com"
+                      placeholder="usuario@correo.com"
                       fullWidth
                       size="small"
                       //   id="filled-hidden-label-small"
@@ -356,7 +364,7 @@ export const Register = () => {
                     <TextField
                       label="Tipo de Usuario"
                       select
-                      defaultValue=""
+                      defaultValue={1}
                       fullWidth
                       size="small"
                       //   id="filled-hidden-label-small"
@@ -385,11 +393,12 @@ export const Register = () => {
                       {...register("password", {
                         required: "Campo requerido",
                         minLength: 10,
+                        maxLength: 32,
                       })}
                       error={!!errors.password}
                       helperText={
                         errors.password
-                          ? "La contraseña debe tener mínimo 10 caracteres"
+                          ? "La contraseña debe tener entre 10 y 32 caracteres"
                           : ""
                       }
                     />
@@ -414,7 +423,11 @@ export const Register = () => {
             </Box>
           </Modal>
         </div>
-        <TableUsers users={users} />
+        <TableUsers
+          users={users}
+          loadingUsers={loadingUsers}
+          setOpenLoadingUsers={setOpenLoadingUsers}
+        />
       </NoiseLayout>
     </>
   );
